@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Hubs</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>❤️AI Hubs❤️</h1>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Search AI tools...">
+    </div>
+    <div class="ai-grid" id="ai-grid">
+      <!-- AI tool cards will be dynamically generated here -->
+    </div>
+    <div class="pagination" id="pagination">
+      <!-- Pagination buttons will be dynamically generated here -->
+    </div>
+    <div class="chat-container" id="chat-container" style="display: none;">
+      <div id="chat-messages"></div>
+      <div class="input-container">
+        <input type="text" id="message-input" placeholder="Type your message...">
+        <button id="send-btn">Send</button>
+        <button id="back-btn">Back to Tools</button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
