@@ -8,7 +8,7 @@
 - [x] Create .env.example file with template for API keys
 - [x] Create README.md with setup and run instructions
 - [x] Run npm install to install dependencies
-- [ ] Test the application locally
+- [x] Test the application locally
 - [x] Expand AI Assistants & Chatbots list with additional tools
 - [x] Implement card-based layout for AI tools
 - [x] Add search functionality to filter AI tools
