@@ -45,8 +45,8 @@ interface AuthRequest extends Request {
 
 // Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
-app.use(express.static(path.join(__dirname, '../dist/public')));
+app.use(express.static(path.join(__dirname, '../public'), { index: false }));
+app.use(express.static(path.join(__dirname, '../dist/public'), { index: false }));
 
 // Authentication middleware
 function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) {
