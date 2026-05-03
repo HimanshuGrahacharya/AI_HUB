@@ -139,7 +139,13 @@ function initGoogleAuth() {
     if (googleBtn) {
       google.accounts.id.renderButton(
         googleBtn,
-        { theme: "outline", size: "large", text: "continue_with", shape: "pill" }
+        { 
+          theme: "outline", 
+          size: "large", 
+          text: "continue_with", 
+          shape: "rectangular",
+          width: "380" // Match the form width
+        }
       );
     }
   } else {

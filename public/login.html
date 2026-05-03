@@ -117,8 +117,17 @@
     }
     .btn-facebook:hover { background:#1464d8; transform:translateY(-1px); }
 
-    #google-signin-btn { width:100%; }
-    #google-signin-btn > div { width:100% !important; }
+    #google-signin-btn { 
+      width: 100%; 
+      display: flex; 
+      justify-content: center; 
+      margin-top: 10px;
+    }
+    #google-signin-btn > div { 
+      width: 100% !important; 
+      display: flex !important;
+      justify-content: center !important;
+    }
 
     .auth-switch { margin-top:28px; text-align:center; font-size:.9rem; color:rgba(226,232,240,0.5); }
     .auth-switch a { color:#818cf8; font-weight:600; text-decoration:none; }
