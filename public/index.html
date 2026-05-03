@@ -3,30 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Hubs</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Dashboard | AI Hubs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
-<body>
-  <div class="container">
-    <h1>❤️HSG AI Hubs❤️</h1>
-    <div class="search-container">
-      <input type="text" id="search-input" placeholder="Search AI tools...">
+<body class="dashboard-body">
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="logos/ai-hubs-logo.svg" alt="AI Hubs Logo" class="nav-logo">
+      <span class="nav-title">AI Hubs</span>
     </div>
-    <div class="ai-grid" id="ai-grid">
-      <!-- AI tool cards will be dynamically generated here -->
-    </div>
-    <div class="pagination" id="pagination">
-      <!-- Pagination buttons will be dynamically generated here -->
-    </div>
-    <div class="chat-container" id="chat-container" style="display: none;">
-      <div id="chat-messages"></div>
-      <div class="input-container">
-        <input type="text" id="message-input" placeholder="Type your message...">
-        <button id="send-btn">Send</button>
-        <button id="back-btn">Back to Tools</button>
+    <div class="nav-center">
+      <div class="search-wrapper">
+        <i class="ph ph-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" placeholder="Search 500+ AI tools..." class="search-input">
       </div>
     </div>
+    </div>
+    <div class="nav-right">
+      <a href="landing.html" class="nav-link">Home</a>
+      <a href="#" id="submit-tools-btn" class="nav-link">Submit Tools</a>
+      <a href="#" id="about-btn" class="nav-link">About</a>
+      <button id="logout-btn" class="btn-secondary">Logout</button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <i class="ph ph-moon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <main class="dashboard-main">
+    <aside class="sidebar glass">
+      <div class="sidebar-section">
+        <h3>Categories</h3>
+        <ul class="category-list" id="category-list">
+          <li class="category-item active" data-category="all">
+            <i class="ph ph-squares-four"></i> All Tools
+          </li>
+          <li class="category-item" data-category="AI Assistants">
+            <i class="ph ph-chat-centered-text"></i> Assistants
+          </li>
+          <li class="category-item" data-category="Writing Tools">
+            <i class="ph ph-pen-nib"></i> Writing
+          </li>
+          <li class="category-item" data-category="Image Generation">
+            <i class="ph ph-palette"></i> Image & Art
+          </li>
+          <li class="category-item" data-category="Video Tools">
+            <i class="ph ph-video-camera"></i> Video
+          </li>
+          <li class="category-item" data-category="Audio / Voice">
+            <i class="ph ph-speaker-high"></i> Audio
+          </li>
+          <li class="category-item" data-category="Coding Tools">
+            <i class="ph ph-code"></i> Coding
+          </li>
+          <li class="category-item" data-category="Productivity">
+            <i class="ph ph-lightning"></i> Productivity
+          </li>
+          <li class="category-item" data-category="Marketing">
+            <i class="ph ph-megaphone"></i> Marketing
+          </li>
+          <li class="category-item" data-category="Business / SaaS">
+            <i class="ph ph-briefcase"></i> Business
+          </li>
+          <li class="category-item" data-category="Research / Study">
+            <i class="ph ph-book-open"></i> Research
+          </li>
+        </ul>
+      </div>
+      <div class="sidebar-section">
+        <h3>My Hub</h3>
+        <ul class="category-list">
+          <li class="category-item" id="show-favorites">
+            <i class="ph ph-star"></i> Favorites
+          </li>
+          <li class="category-item" id="show-recent">
+            <i class="ph ph-clock-counter-clockwise"></i> Recently Viewed
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="content-area">
+      <div class="ai-grid" id="ai-grid">
+        <!-- AI tool cards will be dynamically generated here -->
+      </div>
+      <div class="pagination" id="pagination">
+        <!-- Pagination buttons will be dynamically generated here -->
+      </div>
+
+      <!-- Chat Interface -->
+      <div class="chat-container" id="chat-container" style="display: none;">
+        <div class="chat-header">
+          <div class="chat-info">
+            <img id="selected-ai-logo" src="" alt="" class="chat-logo">
+            <h2 id="selected-ai-name">ChatGPT</h2>
+          </div>
+          <button id="back-btn" class="btn-secondary">Back to Tools</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="input-container">
+          <input type="text" id="message-input" placeholder="Ask anything...">
+          <button id="send-btn" class="btn-primary">Send</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Submit Tools Modal -->
+  <div id="submit-modal" class="modal">
+    <div class="modal-content glass">
+      <span class="close-modal">&times;</span>
+      <h2>Submit AI Tool</h2>
+      <form id="submit-tool-form">
+        <div class="form-group">
+          <label for="tool-name">Tool Name</label>
+          <input type="text" id="tool-name" required placeholder="e.g. MyAwesomeAI">
+        </div>
+        <div class="form-group">
+          <label for="tool-url">Website URL</label>
+          <input type="url" id="tool-url" required placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label for="tool-desc">Description</label>
+          <textarea id="tool-desc" required placeholder="What does this tool do?"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Submit for Review</button>
+      </form>
+    </div>
   </div>
-  <script src="script.js"></script>
+
+  <!-- About Modal -->
+  <div id="about-modal" class="modal">
+    <div class="modal-content glass">
+      <span class="close-modal">&times;</span>
+      <h2>About AI Hubs</h2>
+      <p>AI Hubs is your premier destination to discover, explore, and interact with the world's most powerful AI tools in one unified dashboard.</p>
+      <p>Our mission is to democratize access to AI and help creators, developers, and businesses find the right tools for their specific needs.</p>
+      <div class="about-stats">
+        <div class="stat">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">AI Tools</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Availability</span>
+        </div>
+      </div>
+    </div>
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="logos/ai-hubs-logo.svg" alt="AI Hubs Logo">
+        <h3>AI Hubs</h3>
+        <p>The #1 platform to discover and interact with the best AI tools in one place. Built with love by <span style="color:#818cf8">Himanshu Shekhar Grahacharya</span>.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+          <a href="#" aria-label="GitHub"><i class="ph ph-github-logo"></i></a>
+          <a href="#" aria-label="Discord"><i class="ph ph-discord-logo"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="landing.html#features">Features</a></li>
+          <li><a href="landing.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="signup.html">Sign Up</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 AI Hubs by <span>Himanshu Shekhar Grahacharya</span>. All rights reserved.</p>
+      <p>Made with <i class="ph ph-heart" style="color:#f472b6"></i> for the AI community</p>
+    </div>
+  </footer>
+
+  <script src="auth.js?v=5"></script>
+  <script src="script.js?v=5"></script>
+  <script src="theme.js?v=5"></script>
 </body>
 </html>
