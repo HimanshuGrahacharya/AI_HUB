@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Hubs – Discover, explore, and interact with 500+ of the best AI tools in one place. Trusted by thousands of users.">
+  <title>AI Hubs - Discover the Best AI Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="styles.css?v=5">
+  <style>
+    /* ── Theme Variables ── */
+    :root {
+      --landing-bg: #ffffff;
+      --landing-text: #1e293b;
+      --landing-text-muted: #64748b;
+      --nav-bg: rgba(255, 255, 255, 0.8);
+      --nav-border: rgba(99, 102, 241, 0.1);
+      --hero-gradient: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+      --card-bg: rgba(255, 255, 255, 0.6);
+      --card-border: rgba(99, 102, 241, 0.1);
+      --footer-bg: #f8fafc;
+      --hero-h1: #1e293b;
+    }
+
+    .dark-mode:root,
+    body.dark-mode {
+      --landing-bg: #0a0a1a;
+      --landing-text: #e2e8f0;
+      --landing-text-muted: rgba(226, 232, 240, 0.6);
+      --nav-bg: rgba(10, 10, 26, 0.75);
+      --nav-border: rgba(99, 102, 241, 0.2);
+      --hero-gradient: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --footer-bg: #060614;
+      --hero-h1: #ffffff;
+    }
+
+    /* ── Landing-page-only overrides ── */
+    body { 
+      background: var(--landing-bg); 
+      color: var(--landing-text); 
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* ─────────────── NAVBAR ─────────────── */
+    .landing-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 70px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--nav-border);
+      transition: all 0.3s ease;
+    }
+    .landing-nav .nav-brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .landing-nav .nav-brand img { width:38px; height:38px; }
+    .landing-nav .nav-brand span { font-family:'Outfit',sans-serif; font-weight:800; font-size:1.4rem; color: var(--hero-h1); }
+    .landing-nav .nav-links { display:flex; align-items:center; gap:10px; }
+    .landing-nav .nav-links a.nav-link { color: var(--landing-text-muted); text-decoration:none; font-weight:500; padding:8px 14px; border-radius:8px; transition:all .25s; }
+    .landing-nav .nav-links a.nav-link:hover { color: var(--landing-text); background:rgba(99, 102, 241, 0.08); }
+    .landing-nav .btn-nav-signup { background: linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff !important; border-radius:10px !important; padding:9px 22px !important; font-weight:600 !important; }
+    .landing-nav .btn-nav-login { border:1px solid rgba(99,102,241,0.5); color:#6366f1 !important; border-radius:10px !important; padding:9px 22px !important; font-weight:600 !important; }
+    .dark-mode .landing-nav .btn-nav-login { color: #a5b4fc !important; }
+    .landing-nav .btn-nav-signup:hover { transform:translateY(-1px); box-shadow:0 4px 15px rgba(99,102,241,0.4); background:linear-gradient(135deg,#4f46e5,#7c3aed) !important; }
+    .landing-nav .btn-nav-login:hover { background:rgba(99,102,241,0.1) !important; border-color:rgba(99, 102, 241, 0.8); }
+    .landing-nav .theme-btn { width:40px; height:40px; border-radius:10px; border:1px solid var(--nav-border); background:rgba(99, 102, 241, 0.08); color: var(--landing-text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; transition:all .25s; }
+    .landing-nav .theme-btn:hover { background:rgba(99, 102, 241, 0.15); transform: rotate(15deg); }
+
+    /* ─────────────── HERO ─────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 5% 80px;
+      position: relative; overflow: hidden;
+      background: var(--hero-gradient),
+                  radial-gradient(ellipse 60% 40% at 80% 80%, rgba(168,85,247,0.1) 0%, transparent 60%),
+                  var(--landing-bg);
+      transition: background 0.3s ease;
+    }
+    .hero::before {
+      content:''; position:absolute; inset:0;
+      background-image: radial-gradient(circle at 1px 1px, rgba(99,102,241,0.15) 1px, transparent 0);
+      background-size: 40px 40px;
+      pointer-events:none;
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:6px;
+      background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.4);
+      color:#a5b4fc; padding:6px 16px; border-radius:100px; font-size:.85rem; font-weight:600;
+      margin-bottom:24px; letter-spacing:.04em;
+    }
+    .hero-badge i { font-size:1rem; }
+    .hero h1 {
+      font-family:'Outfit',sans-serif; font-weight:900;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1.1; margin-bottom: 24px; color: var(--hero-h1);
+      letter-spacing: -0.02em;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg,#818cf8,#c084fc,#f472b6);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .hero p {
+      font-size: clamp(1rem,2vw,1.2rem); color: var(--landing-text-muted);
+      max-width:600px; margin:0 auto 40px; line-height:1.7;
+    }
+    .hero-cta { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:60px; }
+    .hero-cta .btn-hero-primary {
+      display:inline-flex; align-items:center; gap:8px;
+      background:linear-gradient(135deg,#6366f1,#8b5cf6);
+      color:#fff; text-decoration:none; padding:16px 36px;
+      border-radius:14px; font-weight:700; font-size:1.05rem;
+      transition:all .3s; border:none; cursor:pointer;
+      box-shadow: 0 8px 30px rgba(99,102,241,0.4);
+    }
+    .hero-cta .btn-hero-primary:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(99,102,241,0.5); }
+    .hero-cta .btn-hero-secondary {
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(99, 102, 241, 0.06); color: var(--landing-text);
+      text-decoration:none; padding:16px 32px;
+      border-radius:14px; font-weight:600; font-size:1.05rem;
+      border:1px solid var(--nav-border); transition:all .3s;
+    }
+    .hero-cta .btn-hero-secondary:hover { background:rgba(99, 102, 241, 0.12); border-color:rgba(99, 102, 241, 0.3); transform:translateY(-2px); }
+    .hero-stats {
+      display:flex; gap:48px; justify-content:center; flex-wrap:wrap;
+      padding:28px 40px;
+      background: var(--card-bg); border:1px solid var(--card-border);
+      border-radius:20px; backdrop-filter:blur(10px);
+    }
+    .hero-stats .stat-item { text-align:center; }
+    .hero-stats .stat-num { display:block; font-family:'Outfit',sans-serif; font-weight:800; font-size:2rem; color:#818cf8; }
+    .hero-stats .stat-lbl { display:block; font-size:.8rem; color: var(--landing-text-muted); font-weight:500; text-transform:uppercase; letter-spacing:.1em; margin-top:2px; }
+
+    /* ─────────────── FEATURES ─────────────── */
+    .features { padding:100px 5%; background: var(--landing-bg); }
+    .section-header { text-align:center; margin-bottom:60px; }
+    .section-label { display:inline-block; background:rgba(99,102,241,0.15); color:#818cf8; padding:5px 14px; border-radius:100px; font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; margin-bottom:16px; }
+    .section-header h2 { font-family:'Outfit',sans-serif; font-weight:800; font-size:clamp(1.8rem,4vw,2.8rem); color: var(--hero-h1); margin-bottom:14px; }
+    .section-header p { color: var(--landing-text-muted); max-width:560px; margin:0 auto; }
+    .features-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:24px; max-width:1200px; margin:0 auto;
+    }
+    .feat-card {
+      background: var(--card-bg); border:1px solid var(--card-border);
+      border-radius:20px; padding:32px;
+      transition:all .3s; cursor:default; position:relative; overflow:hidden;
+    }
+    .feat-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(99,102,241,0.06),transparent); opacity:0; transition:.3s; }
+    .feat-card:hover { border-color:rgba(99,102,241,0.4); transform:translateY(-6px); box-shadow:0 20px 40px rgba(99,102,241,0.1); }
+    .feat-card:hover::before { opacity:1; }
+    .feat-icon { width:52px; height:52px; background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(168,85,247,0.2)); border-radius:14px; display:flex; align-items:center; justify-content:center; margin-bottom:20px; font-size:1.5rem; color:#818cf8; }
+    .feat-card h3 { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.15rem; color: var(--hero-h1); margin-bottom:10px; }
+    .feat-card p { color: var(--landing-text-muted); font-size:.95rem; line-height:1.6; }
+
+    /* ─────────────── HOW IT WORKS ─────────────── */
+    .how-it-works { padding:100px 5%; background: var(--landing-bg); }
+    .steps-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:24px; max-width:900px; margin:0 auto; }
+    .step-card { text-align:center; padding:40px 28px; background: var(--card-bg); border:1px solid var(--card-border); border-radius:20px; transition:all .3s; }
+    .step-card:hover { border-color:rgba(99,102,241,0.3); transform:translateY(-4px); }
+    .step-num { width:56px; height:56px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-weight:900; font-size:1.4rem; color:#fff; margin:0 auto 20px; box-shadow:0 8px 20px rgba(99,102,241,0.3); }
+    .step-card h3 { font-family:'Outfit',sans-serif; font-weight:700; color: var(--hero-h1); margin-bottom:10px; }
+    .step-card p { color: var(--landing-text-muted); font-size:.95rem; }
+
+    /* ─────────────── NEWSLETTER ─────────────── */
+    .newsletter { padding:80px 5%; }
+    .newsletter-inner {
+      max-width:700px; margin:0 auto; text-align:center;
+      background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(168,85,247,0.05));
+      border:1px solid var(--nav-border); border-radius:28px; padding:60px 40px;
+    }
+    .newsletter-inner h2 { font-family:'Outfit',sans-serif; font-weight:800; font-size:clamp(1.6rem,3vw,2.2rem); color: var(--hero-h1); margin-bottom:12px; }
+    .newsletter-inner p { color: var(--landing-text-muted); margin-bottom:32px; }
+    .newsletter-form { display:flex; gap:12px; max-width:480px; margin:0 auto; }
+    .newsletter-form input { flex:1; padding:14px 20px; border-radius:12px; border:1px solid var(--nav-border); background: var(--card-bg); color: var(--landing-text); font-size:.95rem; outline:none; transition:border-color .25s; }
+    .newsletter-form input::placeholder { color: var(--landing-text-muted); opacity: 0.6; }
+    .newsletter-form input:focus { border-color:rgba(99,102,241,0.6); }
+    .newsletter-form button { padding:14px 26px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border:none; border-radius:12px; font-weight:700; cursor:pointer; white-space:nowrap; transition:all .25s; }
+    .newsletter-form button:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,0.4); }
+
+    /* ─────────────── FOOTER ─────────────── */
+    .landing-footer { background: var(--footer-bg); border-top:1px solid var(--nav-border); padding:60px 5% 30px; }
+    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; max-width:1200px; margin:0 auto 50px; }
+    .footer-brand img { width:42px; margin-bottom:12px; }
+    .footer-brand h3 { font-family:'Outfit',sans-serif; font-weight:800; font-size:1.3rem; color: var(--hero-h1); margin-bottom:10px; }
+    .footer-brand p { color: var(--landing-text-muted); font-size:.9rem; line-height:1.6; }
+    .footer-col h4 { font-weight:700; color: var(--landing-text); margin-bottom:16px; font-size:.9rem; text-transform:uppercase; letter-spacing:.06em; }
+    .footer-col ul { list-style:none; }
+    .footer-col ul li { margin-bottom:10px; }
+    .footer-col ul li a { color: var(--landing-text-muted); text-decoration:none; font-size:.9rem; transition:color .2s; }
+    .footer-col ul li a:hover { color:#818cf8; }
+    .footer-social { display:flex; gap:12px; margin-top:20px; }
+    .footer-social a { width:38px; height:38px; border-radius:10px; background: var(--card-bg); border:1px solid var(--card-border); color: var(--landing-text-muted); display:flex; align-items:center; justify-content:center; font-size:1rem; transition:all .2s; text-decoration:none; }
+    .footer-social a:hover { background:rgba(99,102,241,0.2); color:#818cf8; border-color:rgba(99,102,241,0.4); }
+    .footer-bottom { max-width:1200px; margin:0 auto; padding-top:24px; border-top:1px solid var(--nav-border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .footer-bottom p { color: var(--landing-text-muted); font-size:.85rem; opacity: 0.8; }
+    .footer-bottom p span { color:#818cf8; }
+
+    /* ─────────────── MOBILE ─────────────── */
+    @media (max-width: 768px) {
+      .landing-nav { padding:0 4%; }
+      .landing-nav .nav-links a.nav-link:not(.btn-nav-signup):not(.btn-nav-login) { display:none; }
+      .hero { padding:100px 5% 60px; }
+      .hero-stats { gap:28px; padding:20px 24px; }
+      .hero-stats .stat-num { font-size:1.5rem; }
+      .footer-grid { grid-template-columns:1fr 1fr; }
+      .footer-brand { grid-column:span 2; }
+      .footer-bottom { flex-direction:column; text-align:center; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns:1fr; }
+      .footer-brand { grid-column:span 1; }
+      .newsletter-form { flex-direction:column; }
+      .newsletter-form button { width:100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="landing-nav">
+    <a href="landing.html" class="nav-brand">
+      <img src="logos/ai-hubs-logo.svg" alt="AI Hubs Logo">
+      <span>AI Hubs</span>
+    </a>
+    <div class="nav-links">
+      <a href="landing.html" class="nav-link">Home</a>
+      <a href="#features" class="nav-link">Features</a>
+      <a href="login.html" class="nav-link btn-nav-login">Login</a>
+      <a href="signup.html" class="nav-link btn-nav-signup">Sign Up</a>
+      <button class="theme-btn" id="theme-toggle" aria-label="Toggle dark mode"><i class="ph ph-moon"></i></button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge"><i class="ph ph-sparkle"></i> 500+ AI Tools in One Place</div>
+    <h1>The Ultimate<br><span class="gradient-text">AI Hub</span> for Everyone</h1>
+    <p>Discover, explore, and interact with the world's best AI tools — all in one beautifully designed platform. From chatbots to code generators, image creators to voice synthesizers.</p>
+    <div class="hero-cta">
+      <a href="signup.html" class="btn-hero-primary"><i class="ph ph-rocket-launch"></i> Get Started Free</a>
+      <a href="login.html" class="btn-hero-secondary"><i class="ph ph-sign-in"></i> Log In</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><span class="stat-num">500+</span><span class="stat-lbl">AI Tools</span></div>
+      <div class="stat-item"><span class="stat-num">10K+</span><span class="stat-lbl">Users</span></div>
+      <div class="stat-item"><span class="stat-num">15+</span><span class="stat-lbl">Categories</span></div>
+      <div class="stat-item"><span class="stat-num">99%</span><span class="stat-lbl">Uptime</span></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="section-header">
+      <div class="section-label">Why AI Hubs?</div>
+      <h2>Everything You Need, Nothing You Don't</h2>
+      <p>Built for creators, developers, and professionals who want to stay ahead of the AI curve.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ph ph-squares-four"></i></div>
+        <h3>500+ Curated Tools</h3>
+        <p>Handpicked AI tools across 15+ categories — from coding and writing to image generation and voice synthesis.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ph ph-chat-circle-dots"></i></div>
+        <h3>Built-in AI Chat</h3>
+        <p>Interact with any AI model directly through our platform. No switching tabs, no hassle — just seamless conversation.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ph ph-star"></i></div>
+        <h3>Save Favourites</h3>
+        <p>Bookmark your go-to tools and access them instantly. Build your personal AI toolkit over time.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ph ph-clock-counter-clockwise"></i></div>
+        <h3>Recently Viewed</h3>
+        <p>Pick up exactly where you left off. Your history is always available, so you never lose track of a great tool.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ph ph-funnel"></i></div>
+        <h3>Smart Filtering</h3>
+        <p>Search and filter by category, use case, or pricing. Find the perfect tool in seconds, not minutes.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><i class="ph ph-moon"></i></div>
+        <h3>Dark Mode</h3>
+        <p>Work comfortably day or night with a beautifully crafted dark theme that's easy on your eyes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="section-header">
+      <div class="section-label">Simple & Fast</div>
+      <h2>Get Started in 3 Easy Steps</h2>
+      <p>From sign-up to discovering your first AI tool in under 60 seconds.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Create an Account</h3>
+        <p>Sign up for free in seconds. No credit card needed. Use Google or email to get started instantly.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Explore AI Tools</h3>
+        <p>Browse 500+ curated AI tools organized by category. Search, filter, and discover what's trending.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Interact & Save</h3>
+        <p>Chat with tools, visit official sites, and save your favourites for a personalized AI toolkit.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="newsletter-inner">
+      <h2>Stay Ahead of the AI Curve</h2>
+      <p>Get weekly updates on the newest AI tools, industry breakthroughs, and exclusive tips.</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thank you! You\'re subscribed.');">
+        <input type="email" placeholder="Enter your email address" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="logos/ai-hubs-logo.svg" alt="AI Hubs Logo">
+        <h3>AI Hubs</h3>
+        <p>The #1 platform to discover and interact with the best AI tools in one place. Built with love by <span style="color:#818cf8">Himanshu Shekhar Grahacharya</span>.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+          <a href="#" aria-label="GitHub"><i class="ph ph-github-logo"></i></a>
+          <a href="#" aria-label="Discord"><i class="ph ph-discord-logo"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="index.html">Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <ul>
+          <li><a href="signup.html">Sign Up</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 AI Hubs by <span>Himanshu Shekhar Grahacharya</span>. All rights reserved.</p>
+      <p>Made with <i class="ph ph-heart" style="color:#f472b6"></i> for the AI community</p>
+    </div>
+  </footer>
+
+  <script src="theme.js?v=5"></script>
+</body>
+</html>

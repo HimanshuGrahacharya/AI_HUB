@@ -1,17 +1,30 @@
-# AI Hub Project TODO
+# TODO: Modern & Minimal Login Page UI
 
-- [x] Create package.json for Node.js project setup
-- [x] Create server.js with Express backend and API routes for OpenAI, Anthropic, and Blackbox AI
-- [x] Create public/index.html for the frontend interface
-- [x] Create public/script.js for frontend JavaScript to handle user interactions and API calls
-- [x] Create public/styles.css for basic styling
-- [x] Create .env.example file with template for API keys
-- [x] Create README.md with setup and run instructions
-- [x] Run npm install to install dependencies
-- [x] Test the application locally
-- [x] Expand AI Assistants & Chatbots list with additional tools
-- [x] Implement card-based layout for AI tools
-- [x] Add search functionality to filter AI tools
-- [x] Add pagination for AI tools list
-- [x] Update frontend JavaScript for new features
-- [x] Update CSS for card layout and responsiveness
+## Completed Tasks
+- [x] Update login.html to add navbar similar to signup page
+- [x] Add LOGIN title, email/password inputs with placeholders, remember me checkbox, login button, social login buttons, and signup link
+- [x] Update styles.css with login-page styles: gradient background, white login card, input fields with icons, pink primary button, social buttons, and mobile responsiveness
+- [x] Adjust login page layout to accommodate navbar height
+- [x] Update signup.html to match login page design: add login-page class for consistent background and centering, add social login buttons
+
+## Completed Tasks
+- [x] Update login.html to add navbar similar to signup page
+- [x] Add LOGIN title, email/password inputs with placeholders, remember me checkbox, login button, social login buttons, and signup link
+- [x] Update styles.css with login-page styles: gradient background, white login card, input fields with icons, pink primary button, social buttons, and mobile responsiveness
+- [x] Adjust login page layout to accommodate navbar height
+- [x] Update signup.html to match login page design: add login-page class for consistent background and centering, add social login buttons
+- [x] Apply landing page navbar design and position to sign-in and login pages: update nav-right to include Sign Up and Login links consistently
+
+## Summary
+The login and signup pages have been redesigned with a modern, minimal UI featuring:
+- Navbar with logo, title, and consistent Sign Up/Login links matching the landing page
+- Centered white card over a pink-blue gradient background
+- Icon-based input fields (email ✉️, password 🔒)
+- Checkboxes for remember me/terms
+- Pink primary login/signup button
+- Social login options (Facebook and Google)
+- Simple, user-friendly design suitable for SaaS applications
+- Mobile-responsive layout
+
+## Completed Tasks
+- [x] Add inactivity timer feature to chat interface: timer starts when chat is opened, resets on each message, triggers timeout message after 45 minutes of inactivity
