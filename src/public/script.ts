@@ -4193,38 +4193,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Modal logic
-  const submitModal = document.getElementById('submit-modal') as HTMLElement;
-  const aboutModal = document.getElementById('about-modal') as HTMLElement;
-  const submitBtn = document.getElementById('submit-tools-btn');
-  const aboutBtn = document.getElementById('about-btn');
+  // Generic Modal Logic
+  const allModals = document.querySelectorAll('.modal');
   const closeBtns = document.querySelectorAll('.close-modal');
+
+  const closeAllModals = () => {
+    allModals.forEach(modal => (modal as HTMLElement).style.display = 'none');
+  };
+
+  closeBtns.forEach(btn => {
+    (btn as HTMLElement).onclick = closeAllModals;
+  });
+
+  window.onclick = (event) => {
+    allModals.forEach(modal => {
+      if (event.target == modal) (modal as HTMLElement).style.display = 'none';
+    });
+  };
 
   if (submitBtn) {
     submitBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      submitModal.style.display = 'block';
+      const modal = document.getElementById('submit-modal');
+      if (modal) modal.style.display = 'flex';
     });
   }
 
   if (aboutBtn) {
     aboutBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      aboutModal.style.display = 'block';
+      const modal = document.getElementById('about-modal');
+      if (modal) modal.style.display = 'flex';
     });
   }
-
-  closeBtns.forEach(btn => {
-    (btn as HTMLElement).onclick = () => {
-      submitModal.style.display = 'none';
-      aboutModal.style.display = 'none';
-    };
-  });
-
-  window.onclick = (event) => {
-    if (event.target == submitModal) submitModal.style.display = 'none';
-    if (event.target == aboutModal) aboutModal.style.display = 'none';
-  };
 
   // Profile Dropdown Logic
   const profileTrigger = document.getElementById('profile-trigger');
