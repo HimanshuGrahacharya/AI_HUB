@@ -2839,3 +2839,47 @@ body:not(.dark-mode) .profile-details-grid {
 #profile-actions .btn-primary, #profile-actions .btn-secondary {
   margin-top: 0;
 }
+
+/* Compact View Grid */
+.ai-grid.compact-view {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.ai-grid.compact-view .ai-card {
+  padding: 1.2rem;
+}
+
+.ai-grid.compact-view .ai-logo {
+  width: 44px;
+  height: 44px;
+}
+
+.ai-grid.compact-view .ai-card h3 {
+  font-size: 1rem;
+}
+
+.ai-grid.compact-view .ai-card p {
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+/* Badge Styles */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.badge-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.badge-free {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--primary);
+}

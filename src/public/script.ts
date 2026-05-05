@@ -4417,6 +4417,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Compact View Logic
+  const compactToggle = document.querySelector('.switch input:not(#dark-mode-toggle)') as HTMLInputElement;
+  const compactViewToggle = document.querySelectorAll('.switch input')[2] as HTMLInputElement;
+  if (compactViewToggle) {
+    const isCompact = localStorage.getItem('compact-view') === 'true';
+    compactViewToggle.checked = isCompact;
+    if (isCompact) document.getElementById('ai-grid')?.classList.add('compact-view');
+
+    compactViewToggle.addEventListener('change', () => {
+      const active = compactViewToggle.checked;
+      document.getElementById('ai-grid')?.classList.toggle('compact-view', active);
+      localStorage.setItem('compact-view', active.toString());
+      showToast(active ? 'Compact View On' : 'Compact View Off', 'info');
+    });
+  }
+
   // Billing (Coming Soon)
   const billingLink = document.getElementById('billing-link');
   if (billingLink) {
