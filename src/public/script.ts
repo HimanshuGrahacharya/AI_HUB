@@ -4338,7 +4338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (response.ok) {
           const data = await response.json();
-          showToast('Profile updated!', 'success');
+          showToast('Profile updated!', 'info');
           
           // Update all name UI elements
           const nameEls = [
