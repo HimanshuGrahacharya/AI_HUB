@@ -1934,12 +1934,68 @@ h1 {
   color: var(--primary);
 }
 
+.about-desc {
+  color: rgba(148, 163, 184, 0.9);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+
+body:not(.dark-mode) .about-desc {
+  color: #475569;
+}
+
 .about-stats {
   display: flex;
-  gap: 30px;
-  margin-top: 30px;
+  gap: 16px;
+  margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body:not(.dark-mode) .about-stats {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.stat {
+  flex: 1;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 14px;
+  padding: 18px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.about-footer-note {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.about-footer-note strong {
+  color: #818cf8;
 }
 
 .dark-mode .about-stats {
@@ -1974,12 +2030,39 @@ h1 {
 }
 
 .chat-header {
-  padding: 1.5rem 2rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   background: rgba(255, 255, 255, 0.5);
+  flex-wrap: nowrap;
+}
+
+.chat-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chat-info h2 {
+  font-size: 1.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+#back-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 8px 18px !important;
+  font-size: 0.85rem !important;
+  width: auto !important;
+  border-radius: 999px !important;
 }
 
 .dark-mode .chat-header {
