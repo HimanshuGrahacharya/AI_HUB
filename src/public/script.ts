@@ -4250,6 +4250,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Profile Modal Logic
+  const profileLink = document.getElementById('profile-link');
+  const profileModal = document.getElementById('profile-modal');
+  if (profileLink && profileModal) {
+    profileLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      profileModal.style.display = 'flex';
+      
+      // Update values in modal
+      const name = document.getElementById('dropdown-user-name')?.textContent || '';
+      const email = document.getElementById('dropdown-user-email')?.textContent || '';
+      const initials = document.getElementById('user-initials')?.textContent || '?';
+      
+      const modalName = document.getElementById('profile-name-val');
+      const modalEmail = document.getElementById('profile-email-val');
+      const modalInitials = document.getElementById('profile-initials-large');
+      
+      if (modalName) modalName.textContent = name;
+      if (modalEmail) modalEmail.textContent = email;
+      if (modalInitials) modalInitials.textContent = initials;
+    });
+  }
+
+  // Settings & Billing (Coming Soon)
+  const settingsLink = document.getElementById('settings-link');
+  const billingLink = document.getElementById('billing-link');
+  
+  [settingsLink, billingLink].forEach(link => {
+    if (link) {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('This feature is coming soon! 🚀', 'info');
+      });
+    }
+  });
+
   const submitForm = document.getElementById('submit-tool-form') as HTMLFormElement;
   if (submitForm) {
     submitForm.onsubmit = async (e) => {

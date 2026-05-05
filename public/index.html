@@ -42,13 +42,13 @@
             <p class="user-email" id="dropdown-user-email">...</p>
           </div>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a href="#" class="dropdown-item" id="profile-link">
             <i class="ph ph-user"></i> My Profile
           </a>
-          <a href="#" class="dropdown-item">
+          <a href="#" class="dropdown-item" id="settings-link">
             <i class="ph ph-gear"></i> Settings
           </a>
-          <a href="#" class="dropdown-item">
+          <a href="#" class="dropdown-item" id="billing-link">
             <i class="ph ph-credit-card"></i> Billing
           </a>
           <div class="dropdown-divider"></div>
@@ -185,6 +185,34 @@
       </div>
     </div>
   <!-- FOOTER -->
+  <!-- Profile Modal -->
+  <div id="profile-modal" class="modal">
+    <div class="modal-content glass">
+      <span class="close-modal">&times;</span>
+      <h2><i class="ph ph-user-circle"></i> User Profile</h2>
+      <div class="profile-details-grid">
+        <div class="profile-avatar-large">
+          <span id="profile-initials-large">?</span>
+        </div>
+        <div class="profile-info-content">
+          <div class="info-group">
+            <label>Full Name</label>
+            <p id="profile-name-val">Loading...</p>
+          </div>
+          <div class="info-group">
+            <label>Email Address</label>
+            <p id="profile-email-val">Loading...</p>
+          </div>
+          <div class="info-group">
+            <label>Account Status</label>
+            <p><span class="badge badge-success">Pro Member</span></p>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="document.getElementById('profile-modal').style.display='none'">Close</button>
+    </div>
+  </div>
+
   <footer class="landing-footer">
     <div class="footer-grid">
       <div class="footer-brand">
