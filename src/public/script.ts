@@ -4420,7 +4420,7 @@ function renderTools() {
     card.innerHTML = `
       <div class="card-header">
         <img src="${highResLogo}" alt="${tool.name} logo" class="ai-logo" 
-             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(tool.name)}&background=6366f1&color=fff'">
+             onerror="this.src='https://www.gstatic.com/lamda/images/favicon_v2_71731f242707730e84.png'">
         <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, '${tool.id}')">
           ${isFavorite ? '⭐' : '☆'}
         </button>
@@ -4534,7 +4534,12 @@ function selectAI(toolId: string) {
   if (nameEl) nameEl.textContent = tool ? tool.name : 'AI Assistant';
   
   const logoEl = document.getElementById('selected-ai-logo') as HTMLImageElement;
-  if (logoEl) logoEl.src = tool ? tool.logo : '';
+  if (logoEl) {
+    logoEl.src = tool ? tool.logo : '';
+    logoEl.onerror = () => {
+      logoEl.src = 'https://www.gstatic.com/lamda/images/favicon_v2_71731f242707730e84.png';
+    };
+  }
   
   const grid = document.getElementById('ai-grid');
   if (grid) grid.style.display = 'none';
