@@ -228,7 +228,7 @@
     <div class="modal-content glass">
       <span class="close-modal">&times;</span>
       <h2><i class="ph ph-user-circle"></i> User Profile</h2>
-      <div class="profile-details-grid">
+      <div class="profile-details-grid" id="profile-view">
         <div class="profile-avatar-large">
           <span id="profile-initials-large">?</span>
         </div>
@@ -247,7 +247,23 @@
           </div>
         </div>
       </div>
-      <button class="btn-primary" onclick="document.getElementById('profile-modal').style.display='none'">Close</button>
+      
+      <!-- Hidden Edit Form -->
+      <form id="profile-edit-form" style="display: none; margin: 20px 0;">
+        <div class="form-group">
+          <label for="edit-full-name">New Full Name</label>
+          <input type="text" id="edit-full-name" class="search-input" style="width: 100%; background: rgba(0,0,0,0.05); margin-top: 10px;">
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="submit" class="btn-primary">Save Changes</button>
+          <button type="button" class="btn-secondary" id="cancel-edit-btn">Cancel</button>
+        </div>
+      </form>
+
+      <div id="profile-actions" style="margin-top: 20px;">
+        <button id="enable-edit-btn" class="btn-secondary"><i class="ph ph-pencil"></i> Edit Profile</button>
+        <button class="btn-primary" onclick="document.getElementById('profile-modal').style.display='none'">Close</button>
+      </div>
     </div>
   </div>
 

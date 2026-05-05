@@ -4285,6 +4285,87 @@ document.addEventListener('DOMContentLoaded', () => {
       if (modalName) modalName.textContent = name;
       if (modalEmail) modalEmail.textContent = email;
       if (modalInitials) modalInitials.textContent = initials;
+      
+      // Reset edit view
+      const editForm = document.getElementById('profile-edit-form');
+      const profileView = document.getElementById('profile-view');
+      const actions = document.getElementById('profile-actions');
+      if (editForm) editForm.style.display = 'none';
+      if (profileView) profileView.style.display = 'grid';
+      if (actions) actions.style.display = 'block';
+    });
+  }
+
+  // Edit Profile Logic
+  const enableEditBtn = document.getElementById('enable-edit-btn');
+  const cancelEditBtn = document.getElementById('cancel-edit-btn');
+  const profileEditForm = document.getElementById('profile-edit-form') as HTMLFormElement;
+  const profileView = document.getElementById('profile-view');
+  const profileActions = document.getElementById('profile-actions');
+
+  if (enableEditBtn && profileEditForm && profileView && profileActions) {
+    enableEditBtn.addEventListener('click', () => {
+      const currentName = document.getElementById('profile-name-val')?.textContent || '';
+      (document.getElementById('edit-full-name') as HTMLInputElement).value = currentName;
+      
+      profileView.style.display = 'none';
+      profileActions.style.display = 'none';
+      profileEditForm.style.display = 'block';
+    });
+    
+    if (cancelEditBtn) {
+      cancelEditBtn.addEventListener('click', () => {
+        profileView.style.display = 'grid';
+        profileActions.style.display = 'block';
+        profileEditForm.style.display = 'none';
+      });
+    }
+
+    profileEditForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newName = (document.getElementById('edit-full-name') as HTMLInputElement).value;
+      const token = localStorage.getItem('token');
+      
+      try {
+        const response = await fetch('/api/user/update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ fullName: newName })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          showToast('Profile updated!', 'success');
+          
+          // Update all name UI elements
+          const nameEls = [
+            document.getElementById('dropdown-user-name'),
+            document.getElementById('profile-name-val')
+          ];
+          nameEls.forEach(el => { if(el) el.textContent = data.fullName; });
+          
+          // Update initials
+          const initials = data.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase();
+          const initialEls = [
+            document.getElementById('user-initials'),
+            document.getElementById('profile-initials-large')
+          ];
+          initialEls.forEach(el => { if(el) el.textContent = initials; });
+
+          // Return to view
+          profileView.style.display = 'grid';
+          profileActions.style.display = 'block';
+          profileEditForm.style.display = 'none';
+        } else {
+          showToast('Failed to update profile', 'error');
+        }
+      } catch (error) {
+        console.error('Update profile error:', error);
+        showToast('Server error', 'error');
+      }
     });
   }
 

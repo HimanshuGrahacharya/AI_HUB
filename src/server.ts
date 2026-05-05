@@ -243,6 +243,24 @@ app.post('/api/user/recent', authenticateToken, async (req: AuthRequest, res: Re
 });
 
 
+app.put('/api/user/update', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const { fullName } = req.body;
+    if (!fullName) return res.status(400).json({ error: 'Full name is required' });
+
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    user.fullName = fullName;
+    await user.save();
+
+    res.json({ message: 'Profile updated successfully', fullName: user.fullName });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
 // Get chat history for a specific tool
 app.get('/api/chat/history/:toolId', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
