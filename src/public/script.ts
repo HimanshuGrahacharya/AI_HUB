@@ -4273,18 +4273,41 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Settings & Billing (Coming Soon)
+  // Settings Modal Logic
   const settingsLink = document.getElementById('settings-link');
+  const settingsModal = document.getElementById('settings-modal');
+  const darkModeToggle = document.getElementById('dark-mode-toggle') as HTMLInputElement;
+
+  if (settingsLink && settingsModal) {
+    settingsLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      settingsModal.style.display = 'flex';
+    });
+  }
+
+  // Dark Mode Logic
+  if (darkModeToggle) {
+    // Load preference
+    const isDark = localStorage.getItem('dark-mode') === 'true';
+    darkModeToggle.checked = isDark;
+    if (isDark) document.body.classList.add('dark-mode');
+
+    darkModeToggle.addEventListener('change', () => {
+      const active = darkModeToggle.checked;
+      document.body.classList.toggle('dark-mode', active);
+      localStorage.setItem('dark-mode', active.toString());
+      showToast(active ? 'Dark Mode On 🌙' : 'Light Mode On ☀️', 'info');
+    });
+  }
+
+  // Billing (Coming Soon)
   const billingLink = document.getElementById('billing-link');
-  
-  [settingsLink, billingLink].forEach(link => {
-    if (link) {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        showToast('This feature is coming soon! 🚀', 'info');
-      });
-    }
-  });
+  if (billingLink) {
+    billingLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast('This feature is coming soon! 🚀', 'info');
+    });
+  }
 
   const submitForm = document.getElementById('submit-tool-form') as HTMLFormElement;
   if (submitForm) {

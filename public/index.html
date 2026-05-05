@@ -185,6 +185,47 @@
       </div>
     </div>
   <!-- FOOTER -->
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal">
+    <div class="modal-content glass">
+      <span class="close-modal">&times;</span>
+      <h2><i class="ph ph-gear"></i> Settings</h2>
+      <div class="settings-list">
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Dark Mode</h4>
+            <p>Switch between light and dark appearance</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="dark-mode-toggle">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Email Notifications</h4>
+            <p>Get updates about new AI tools</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Compact View</h4>
+            <p>Show more tools in the grid</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="document.getElementById('settings-modal').style.display='none'">Save Settings</button>
+    </div>
+  </div>
+
   <!-- Profile Modal -->
   <div id="profile-modal" class="modal">
     <div class="modal-content glass">
