@@ -4109,6 +4109,18 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .then(res => res.json())
     .then(data => {
+      // Populate User Profile
+      if (data.fullName) {
+        const initials = data.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2);
+        const initialsEl = document.getElementById('user-initials');
+        const dropdownName = document.getElementById('dropdown-user-name');
+        const dropdownEmail = document.getElementById('dropdown-user-email');
+        
+        if (initialsEl) initialsEl.textContent = initials;
+        if (dropdownName) dropdownName.textContent = data.fullName;
+        if (dropdownEmail) dropdownEmail.textContent = data.email;
+      }
+
       if (data.favorites) localStorage.setItem('ai_hubs_favorites', JSON.stringify(data.favorites));
       if (data.recentlyViewed) localStorage.setItem('ai_hubs_recent', JSON.stringify(data.recentlyViewed));
       renderTools();
@@ -4180,6 +4192,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.target == submitModal) submitModal.style.display = 'none';
     if (event.target == aboutModal) aboutModal.style.display = 'none';
   };
+
+  // Profile Dropdown Logic
+  const profileTrigger = document.getElementById('profile-trigger');
+  const profileDropdown = document.getElementById('profile-dropdown');
+  
+  if (profileTrigger && profileDropdown) {
+    profileTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = profileDropdown.style.display === 'flex';
+      profileDropdown.style.display = isVisible ? 'none' : 'flex';
+    });
+
+    document.addEventListener('click', () => {
+      profileDropdown.style.display = 'none';
+    });
+  }
+
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('token');
+      window.location.href = 'landing.html';
+    });
+  }
 
   const submitForm = document.getElementById('submit-tool-form') as HTMLFormElement;
   if (submitForm) {

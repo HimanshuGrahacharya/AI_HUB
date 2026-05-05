@@ -188,7 +188,12 @@ app.get('/api/user/data', authenticateToken, async (req: AuthRequest, res: Respo
   try {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
-    res.json({ favorites: user.favorites, recentlyViewed: user.recentlyViewed });
+    res.json({ 
+      fullName: user.fullName, 
+      email: user.email,
+      favorites: user.favorites, 
+      recentlyViewed: user.recentlyViewed 
+    });
   } catch (error) {
     console.error('Fetch user data error:', error);
     res.status(500).json({ error: 'Failed to fetch user data' });
