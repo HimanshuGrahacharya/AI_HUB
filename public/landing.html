@@ -383,39 +383,70 @@
 
   <script src="theme.js?v=5"></script>
   <script>
-    // Smart Navigation for Logged-in Users
-    document.addEventListener('DOMContentLoaded', () => {
+    // Professional Session Detection & Smart Navigation
+    (function() {
       const token = localStorage.getItem('token');
-      if (token) {
-        // Update Navbar buttons
+      if (!token) return;
+
+      // 1. Instant UI Swap (Runs immediately)
+      const updateUI = () => {
         const loginBtn = document.querySelector('.btn-nav-login');
         const signupBtn = document.querySelector('.btn-nav-signup');
+        const heroPrimary = document.querySelector('.btn-hero-primary');
+        const heroSecondary = document.querySelector('.btn-hero-secondary');
         const homeLink = document.querySelector('.landing-nav .nav-link[href="landing.html"]');
         const logoLink = document.querySelector('.nav-brand');
 
         if (loginBtn) {
-          loginBtn.textContent = 'Dashboard';
+          loginBtn.innerHTML = '<i class="ph ph-layout"></i> Dashboard';
           loginBtn.href = 'index.html';
+          loginBtn.classList.remove('btn-nav-login');
+          loginBtn.classList.add('btn-nav-signup'); // Make it look like a primary button
         }
         if (signupBtn) signupBtn.style.display = 'none';
-        
         if (homeLink) homeLink.href = 'index.html';
         if (logoLink) logoLink.href = 'index.html';
-
-        // Update Hero CTA
-        const heroPrimary = document.querySelector('.btn-hero-primary');
-        const heroSecondary = document.querySelector('.btn-hero-secondary');
 
         if (heroPrimary) {
           heroPrimary.innerHTML = '<i class="ph ph-layout"></i> Go to Dashboard';
           heroPrimary.href = 'index.html';
         }
         if (heroSecondary) {
-          heroSecondary.innerHTML = '<i class="ph ph-sparkle"></i> Explore Tools';
+          heroSecondary.innerHTML = '<i class="ph ph-sparkle"></i> Back to Tools';
           heroSecondary.href = 'index.html';
         }
+
+        // Add a "Welcome Back" toast notification
+        const welcomeToast = document.createElement('div');
+        welcomeToast.style.cssText = `
+          position: fixed; bottom: 30px; right: 30px;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          color: white; padding: 16px 24px; border-radius: 12px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+          z-index: 10000; font-weight: 600; display: flex; align-items: center; gap: 10px;
+          animation: slideUp 0.5s ease-out;
+        `;
+        welcomeToast.innerHTML = '<i class="ph ph-hand-waving" style="font-size: 1.5rem"></i> Welcome back! Redirecting to your dashboard...';
+        document.body.appendChild(welcomeToast);
+
+        // Auto-redirect after 3 seconds if they stay on landing page
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 3000);
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', updateUI);
+      } else {
+        updateUI();
       }
-    });
+    })();
   </script>
+  <style>
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
 </body>
 </html>
