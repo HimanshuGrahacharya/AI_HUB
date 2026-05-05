@@ -4175,6 +4175,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const backBtn = document.getElementById('back-btn');
   if (backBtn) backBtn.addEventListener('click', showTools);
 
+  const homeLink = document.getElementById('home-link');
+  if (homeLink) {
+    homeLink.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+      // Reset search
+      if (searchInput) searchInput.value = '';
+      // Reset categories
+      const allToolsItem = document.querySelector('.category-item[data-category="All"]') as HTMLElement;
+      if (allToolsItem) allToolsItem.click();
+      // Back to tools grid
+      showTools();
+      // Smooth scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
   // Category filtering logic
   const sidebarItems = document.querySelectorAll('.category-item');
   sidebarItems.forEach(item => {
