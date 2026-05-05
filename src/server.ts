@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs';
 import { OAuth2Client } from 'google-auth-library';
 import mongoose from 'mongoose';
 import User from './models/User';
+import Chat from './models/Chat';
 
 dotenv.config();
 
@@ -97,6 +98,22 @@ app.post('/api/claude', authenticateToken, async (req: AuthRequest, res: Respons
   } catch (error: any) {
     console.error('Anthropic API error:', error.message);
     res.status(500).json({ error: 'Failed to get response from Claude' });
+  }
+});
+
+app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.json({ response: "Gemini integration is in Demo Mode. To enable real answers, add GEMINI_API_KEY to your Render environment variables!" });
+    }
+    const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
+      contents: [{ parts: [{ text: req.body.message }] }]
+    });
+    res.json({ response: response.data.candidates[0].content.parts[0].text });
+  } catch (error: any) {
+    console.error('Gemini API error:', error.message);
+    res.status(500).json({ error: 'Failed to get response from Gemini' });
   }
 });
 
@@ -220,17 +237,45 @@ app.post('/api/user/recent', authenticateToken, async (req: AuthRequest, res: Re
 });
 
 
-// Generic API Route for other tools (Mock implementation)
-// This MUST be after specific routes like /signup so it doesn't match them.
+// Get chat history for a specific tool
+app.get('/api/chat/history/:toolId', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const { toolId } = req.params;
+    const chat = await Chat.findOne({ userId: req.user.id, toolId });
+    res.json({ messages: chat ? chat.messages : [] });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch chat history' });
+  }
+});
+
+// Generic API Route for other tools with Persistence
 app.post('/api/:toolId', authenticateToken, async (req: AuthRequest, res: Response) => {
   const { toolId } = req.params;
   const { message } = req.body;
 
-  setTimeout(() => {
-    res.json({ 
-      response: `This is a simulated response from ${toolId}. Official integration for this tool is coming soon! You asked: "${message}"` 
-    });
-  }, 1000);
+  try {
+    // Generate response (Simulated smart response based on toolId)
+    let aiResponse = `This is a simulated response from ${toolId}. Official integration for this tool is coming soon! You asked: "${message}"`;
+    
+    if (toolId.includes('write') || toolId.includes('copy')) {
+      aiResponse = `I am your professional writing assistant. Based on your request "${message}", I would suggest focusing on clarity and emotional impact... (This is a professional demo response)`;
+    }
+
+    // Save to history
+    let chat = await Chat.findOne({ userId: req.user.id, toolId });
+    if (!chat) {
+      chat = new Chat({ userId: req.user.id, toolId, messages: [] });
+    }
+    
+    chat.messages.push({ sender: 'user', text: message });
+    chat.messages.push({ sender: 'ai', text: aiResponse });
+    chat.updatedAt = new Date();
+    await chat.save();
+
+    res.json({ response: aiResponse });
+  } catch (error) {
+    res.status(500).json({ error: 'Chat processing failed' });
+  }
 });
 
 // Serve landing page as root

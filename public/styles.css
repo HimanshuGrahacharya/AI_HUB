@@ -1873,6 +1873,71 @@ h1 {
   color: #e2e8f0;
 }
 
+.message.new {
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+@keyframes messageSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message-content {
+  word-break: break-word;
+}
+
+.message-meta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+.message-time {
+  font-size: 0.7rem;
+}
+
+.copy-msg {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.copy-msg:hover {
+  color: var(--primary);
+  transform: scale(1.2);
+}
+
+/* Typing Indicator */
+.message.typing {
+  display: flex;
+  gap: 4px;
+  padding: 12px 20px;
+}
+
+.message.typing span {
+  width: 6px;
+  height: 6px;
+  background: #cbd5e1;
+  border-radius: 50%;
+  animation: typing 1s infinite ease-in-out;
+}
+
+.message.typing span:nth-child(2) { animation-delay: 0.2s; }
+.message.typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
 .chat-container .input-container {
   padding: 1.5rem 2rem;
   background: white;

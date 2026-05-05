@@ -4450,10 +4450,24 @@ function selectAI(toolId: string) {
   const messagesDiv = document.getElementById('chat-messages');
   if (messagesDiv) messagesDiv.innerHTML = '';
   
-  // Initial message from AI
-  setTimeout(() => {
-    addMessage('ai', `Hello! I am ${tool ? tool.name : 'your'} assistant. How can I help you today?`);
-  }, 500);
+  // Load History
+  const token = localStorage.getItem('token');
+  if (token) {
+    fetch(`/api/chat/history/${toolId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.messages && data.messages.length > 0) {
+        data.messages.forEach((msg: any) => addMessage(msg.sender, msg.text, false));
+      } else {
+        // Initial message from AI if no history
+        addMessage('ai', `Hello! I am your ${tool ? tool.name : 'AI'} assistant. How can I help you today?`);
+      }
+    });
+  } else {
+    addMessage('ai', `Hello! I am your ${tool ? tool.name : 'AI'} assistant. How can I help you today?`);
+  }
   
   startInactivityTimer();
 }
@@ -4491,6 +4505,16 @@ async function sendMessage() {
   input.value = '';
 
   const token = localStorage.getItem('token');
+  
+  // Typing Indicator
+  const messagesDiv = document.getElementById('chat-messages');
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'message ai typing';
+  typingDiv.innerHTML = '<span>.</span><span>.</span><span>.</span>';
+  if (messagesDiv) {
+    messagesDiv.appendChild(typingDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
 
   try {
     const response = await fetch(`/api/${selectedAI}`, {
@@ -4502,6 +4526,8 @@ async function sendMessage() {
       body: JSON.stringify({ message }),
     });
     
+    if (typingDiv.parentNode) typingDiv.parentNode.removeChild(typingDiv);
+    
     const data = await response.json();
     if (response.ok) {
       addMessage('ai', data.response);
@@ -4509,21 +4535,38 @@ async function sendMessage() {
       addMessage('ai', data.error || 'Sorry, there was an error processing your request.');
     }
   } catch (error) {
+    if (typingDiv.parentNode) typingDiv.parentNode.removeChild(typingDiv);
     console.error('Error:', error);
     addMessage('ai', 'Sorry, there was an error connecting to the server.');
   }
 }
 
-function addMessage(sender: 'user' | 'ai', text: string) {
+function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true) {
   const messagesDiv = document.getElementById('chat-messages');
   if (!messagesDiv) return;
+  
   const messageDiv = document.createElement('div');
-  messageDiv.className = `message ${sender}`;
-  messageDiv.textContent = text;
+  messageDiv.className = `message ${sender} ${animate ? 'new' : ''}`;
+  
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+  messageDiv.innerHTML = `
+    <div class="message-content">${text}</div>
+    <div class="message-meta">
+      <span class="message-time">${time}</span>
+      ${sender === 'ai' ? `<button class="copy-msg" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')"><i class="ph ph-copy"></i></button>` : ''}
+    </div>
+  `;
+  
   messagesDiv.appendChild(messageDiv);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
   resetInactivityTimer();
 }
+
+(window as any).copyToClipboard = function(text: string) {
+  navigator.clipboard.writeText(text);
+  showToast('Response copied! 📋', 'info');
+};
 
 function startInactivityTimer() {
   clearTimeout(inactivityTimer);
