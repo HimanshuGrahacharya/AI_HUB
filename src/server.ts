@@ -245,7 +245,8 @@ app.post('/api/user/recent', authenticateToken, async (req: AuthRequest, res: Re
 // Get chat history for a specific tool
 app.get('/api/chat/history/:toolId', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
-    const { toolId } = req.params;
+    const toolId = req.params.toolId as string;
+    if (!toolId) return res.status(400).json({ error: 'Tool ID is required' });
     const chat = await Chat.findOne({ userId: req.user.id, toolId });
     res.json({ messages: chat ? chat.messages : [] });
   } catch (error) {
@@ -255,14 +256,18 @@ app.get('/api/chat/history/:toolId', authenticateToken, async (req: AuthRequest,
 
 // Generic API Route for other tools with Persistence
 app.post('/api/:toolId', authenticateToken, async (req: AuthRequest, res: Response) => {
-  const { toolId } = req.params;
+  const toolId = req.params.toolId as string;
   const { message } = req.body;
+
+  if (!toolId) {
+    return res.status(400).json({ error: 'Tool ID is required' });
+  }
 
   try {
     // Generate response (Simulated smart response based on toolId)
     let aiResponse = `This is a simulated response from ${toolId}. Official integration for this tool is coming soon! You asked: "${message}"`;
     
-    if (toolId && (toolId.includes('write') || toolId.includes('copy'))) {
+    if (toolId.includes('write') || toolId.includes('copy')) {
       aiResponse = `I am your professional writing assistant. Based on your request "${message}", I would suggest focusing on clarity and emotional impact... (This is a professional demo response)`;
     }
 
