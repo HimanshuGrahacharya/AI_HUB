@@ -2566,11 +2566,16 @@ body:not(.dark-mode) .about-stats {
     padding: 0 0.75rem;
   }
 
+  /* Always show the brand name on mobile */
   .nav-title {
-    display: none; /* Hide text, show logo only */
+    font-size: 1rem;
+    display: block !important;
   }
 
-  /* Grid */
+  /* Hide search bar on very small screens to give room to brand */
+  .nav-center {
+    display: none;
+  }
   .ai-grid {
     grid-template-columns: 1fr;
   }
