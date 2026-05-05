@@ -4285,9 +4285,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const profileLink = document.getElementById('profile-link');
   const profileModal = document.getElementById('profile-modal');
   if (profileLink && profileModal) {
-    profileLink.addEventListener('click', (e) => {
+    profileLink.addEventListener('click', (e: Event) => {
       e.preventDefault();
       profileModal.style.display = 'flex';
+      // Auto-close dropdown
+      if (profileDropdown) profileDropdown.style.display = 'none';
       
       // Update values in modal
       const name = document.getElementById('dropdown-user-name')?.textContent || '';
@@ -4309,6 +4311,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (editForm) editForm.style.display = 'none';
       if (profileView) profileView.style.display = 'grid';
       if (actions) actions.style.display = 'block';
+    });
+  }
+
+  const settingsLink = document.getElementById('settings-link');
+  if (settingsLink) {
+    settingsLink.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+      const modal = document.getElementById('settings-modal');
+      if (modal) modal.style.display = 'flex';
+      // Auto-close dropdown
+      if (profileDropdown) profileDropdown.style.display = 'none';
     });
   }
 
