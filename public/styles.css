@@ -2656,3 +2656,51 @@ h1 {
     margin: 0 auto;
   }
 }
+
+/* Professional Modal Polish for Laptop/Desktop */
+.modal-content label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  margin-top: 15px;
+}
+
+.modal-content input, 
+.modal-content textarea {
+  width: 100% !important;
+  padding: 12px 15px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  color: white !important;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.modal-content input:focus, 
+.modal-content textarea:focus {
+  border-color: var(--primary) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Ensure labels are readable in Light Mode too */
+body:not(.dark-mode) .modal-content label {
+  color: #64748b;
+}
+body:not(.dark-mode) .modal-content input,
+body:not(.dark-mode) .modal-content textarea {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+.modal-content .btn-primary {
+  margin-top: 25px;
+  width: auto;
+  min-width: 150px;
+}
