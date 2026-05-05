@@ -10,6 +10,7 @@ import User from './models/User';
 import Chat from './models/Chat';
 import Submission from './models/Submission';
 import crypto from 'crypto';
+import { sendEmail } from './utils/sendEmail';
 
 dotenv.config();
 
@@ -173,11 +174,19 @@ app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
     await user.save();
 
     const resetUrl = `${req.protocol}://${req.get('host')}/reset-password.html?token=${resetToken}&email=${email}`;
-    console.log(`[SIMULATED EMAIL] Password reset link for ${email}: ${resetUrl}`);
+    
+    try {
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        await sendEmail(email, resetUrl);
+      } else {
+        console.warn('EMAIL_USER and EMAIL_PASS are not set. Cannot send real email. Mock link:', resetUrl);
+      }
+    } catch (err) {
+      console.error('Failed to send email:', err);
+    }
 
     res.status(200).json({ 
-      message: 'If an account exists, a reset link was sent.',
-      demoLink: resetUrl // Passed back ONLY for this simulated demo
+      message: 'If an account exists, a reset link was sent.'
     });
   } catch (error) {
     console.error('Forgot password error:', error);

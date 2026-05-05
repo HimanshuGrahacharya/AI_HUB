@@ -113,21 +113,7 @@ async function forgotPassword(email: string): Promise<void> {
     });
     const data = await response.json();
     if (response.ok) {
-      if (data.demoLink) {
-        showToast('Demo reset link generated!', 'info');
-        setTimeout(() => {
-          const toast = document.createElement('div');
-          toast.style.cssText = `
-            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-            background: #1e293b; color: white; padding: 16px; border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10000; text-align: center;
-          `;
-          toast.innerHTML = `<p style="margin-bottom:10px"><b>Demo Mode:</b> Here is your reset link:</p><a href="${data.demoLink}" style="color:#818cf8; word-break:break-all">${data.demoLink}</a><br><br><button onclick="this.parentElement.remove()" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; margin-top:10px">Close</button>`;
-          document.body.appendChild(toast);
-        }, 1000);
-      } else {
-        showToast(data.message, 'info');
-      }
+      showToast('If an account exists, a reset link was sent to your email.', 'info');
     } else {
       showToast(data.error || 'Failed to process request', 'error');
     }
