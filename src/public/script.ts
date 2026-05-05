@@ -4219,11 +4219,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const submitForm = document.getElementById('submit-tool-form') as HTMLFormElement;
   if (submitForm) {
-    submitForm.onsubmit = (e) => {
+    submitForm.onsubmit = async (e) => {
       e.preventDefault();
-      alert('Thank you for your submission! Our team will review it shortly.');
-      submitModal.style.display = 'none';
-      submitForm.reset();
+      
+      const toolName = (document.getElementById('tool-name') as HTMLInputElement).value;
+      const url = (document.getElementById('tool-url') as HTMLInputElement).value;
+      const description = (document.getElementById('tool-desc') as HTMLTextAreaElement).value;
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showToast('You must be logged in to submit tools!', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/submissions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ toolName, url, description }),
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          showToast(data.message || 'Submission successful!', 'info');
+          const modal = document.getElementById('submit-modal');
+          if (modal) modal.style.display = 'none';
+          submitForm.reset();
+        } else {
+          showToast(data.error || 'Submission failed', 'error');
+        }
+      } catch (error) {
+        console.error('Submission error:', error);
+        showToast('Error connecting to server', 'error');
+      }
     };
   }
 });

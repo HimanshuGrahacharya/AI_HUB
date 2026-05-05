@@ -8,6 +8,7 @@ import { OAuth2Client } from 'google-auth-library';
 import mongoose from 'mongoose';
 import User from './models/User';
 import Chat from './models/Chat';
+import Submission from './models/Submission';
 
 dotenv.config();
 
@@ -251,6 +252,30 @@ app.get('/api/chat/history/:toolId', authenticateToken, async (req: AuthRequest,
     res.json({ messages: chat ? chat.messages : [] });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch chat history' });
+  }
+});
+
+// Submit a new AI tool
+app.post('/api/submissions', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const { toolName, url, description } = req.body;
+    
+    if (!toolName || !url || !description) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    const submission = new Submission({
+      toolName,
+      url,
+      description,
+      submittedBy: req.user.id
+    });
+
+    await submission.save();
+    res.status(201).json({ message: 'Tool submitted successfully! Our team will review it.' });
+  } catch (error) {
+    console.error('Submission error:', error);
+    res.status(500).json({ error: 'Failed to submit tool' });
   }
 });
 
