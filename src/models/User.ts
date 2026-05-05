@@ -7,6 +7,8 @@ export interface IUser extends Document {
   googleId?: string;
   favorites: string[];
   recentlyViewed: string[];
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
 }
 
 const UserSchema: Schema = new Schema({
@@ -15,7 +17,9 @@ const UserSchema: Schema = new Schema({
   password: { type: String }, // Optional because of Google OAuth
   googleId: { type: String, sparse: true, unique: true },
   favorites: { type: [String], default: [] },
-  recentlyViewed: { type: [String], default: [] }
+  recentlyViewed: { type: [String], default: [] },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date }
 }, {
   timestamps: true
 });

@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import User from './models/User';
 import Chat from './models/Chat';
 import Submission from './models/Submission';
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -152,6 +153,65 @@ app.post('/api/login', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Failed to login' });
+  }
+});
+
+app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      // Security: Don't reveal if user exists or not
+      return res.status(200).json({ message: 'If an account exists, a reset link was sent.' });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenHash = await bcrypt.hash(resetToken, 10);
+    
+    user.resetPasswordToken = resetTokenHash;
+    user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
+    await user.save();
+
+    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password.html?token=${resetToken}&email=${email}`;
+    console.log(`[SIMULATED EMAIL] Password reset link for ${email}: ${resetUrl}`);
+
+    res.status(200).json({ 
+      message: 'If an account exists, a reset link was sent.',
+      demoLink: resetUrl // Passed back ONLY for this simulated demo
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ error: 'Failed to process request' });
+  }
+});
+
+app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
+  try {
+    const { email, token, newPassword } = req.body;
+    const user = await User.findOne({ 
+      email, 
+      resetPasswordToken: { $exists: true },
+      resetPasswordExpires: { $gt: new Date() }
+    });
+
+    if (!user || !user.resetPasswordToken) {
+      return res.status(400).json({ error: 'Invalid or expired password reset token' });
+    }
+
+    const isValidToken = await bcrypt.compare(token, user.resetPasswordToken);
+    if (!isValidToken) {
+      return res.status(400).json({ error: 'Invalid or expired password reset token' });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.status(200).json({ message: 'Password has been successfully reset' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 });
 

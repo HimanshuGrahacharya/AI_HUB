@@ -46,7 +46,7 @@ function checkAuth(): void {
 
 
   const token = localStorage.getItem('token');
-  const publicPaths = ['/login.html', '/signup.html', '/landing.html', '/'];
+  const publicPaths = ['/login.html', '/signup.html', '/landing.html', '/', '/forgot-password.html', '/reset-password.html'];
   const currentPath = window.location.pathname;
   if (!token && !publicPaths.some(p => currentPath.endsWith(p) || currentPath === p)) {
     window.location.href = 'landing.html';
@@ -96,6 +96,69 @@ async function signup(fullName: string, email: string, password: string): Promis
   } catch (error) {
     console.error('Signup error:', error);
     alert('Signup failed');
+  }
+}
+
+// Forgot Password function
+async function forgotPassword(email: string): Promise<void> {
+  const btn = document.getElementById('forgot-btn') as HTMLButtonElement;
+  if (btn) btn.disabled = true;
+  try {
+    const response = await fetch('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      if (data.demoLink) {
+        showToast('Demo reset link generated!', 'info');
+        setTimeout(() => {
+          const toast = document.createElement('div');
+          toast.style.cssText = `
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white; padding: 16px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10000; text-align: center;
+          `;
+          toast.innerHTML = `<p style="margin-bottom:10px"><b>Demo Mode:</b> Here is your reset link:</p><a href="${data.demoLink}" style="color:#818cf8; word-break:break-all">${data.demoLink}</a><br><br><button onclick="this.parentElement.remove()" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; margin-top:10px">Close</button>`;
+          document.body.appendChild(toast);
+        }, 1000);
+      } else {
+        showToast(data.message, 'info');
+      }
+    } else {
+      showToast(data.error || 'Failed to process request', 'error');
+    }
+  } catch (error) {
+    showToast('Network error occurred', 'error');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+// Reset Password function
+async function resetPassword(email: string, token: string, newPassword: string): Promise<void> {
+  const btn = document.getElementById('reset-btn') as HTMLButtonElement;
+  if (btn) btn.disabled = true;
+  try {
+    const response = await fetch('/api/auth/reset-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, token, newPassword }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      showToast('Password reset successfully! Redirecting...', 'info');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 2000);
+    } else {
+      showToast(data.error || 'Failed to reset password', 'error');
+    }
+  } catch (error) {
+    showToast('Network error occurred', 'error');
+  } finally {
+    if (btn) btn.disabled = false;
   }
 }
 
@@ -185,6 +248,39 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       signup(fullName, email, password);
+    });
+  }
+
+  const forgotPasswordForm = document.getElementById('forgot-password-form') as HTMLFormElement;
+  if (forgotPasswordForm) {
+    forgotPasswordForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = (document.getElementById('email') as HTMLInputElement).value;
+      forgotPassword(email);
+    });
+  }
+
+  const resetPasswordForm = document.getElementById('reset-password-form') as HTMLFormElement;
+  if (resetPasswordForm) {
+    resetPasswordForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newPassword = (document.getElementById('password') as HTMLInputElement).value;
+      const confirmPassword = (document.getElementById('confirm-password') as HTMLInputElement).value;
+      if (newPassword !== confirmPassword) {
+        showToast('Passwords do not match', 'error');
+        return;
+      }
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      const email = urlParams.get('email');
+      
+      if (!token || !email) {
+        showToast('Invalid password reset link. Please request a new one.', 'error');
+        return;
+      }
+      
+      resetPassword(email, token, newPassword);
     });
   }
 
