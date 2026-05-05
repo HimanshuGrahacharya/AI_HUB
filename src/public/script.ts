@@ -4577,10 +4577,39 @@ function renderTools() {
   if (!grid) return;
   grid.innerHTML = '';
 
+  // Show Skeletons if still loading tools
+  if (aiTools.length === 0) {
+    for (let i = 0; i < 6; i++) {
+      grid.innerHTML += `
+        <div class="skeleton-card">
+          <div class="skeleton-logo skeleton"></div>
+          <div class="skeleton-title skeleton"></div>
+          <div class="skeleton-text skeleton"></div>
+          <div class="skeleton-text skeleton" style="width: 80%"></div>
+          <div class="skeleton-tag skeleton"></div>
+        </div>
+      `;
+    }
+    return;
+  }
+
   const favorites = JSON.parse(localStorage.getItem('ai_hubs_favorites') || '[]');
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const toolsToShow = filteredTools.slice(startIndex, endIndex);
+
+  // Show Empty State if no tools match
+  if (toolsToShow.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <i class="ph ph-magnifying-glass"></i>
+        <h3>No tools found</h3>
+        <p>We couldn't find any tools matching your search or category.</p>
+        <button class="btn-primary" onclick="resetSearch()">View All Tools</button>
+      </div>
+    `;
+    return;
+  }
 
   toolsToShow.forEach(tool => {
     const isFavorite = favorites.includes(tool.id);
