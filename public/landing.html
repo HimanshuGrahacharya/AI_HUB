@@ -382,5 +382,40 @@
   </footer>
 
   <script src="theme.js?v=5"></script>
+  <script>
+    // Smart Navigation for Logged-in Users
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Update Navbar buttons
+        const loginBtn = document.querySelector('.btn-nav-login');
+        const signupBtn = document.querySelector('.btn-nav-signup');
+        const homeLink = document.querySelector('.landing-nav .nav-link[href="landing.html"]');
+        const logoLink = document.querySelector('.nav-brand');
+
+        if (loginBtn) {
+          loginBtn.textContent = 'Dashboard';
+          loginBtn.href = 'index.html';
+        }
+        if (signupBtn) signupBtn.style.display = 'none';
+        
+        if (homeLink) homeLink.href = 'index.html';
+        if (logoLink) logoLink.href = 'index.html';
+
+        // Update Hero CTA
+        const heroPrimary = document.querySelector('.btn-hero-primary');
+        const heroSecondary = document.querySelector('.btn-hero-secondary');
+
+        if (heroPrimary) {
+          heroPrimary.innerHTML = '<i class="ph ph-layout"></i> Go to Dashboard';
+          heroPrimary.href = 'index.html';
+        }
+        if (heroSecondary) {
+          heroSecondary.innerHTML = '<i class="ph ph-sparkle"></i> Explore Tools';
+          heroSecondary.href = 'index.html';
+        }
+      }
+    });
+  </script>
 </body>
 </html>
