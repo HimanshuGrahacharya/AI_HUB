@@ -33,7 +33,7 @@ describe('AI Hub Server', () => {
     };
     const response = await axios.post(baseUrl + '/api/signup', userData);
     expect(response.status).toBe(201);
-    expect(response.data.message).toBe('User created successfully');
+    expect((response.data as any).message).toBe('User created successfully');
   });
 
   it('should return error for duplicate email in POST /api/signup', async () => {
@@ -52,7 +52,7 @@ describe('AI Hub Server', () => {
       fail('Should have thrown 400 error');
     } catch (error: any) {
       expect(error.response.status).toBe(400);
-      expect(error.response.data.error).toBe('User already exists');
+      expect((error.response.data as any).error).toBe('User already exists');
     }
   });
 });

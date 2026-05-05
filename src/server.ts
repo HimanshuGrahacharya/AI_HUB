@@ -262,7 +262,7 @@ app.post('/api/:toolId', authenticateToken, async (req: AuthRequest, res: Respon
     // Generate response (Simulated smart response based on toolId)
     let aiResponse = `This is a simulated response from ${toolId}. Official integration for this tool is coming soon! You asked: "${message}"`;
     
-    if (toolId.includes('write') || toolId.includes('copy')) {
+    if (toolId && (toolId.includes('write') || toolId.includes('copy'))) {
       aiResponse = `I am your professional writing assistant. Based on your request "${message}", I would suggest focusing on clarity and emotional impact... (This is a professional demo response)`;
     }
 
