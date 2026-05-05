@@ -4193,6 +4193,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Top Filter Buttons Logic
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const category = (btn as HTMLElement).dataset.category;
+      if (category) filterByCategory(category);
+    });
+  });
+
   // Generic Modal Logic
   const allModals = document.querySelectorAll('.modal');
   const closeBtns = document.querySelectorAll('.close-modal');
@@ -4211,8 +4222,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const submitBtn = document.getElementById('submit-tools-btn');
+  const aboutBtn = document.getElementById('about-btn');
+
   if (submitBtn) {
-    submitBtn.addEventListener('click', (e) => {
+    submitBtn.addEventListener('click', (e: Event) => {
       e.preventDefault();
       const modal = document.getElementById('submit-modal');
       if (modal) modal.style.display = 'flex';
@@ -4220,7 +4234,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (aboutBtn) {
-    aboutBtn.addEventListener('click', (e) => {
+    aboutBtn.addEventListener('click', (e: Event) => {
       e.preventDefault();
       const modal = document.getElementById('about-modal');
       if (modal) modal.style.display = 'flex';
