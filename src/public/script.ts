@@ -4399,16 +4399,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Settings Modal Logic
-  const settingsLink = document.getElementById('settings-link');
   const settingsModal = document.getElementById('settings-modal');
   const darkModeToggle = document.getElementById('dark-mode-toggle') as HTMLInputElement;
-
-  if (settingsLink && settingsModal) {
-    settingsLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      settingsModal.style.display = 'flex';
-    });
-  }
 
   // Dark Mode Logic
   if (darkModeToggle) {
