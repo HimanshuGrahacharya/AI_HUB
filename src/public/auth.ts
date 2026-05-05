@@ -68,11 +68,11 @@ async function login(email: string, password: string): Promise<void> {
       localStorage.setItem('token', data.token);
       window.location.href = 'index.html';
     } else {
-      alert(data.error || 'Login failed');
+      showToast(data.error || 'Login failed', 'error');
     }
   } catch (error) {
     console.error('Login error:', error);
-    alert('Login failed');
+    showToast('Login failed', 'error');
   }
 }
 
@@ -88,14 +88,16 @@ async function signup(fullName: string, email: string, password: string): Promis
     });
     const data = await response.json();
     if (response.ok) {
-      alert('Signup successful! Please login.');
-      window.location.href = 'login.html';
+      showToast('Signup successful! Redirecting to login...', 'info');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1500);
     } else {
-      alert(data.error || 'Signup failed');
+      showToast(data.error || 'Signup failed', 'error');
     }
   } catch (error) {
     console.error('Signup error:', error);
-    alert('Signup failed');
+    showToast('Signup failed', 'error');
   }
 }
 
@@ -183,11 +185,11 @@ async function handleGoogleSignIn(response: any): Promise<void> {
       localStorage.setItem('token', data.token);
       window.location.href = 'index.html';
     } else {
-      alert(data.error || 'Google login failed');
+      showToast(data.error || 'Google login failed', 'error');
     }
   } catch (error) {
     console.error('Google Auth error:', error);
-    alert('Google login failed');
+    showToast('Google login failed', 'error');
   }
 }
 
@@ -244,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const password = (document.getElementById('password') as HTMLInputElement).value;
       const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value;
       if (password !== confirmPassword) {
-        alert('Passwords do not match');
+        showToast('Passwords do not match', 'error');
         return;
       }
       signup(fullName, email, password);
