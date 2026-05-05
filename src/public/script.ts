@@ -4101,7 +4101,40 @@ let filteredTools = aiTools;
 let inactivityTimer: any = null;
 const INACTIVITY_TIMEOUT = 45 * 60 * 1000; // 45 minutes in milliseconds
 
+async function loadSubmissions() {
+  try {
+    const res = await fetch('/api/submissions/all');
+    const submissions = await res.json();
+    
+    const extraTools: AITool[] = submissions.map((s: any) => {
+      let hostname = 'link';
+      try { hostname = new URL(s.url).hostname; } catch(e) {}
+      
+      return {
+        id: `sub-${s._id}`,
+        name: s.toolName,
+        description: s.description,
+        category: 'Community Submission',
+        link: s.url,
+        logo: `https://www.google.com/s2/favicons?domain=${hostname}&sz=128`
+      };
+    });
+    
+    aiTools.push(...extraTools);
+    // Refresh the grid
+    const query = (document.getElementById('search-input') as HTMLInputElement)?.value.toLowerCase() || '';
+    if (!query) {
+      filteredTools = [...aiTools];
+      renderTools();
+      renderPagination();
+    }
+  } catch (err) {
+    console.error('Failed to load community submissions', err);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  loadSubmissions(); // Load extra tools automatically
   const token = localStorage.getItem('token');
   if (token) {
     fetch('/api/user/data', {

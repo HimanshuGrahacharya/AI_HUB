@@ -279,6 +279,16 @@ app.post('/api/submissions', authenticateToken, async (req: AuthRequest, res: Re
   }
 });
 
+// Get all tool submissions for public display
+app.get('/api/submissions/all', async (req: Request, res: Response) => {
+  try {
+    const submissions = await Submission.find({ status: 'pending' }); // For automatic, we show pending too
+    res.json(submissions);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch submissions' });
+  }
+});
+
 // Generic API Route for other tools with Persistence
 app.post('/api/:toolId', authenticateToken, async (req: AuthRequest, res: Response) => {
   const toolId = req.params.toolId as string;

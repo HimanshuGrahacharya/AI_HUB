@@ -35,7 +35,7 @@ function checkAuth(): void {
     localStorage.setItem('token', tokenFromUrl);
     const isDemo = urlParams.get('demo');
     if (isDemo) {
-      showToast('🚀 Demo login successful! Welcome to AI Hubs.', 'info');
+      showToast('🚀 Demo login successful! Welcome to HSG AI HUB.', 'info');
     }
     window.history.replaceState({}, document.title, window.location.pathname);
     setTimeout(() => {
