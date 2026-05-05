@@ -4470,10 +4470,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function filterByCategory(category: string) {
-  if (category === 'all') {
+  if (category.toLowerCase() === 'all') {
     filteredTools = aiTools;
   } else {
-    filteredTools = aiTools.filter(tool => tool.category === category);
+    filteredTools = aiTools.filter(tool => tool.category.toLowerCase().includes(category.toLowerCase()));
   }
   currentPage = 1;
   renderTools();
