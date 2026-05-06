@@ -5183,7 +5183,62 @@ async function executeArena() {
     fetchModel('/api/groq', resGroq),
     fetchModel('/api/blackbox', resFree)
   ]);
+  
+  // Show export buttons after execution
+  const pdfBtn = document.getElementById('export-pdf-btn');
+  const mdBtn = document.getElementById('export-md-btn');
+  if (pdfBtn) pdfBtn.style.display = 'inline-flex';
+  if (mdBtn) mdBtn.style.display = 'inline-flex';
 }
+
+(window as any).exportArenaPDF = function() {
+  const element = document.querySelector('.arena-grid');
+  const opt = {
+    margin:       0.5,
+    filename:     `AI_Arena_Results_${new Date().toISOString().slice(0,10)}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true },
+    jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+  };
+  
+  showToast('Generating PDF Report...', 'info');
+  (window as any).html2pdf().set(opt).from(element).save().then(() => {
+    showToast('PDF Exported Successfully!', 'success');
+  });
+};
+
+(window as any).exportArenaMarkdown = function() {
+  const prompt = (document.getElementById('arena-input') as HTMLTextAreaElement).value;
+  
+  const getModelText = (id: string) => {
+    const el = document.getElementById(id);
+    const contentEl = el?.querySelector('.arena-response-content');
+    return contentEl ? contentEl.textContent?.trim() : 'No response';
+  };
+
+  const markdown = `# AI Arena Report
+**Date:** ${new Date().toLocaleDateString()}
+**Prompt:** ${prompt}
+
+## ChatGPT
+${getModelText('res-chatgpt')}
+
+## Gemini
+${getModelText('res-gemini')}
+
+## Groq (Llama 3)
+${getModelText('res-groq')}
+
+## Free Assistant
+${getModelText('res-free')}
+`;
+
+  navigator.clipboard.writeText(markdown).then(() => {
+    showToast('Markdown copied to clipboard!', 'success');
+  }).catch(() => {
+    showToast('Failed to copy Markdown', 'error');
+  });
+};
 
 // Event Listeners
 window.addEventListener('load', () => {
