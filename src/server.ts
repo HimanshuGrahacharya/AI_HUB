@@ -179,11 +179,17 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return res.json({ response: "Gemini integration is in Demo Mode. To enable real answers, add GEMINI_API_KEY to your Render environment variables!" });
+      return res.json({ response: "Gemini integration is in Demo Mode. Add GEMINI_API_KEY to your Render environment variables!" });
     }
-    const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
-      contents: [{ parts: [{ text: req.body.message }] }]
-    });
+
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        contents: [{ parts: [{ text: req.body.message }] }]
+      },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    
     const aiResponse = response.data.candidates[0].content.parts[0].text;
 
     // Save to history
@@ -233,41 +239,19 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
 
 app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
-    // 1. Get the VQD token from DuckDuckGo
-    const statusRes = await axios.get('https://duckduckgo.com/duckchat/v1/status', {
-      headers: { 'x-vqd-accept': '1' }
-    });
-    const vqd = statusRes.headers['x-vqd-4'];
-
-    if (!vqd) throw new Error('Failed to get VQD token');
-
-    // 2. Send the chat request
-    const response = await axios.post('https://duckduckgo.com/duckchat/v1/chat', {
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: req.body.message }]
+    // Switching to Hugging Face - extremely stable and fast for free tier
+    const response = await axios.post('https://api-inference.huggingface.co/models/Qwen/Qwen2.5-72B-Instruct/v1/chat/completions', {
+      model: "Qwen/Qwen2.5-72B-Instruct",
+      messages: [{ role: "user", content: req.body.message }],
+      max_tokens: 500
     }, {
       headers: {
-        'x-vqd-4': vqd,
-        'Content-Type': 'application/json',
-        'Accept': 'text/event-stream'
-      }
+        'Content-Type': 'application/json'
+      },
+      timeout: 15000
     });
     
-    // DuckDuckGo returns a stream, we need to extract the text
-    let aiResponse = "";
-    if (typeof response.data === 'string') {
-      const lines = response.data.split('\n');
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          try {
-            const data = JSON.parse(line.replace('data: ', ''));
-            if (data.message) aiResponse += data.message;
-          } catch (e) {}
-        }
-      }
-    }
-
-    if (!aiResponse) aiResponse = "DuckDuckGo AI is taking a break. Please try again or use your Groq/Gemini key!";
+    const aiResponse = response.data.choices[0].message.content;
 
     // Save to history
     await saveChatMessage(req.user.id, 'blackbox', 'user', req.body.message);
@@ -275,9 +259,20 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
 
     res.json({ response: aiResponse });
   } catch (error: any) {
-    console.error('DuckDuckGo AI error:', error.message);
-    const fallbackResponse = "The Free Assistant is currently under heavy load. 🚀 PRO TIP: Use Groq AI (Llama 3) with your free key for the best experience!";
-    res.json({ response: fallbackResponse });
+    console.error('Hugging Face AI error:', error.message);
+    
+    // FINAL FALLBACK: If all else fails, use Gemini (since we know the user added the key)
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const gemResponse = await axios.post(
+          `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+          { contents: [{ parts: [{ text: req.body.message }] }] }
+        );
+        return res.json({ response: gemResponse.data.candidates[0].content.parts[0].text });
+      } catch (e) {}
+    }
+    
+    res.json({ response: "The Free Assistant is under maintenance. Please use Groq or Gemini in the meantime!" });
   }
 });
 
