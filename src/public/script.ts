@@ -4261,9 +4261,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const category = (item as HTMLElement).dataset.category;
 
       // Update Hero Title
-      const h1 = document.querySelector('.dashboard-hero h1');
-      if (h1) {
-        h1.innerHTML = (!category || category === 'All') 
+      const heroH1 = document.querySelector('.dashboard-hero h1');
+      if (heroH1) {
+        heroH1.innerHTML = (!category || category === 'All') 
           ? 'Unlock the Power of <span class="highlight">Artificial Intelligence</span>'
           : `Explore <span class="highlight">${category}</span> Tools`;
       }
