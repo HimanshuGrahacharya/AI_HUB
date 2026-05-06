@@ -4916,10 +4916,15 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
   const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   
   messageDiv.innerHTML = `
-    <div class="message-content">${text}</div>
-    <div class="message-meta">
-      <span class="message-time">${time}</span>
-      ${sender === 'ai' ? `<button class="copy-msg" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')"><i class="ph ph-copy"></i></button>` : ''}
+    <div class="message-content">
+      ${text}
+      <div class="message-meta">
+        <span class="message-time">${time}</span>
+        ${sender === 'ai' ? `
+          <button class="copy-msg" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')"><i class="ph ph-copy"></i></button>
+          <button class="speak-msg" onclick="speakText('${text.replace(/'/g, "\\'").replace(/\n/g, " ")}')"><i class="ph ph-speaker-high"></i></button>
+        ` : ''}
+      </div>
     </div>
   `;
   
@@ -5082,5 +5087,19 @@ document.addEventListener('DOMContentLoaded', () => {
   (window as any).handleSearch();
 };
 
+// Global TTS Function
+(window as any).speakText = (text: string) => {
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 1.1; // Slightly faster for modern feel
+  utterance.pitch = 1;
+  
+  // Try to find a high-quality voice
+  const voices = window.speechSynthesis.getVoices();
+  const premiumVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural'))) || voices[0];
+  if (premiumVoice) utterance.voice = premiumVoice;
 
-
+  window.speechSynthesis.speak(utterance);
+};
