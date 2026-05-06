@@ -4244,10 +4244,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  
+  if (menuToggle && sidebar) {
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      let overlay = document.getElementById('sidebar-overlay');
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'sidebar-overlay';
+        overlay.className = 'sidebar-overlay';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', () => {
+          sidebar.classList.remove('active');
+          overlay?.classList.remove('show');
+        });
+      }
+      setTimeout(() => overlay?.classList.toggle('show'), 10);
+    });
+  }
+
   // Category filtering logic
   const sidebarItems = document.querySelectorAll('.category-item');
   sidebarItems.forEach(item => {
     item.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        sidebar?.classList.remove('active');
+        document.getElementById('sidebar-overlay')?.classList.remove('show');
+      }
+
       const h1 = document.querySelector('.dashboard-hero h1');
       const cat = (item as HTMLElement).dataset.category;
       if (h1) {
