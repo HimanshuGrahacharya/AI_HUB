@@ -2841,9 +2841,28 @@ body:not(.dark-mode) .about-stats {
   .nav-logo-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     text-decoration: none;
     color: inherit;
+  }
+
+  .nav-logo {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .nav-title {
+    font-size: 1.1rem !important;
+  }
+
+  .search-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .search-input {
+    width: 100% !important;
+    padding-left: 45px !important;
   }
 
   .dashboard-main {
