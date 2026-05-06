@@ -113,7 +113,7 @@ async function sendOtp(identifier: string): Promise<void> {
     const data = await response.json();
     if (response.ok) {
       resetIdentifier = identifier;
-      showToast(data.demoOtp ? `Demo OTP: ${data.demoOtp}` : 'Verification code sent.', 'success');
+      showToast(data.demoOtp ? `Demo OTP: ${data.demoOtp}` : 'Verification code sent.', 'info');
       if (data.demoOtp) {
         const otpInput = document.getElementById('otp') as HTMLInputElement;
         if (otpInput) otpInput.value = data.demoOtp;
@@ -147,7 +147,7 @@ async function verifyOtp(otp: string): Promise<void> {
     const data = await response.json();
     if (response.ok) {
       resetTempToken = data.tempToken;
-      showToast('Code verified! Create a new password.', 'success');
+      showToast('Code verified! Create a new password.', 'info');
       
       // UI Transitions
       document.getElementById('step-2')!.style.display = 'none';
@@ -176,7 +176,7 @@ async function resetPasswordOtp(newPassword: string): Promise<void> {
     });
     const data = await response.json();
     if (response.ok) {
-      showToast('Password updated successfully! Redirecting...', 'success');
+      showToast('Password updated successfully! Redirecting...', 'info');
       setTimeout(() => {
         window.location.href = 'login.html';
       }, 1500);
