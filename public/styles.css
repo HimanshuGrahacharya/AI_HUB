@@ -3533,34 +3533,42 @@ body:not(.dark-mode) .profile-details-grid {
   }
 }
 
-/* AI Voice Narration Buttons */
-.speak-msg, .stop-msg, .copy-msg {
+/* Professional Voice Toggle */
+.voice-toggle, .copy-msg {
   background: transparent;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 0.95rem;
-  padding: 6px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  font-size: 1.1rem;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.speak-msg:hover, .copy-msg:hover {
+.voice-toggle:hover, .copy-msg:hover {
   color: var(--primary-light);
   background: rgba(110, 86, 207, 0.15);
+  transform: translateY(-2px);
 }
 
-.stop-msg:hover {
-  color: #ff4d4d;
-  background: rgba(255, 77, 77, 0.15);
+.speaking-pulse {
+  color: #ff4d4d !important;
+  background: rgba(255, 77, 77, 0.1) !important;
+  animation: voicePulse 1.5s infinite ease-in-out;
+}
+
+@keyframes voicePulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
 }
 
 .message-actions {
   display: flex;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 10px;
+  margin-top: 10px;
   justify-content: flex-end;
 }

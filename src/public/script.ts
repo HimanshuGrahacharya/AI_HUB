@@ -4934,9 +4934,8 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
       <div class="message-meta">
         <span class="message-time">${time}</span>
         ${sender === 'ai' ? `
-          <button class="copy-msg" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')"><i class="ph ph-copy"></i></button>
-          <button class="speak-msg" title="Speak" onclick="speakText('${text.replace(/'/g, "\\'").replace(/\n/g, " ")}')"><i class="ph ph-speaker-high"></i></button>
-          <button class="stop-msg" title="Stop" onclick="stopSpeaking()"><i class="ph ph-stop"></i></button>
+          <button class="copy-msg" title="Copy" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')"><i class="ph ph-copy"></i></button>
+          <button class="voice-toggle" title="Listen" onclick="toggleVoice(this, '${text.replace(/'/g, "\\'").replace(/\n/g, " ")}')"><i class="ph ph-speaker-high"></i></button>
         ` : ''}
       </div>
     </div>
@@ -5113,23 +5112,55 @@ document.addEventListener('DOMContentLoaded', () => {
   (window as any).handleSearch();
 };
 
-// Global TTS Functions
+// Global TTS State
+let currentUtterance: SpeechSynthesisUtterance | null = null;
+
 (window as any).stopSpeaking = () => {
-  window.speechSynthesis.cancel();
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    document.querySelectorAll('.voice-toggle i').forEach(icon => {
+      icon.className = 'ph ph-speaker-high';
+    });
+    document.querySelectorAll('.voice-toggle').forEach(btn => {
+      btn.classList.remove('speaking-pulse');
+    });
+  }
 };
 
-(window as any).speakText = (text: string) => {
-  // Cancel any ongoing speech
-  window.speechSynthesis.cancel();
+(window as any).toggleVoice = (btn: HTMLElement, text: string) => {
+  const icon = btn.querySelector('i');
   
+  // If already speaking THIS message, stop it
+  if (window.speechSynthesis.speaking && btn.classList.contains('speaking-pulse')) {
+    (window as any).stopSpeaking();
+    return;
+  }
+
+  // Stop any other message first
+  (window as any).stopSpeaking();
+
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 1.1; // Slightly faster for modern feel
-  utterance.pitch = 1;
+  utterance.rate = 1.1;
   
-  // Try to find a high-quality voice
   const voices = window.speechSynthesis.getVoices();
   const premiumVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Google') || v.name.includes('Natural'))) || voices[0];
   if (premiumVoice) utterance.voice = premiumVoice;
 
+  utterance.onstart = () => {
+    if (icon) icon.className = 'ph ph-stop';
+    btn.classList.add('speaking-pulse');
+  };
+
+  utterance.onend = () => {
+    if (icon) icon.className = 'ph ph-speaker-high';
+    btn.classList.remove('speaking-pulse');
+  };
+
+  utterance.onerror = () => {
+    if (icon) icon.className = 'ph ph-speaker-high';
+    btn.classList.remove('speaking-pulse');
+  };
+
+  currentUtterance = utterance;
   window.speechSynthesis.speak(utterance);
 };
