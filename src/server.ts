@@ -132,7 +132,7 @@ app.post('/api/claude', authenticateToken, async (req: AuthRequest, res: Respons
     // AUTO-FIX: If they used a Groq key for Claude, just use Groq API for them!
     if (apiKey && apiKey.startsWith('gsk_')) {
       const groqResponse = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-        model: 'llama3-8b-8192',
+        model: 'llama-3.1-8b-instant',
         messages: [{ role: 'user', content: req.body.message }],
       }, {
         headers: {
@@ -209,7 +209,7 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
     }
 
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama3-8b-8192',
+      model: 'llama-3.1-8b-instant',
       messages: [{ role: 'user', content: req.body.message }],
     }, {
       headers: {
