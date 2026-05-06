@@ -83,6 +83,14 @@
     }
     .input-wrap input::placeholder { color:rgba(255,255,255,0.25); }
     .input-wrap input:focus { border-color:rgba(99,102,241,0.6); background:rgba(99,102,241,0.06); box-shadow:0 0 0 3px rgba(99,102,241,0.12); }
+    .input-wrap input:-webkit-autofill,
+    .input-wrap input:-webkit-autofill:hover, 
+    .input-wrap input:-webkit-autofill:focus, 
+    .input-wrap input:-webkit-autofill:active{
+      -webkit-box-shadow: 0 0 0 30px #0d0d20 inset !important;
+      -webkit-text-fill-color: white !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
     .input-wrap .toggle-pw { position:absolute; right:14px; color:rgba(255,255,255,0.3); cursor:pointer; font-size:1.1rem; transition:color .2s; }
     .input-wrap .toggle-pw:hover { color:rgba(255,255,255,0.6); }
 
