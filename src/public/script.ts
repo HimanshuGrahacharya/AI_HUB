@@ -7,7 +7,7 @@ interface AITool {
   logo: string;
 }
 
-declare function showToast(message: string, type?: 'error' | 'info'): void;
+declare function showToast(message: string, type?: 'error' | 'info' | 'success'): void;
 
 const aiTools: AITool[] = [
 
