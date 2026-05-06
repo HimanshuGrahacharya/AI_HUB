@@ -5199,3 +5199,75 @@ let currentUtterance: SpeechSynthesisUtterance | null = null;
   currentUtterance = utterance;
   window.speechSynthesis.speak(utterance);
 };
+
+// Voice-to-Text (Speech Recognition) Logic
+const initVoiceRecognition = (btnId: string, inputId: string, onComplete?: () => void) => {
+  const btn = document.getElementById(btnId);
+  const input = document.getElementById(inputId) as HTMLInputElement | HTMLTextAreaElement;
+  
+  if (!btn || !input) return;
+
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    btn.style.display = 'none'; // Hide if browser doesn't support
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (btn.classList.contains('listening')) {
+      recognition.stop();
+      return;
+    }
+    
+    try {
+      recognition.start();
+    } catch (e) {
+      console.log('Recognition already started');
+    }
+  });
+
+  recognition.onstart = () => {
+    btn.classList.add('listening');
+    btn.innerHTML = '<i class="ph ph-waveform"></i>'; // Waveform icon while listening
+    input.placeholder = 'Listening... Speak clearly';
+    showToast('Voice recognition active', 'info');
+  };
+
+  recognition.onresult = (event: any) => {
+    const transcript = event.results[0][0].transcript;
+    input.value = transcript;
+    if (onComplete) {
+      setTimeout(onComplete, 500); // Slight delay for natural feel
+    }
+  };
+
+  recognition.onend = () => {
+    btn.classList.remove('listening');
+    btn.innerHTML = '<i class="ph ph-microphone"></i>';
+    input.placeholder = inputId.includes('search') ? 'Search for tools...' : 'Ask anything...';
+  };
+
+  recognition.onerror = (event: any) => {
+    btn.classList.remove('listening');
+    btn.innerHTML = '<i class="ph ph-microphone"></i>';
+    if (event.error !== 'no-speech') {
+      showToast(`Voice error: ${event.error}`, 'error');
+    }
+  };
+};
+
+// Initialize All Voice Inputs on Page Load
+window.addEventListener('load', () => {
+  initVoiceRecognition('voice-search-btn', 'search-input', () => (window as any).handleSearch());
+  initVoiceRecognition('voice-chat-btn', 'message-input', () => {
+    const sendBtn = document.getElementById('send-btn');
+    if (sendBtn) sendBtn.click();
+  });
+  initVoiceRecognition('voice-arena-btn', 'arena-input');
+});

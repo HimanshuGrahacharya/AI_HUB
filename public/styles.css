@@ -3839,3 +3839,49 @@ body:not(.dark-mode) .profile-details-grid {
     transform: none;
   }
 }
+/* Voice Search Button Styles */
+.voice-search-btn {
+  background: transparent;
+  border: none;
+  color: var(--primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.voice-search-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary-light);
+}
+
+.listening {
+  color: #ff4d4d !important;
+  background: rgba(255, 77, 77, 0.1) !important;
+  animation: listeningPulse 1.5s infinite;
+}
+
+@keyframes listeningPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.4); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 77, 77, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-wrapper .voice-search-btn {
+  position: absolute;
+  right: 15px;
+}
+
+.input-container .voice-search-btn {
+  margin: 0 5px;
+}
