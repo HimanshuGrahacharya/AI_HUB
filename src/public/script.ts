@@ -4251,6 +4251,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebarItems = document.querySelectorAll('.category-item');
   sidebarItems.forEach(item => {
     item.addEventListener('click', () => {
+      const h1 = document.querySelector('.dashboard-hero h1');
+      const cat = (item as HTMLElement).dataset.category;
+      if (h1) {
+        h1.innerHTML = (!cat || cat === 'All') 
+          ? 'Unlock the Power of <span class="highlight">Artificial Intelligence</span>'
+          : `Explore <span class="highlight">${cat}</span> Tools`;
+      }
       sidebarItems.forEach(i => (i as HTMLElement).classList.remove('active'));
       (item as HTMLElement).classList.add('active');
       
