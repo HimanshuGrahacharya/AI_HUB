@@ -208,7 +208,7 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
 app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) return res.json({ response: "Groq key missing!" });
+    if (!apiKey) return res.json({ response: "Groq API Key is not set in Render Environment Variables!" });
 
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
       model: 'llama3-8b-8192',
@@ -222,49 +222,51 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
     await saveChatMessage(req.user.id, 'groq', 'ai', aiResponse);
     res.json({ response: aiResponse });
   } catch (error: any) {
-    res.status(500).json({ error: 'Groq error' });
+    const detail = error.response?.data?.error?.message || error.message;
+    res.json({ response: `Groq Error: ${detail}` });
   }
 });
 
 app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.json({ response: "Gemini key missing." });
+    if (!apiKey) return res.json({ response: "Gemini API Key is missing!" });
 
-    const models = ['gemini-1.5-flash', 'gemini-pro'];
-    let lastError = "";
+    // Try all possible model names
+    const models = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro'];
+    let errors: string[] = [];
 
     for (const model of models) {
       try {
         const response = await axios.post(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           { contents: [{ parts: [{ text: req.body.message }] }] },
-          { headers: { 'Content-Type': 'application/json' }, timeout: 10000 }
+          { headers: { 'Content-Type': 'application/json' }, timeout: 8000 }
         );
         const aiResponse = response.data.candidates[0].content.parts[0].text;
         await saveChatMessage(req.user.id, 'gemini', 'user', req.body.message);
         await saveChatMessage(req.user.id, 'gemini', 'ai', aiResponse);
         return res.json({ response: aiResponse });
       } catch (e: any) {
-        lastError = e.message;
+        errors.push(`${model}: ${e.response?.data?.error?.message || e.message}`);
         continue;
       }
     }
-    res.json({ response: `Gemini unavailable: ${lastError}` });
+    res.json({ response: `Gemini unavailable. Attempts: ${errors.join(' | ')}` });
   } catch (error: any) {
-    res.json({ response: "Gemini error." });
+    res.json({ response: `Gemini system error: ${error.message}` });
   }
 });
 
 app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) return res.json({ response: "Free Assistant busy." });
+    if (!apiKey) return res.json({ response: "Free Assistant key missing." });
 
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama3-8b-8192',
+      model: 'llama3-70b-8192', // Trying 70B again but with correct ID
       messages: [
-        { role: 'system', content: "You are the HSG AI Free Assistant. Be helpful." },
+        { role: 'system', content: "You are the HSG AI Free Assistant." },
         { role: 'user', content: req.body.message }
       ],
     }, {
@@ -276,7 +278,8 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
     await saveChatMessage(req.user.id, 'blackbox', 'ai', aiResponse);
     res.json({ response: aiResponse });
   } catch (error: any) {
-    res.json({ response: "Free Assistant taking a break." });
+    const detail = error.response?.data?.error?.message || error.message;
+    res.json({ response: `Free Assistant Error: ${detail}` });
   }
 });
 
