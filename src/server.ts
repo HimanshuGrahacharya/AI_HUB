@@ -182,8 +182,9 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
       return res.json({ response: "Gemini integration is in Demo Mode. Add GEMINI_API_KEY to your Render environment variables!" });
     }
 
+    // Trying v1beta with gemini-1.5-flash which is the most stable combination right now
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         contents: [{ parts: [{ text: req.body.message }] }]
       },
@@ -239,16 +240,20 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
 
 app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
-    // Switching to Hugging Face - extremely stable and fast for free tier
-    const response = await axios.post('https://api-inference.huggingface.co/models/Qwen/Qwen2.5-72B-Instruct/v1/chat/completions', {
-      model: "Qwen/Qwen2.5-72B-Instruct",
-      messages: [{ role: "user", content: req.body.message }],
-      max_tokens: 500
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      return res.json({ response: "Free Assistant is currently busy. Please add a GROQ_API_KEY to your dashboard for instant access!" });
+    }
+
+    // Using the 70B model for the "Free Assistant" to make it feel premium
+    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+      model: 'llama-3.1-70b-versatile',
+      messages: [{ role: 'user', content: req.body.message }],
     }, {
       headers: {
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
-      },
-      timeout: 15000
+      }
     });
     
     const aiResponse = response.data.choices[0].message.content;
@@ -259,20 +264,8 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
 
     res.json({ response: aiResponse });
   } catch (error: any) {
-    console.error('Hugging Face AI error:', error.message);
-    
-    // FINAL FALLBACK: If all else fails, use Gemini (since we know the user added the key)
-    if (process.env.GEMINI_API_KEY) {
-      try {
-        const gemResponse = await axios.post(
-          `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-          { contents: [{ parts: [{ text: req.body.message }] }] }
-        );
-        return res.json({ response: gemResponse.data.candidates[0].content.parts[0].text });
-      } catch (e) {}
-    }
-    
-    res.json({ response: "The Free Assistant is under maintenance. Please use Groq or Gemini in the meantime!" });
+    console.error('Free Assistant error:', error.message);
+    res.json({ response: "The Free Assistant is under maintenance. Please use the Gemini or Groq cards in the meantime!" });
   }
 });
 
