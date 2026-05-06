@@ -207,65 +207,76 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
 
 app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
-    const apiKey = process.env.ANTHROPIC_API_KEY; // Using the key the user already has (which is actually a Groq key)
-    // Note: I'll check both ANTHROPIC_API_KEY (where they put it by mistake) and a dedicated GROQ_API_KEY
-    const groqKey = (apiKey && apiKey.startsWith('gsk_')) ? apiKey : process.env.GROQ_API_KEY;
-
-    if (!groqKey) {
-      return res.json({ response: "Groq integration is in Demo Mode. Add GROQ_API_KEY to Render to enable lightning-fast answers!" });
-    }
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) return res.json({ response: "Groq key missing!" });
 
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama-3.1-8b-instant',
+      model: 'llama3-8b-8192',
       messages: [{ role: 'user', content: req.body.message }],
     }, {
-      headers: {
-        'Authorization': `Bearer ${groqKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
     });
-    const aiResponse = response.data.choices[0].message.content;
 
-    // Save to history
+    const aiResponse = response.data.choices[0].message.content;
     await saveChatMessage(req.user.id, 'groq', 'user', req.body.message);
     await saveChatMessage(req.user.id, 'groq', 'ai', aiResponse);
-
     res.json({ response: aiResponse });
   } catch (error: any) {
-    console.error('Groq API error:', error.response?.data || error.message);
-    const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Groq';
-    res.status(500).json({ error: errorMessage });
+    res.status(500).json({ error: 'Groq error' });
+  }
+});
+
+app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) return res.json({ response: "Gemini key missing." });
+
+    const models = ['gemini-1.5-flash', 'gemini-pro'];
+    let lastError = "";
+
+    for (const model of models) {
+      try {
+        const response = await axios.post(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          { contents: [{ parts: [{ text: req.body.message }] }] },
+          { headers: { 'Content-Type': 'application/json' }, timeout: 10000 }
+        );
+        const aiResponse = response.data.candidates[0].content.parts[0].text;
+        await saveChatMessage(req.user.id, 'gemini', 'user', req.body.message);
+        await saveChatMessage(req.user.id, 'gemini', 'ai', aiResponse);
+        return res.json({ response: aiResponse });
+      } catch (e: any) {
+        lastError = e.message;
+        continue;
+      }
+    }
+    res.json({ response: `Gemini unavailable: ${lastError}` });
+  } catch (error: any) {
+    res.json({ response: "Gemini error." });
   }
 });
 
 app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
-      return res.json({ response: "Free Assistant is currently busy. Please add a GROQ_API_KEY to your dashboard for instant access!" });
-    }
+    if (!apiKey) return res.json({ response: "Free Assistant busy." });
 
-    // Using the 70B model for the "Free Assistant" to make it feel premium
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama-3.1-70b-versatile',
-      messages: [{ role: 'user', content: req.body.message }],
+      model: 'llama3-8b-8192',
+      messages: [
+        { role: 'system', content: "You are the HSG AI Free Assistant. Be helpful." },
+        { role: 'user', content: req.body.message }
+      ],
     }, {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
     });
     
     const aiResponse = response.data.choices[0].message.content;
-
-    // Save to history
     await saveChatMessage(req.user.id, 'blackbox', 'user', req.body.message);
     await saveChatMessage(req.user.id, 'blackbox', 'ai', aiResponse);
-
     res.json({ response: aiResponse });
   } catch (error: any) {
-    console.error('Free Assistant error:', error.message);
-    res.json({ response: "The Free Assistant is under maintenance. Please use the Gemini or Groq cards in the meantime!" });
+    res.json({ response: "Free Assistant taking a break." });
   }
 });
 

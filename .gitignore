@@ -4,3 +4,4 @@ node_modules/
 *.log
 
 dist/
+PROJECT_MASTER_GUIDE.md
