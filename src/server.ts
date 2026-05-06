@@ -233,19 +233,41 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
 
 app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
-    // Switching to Pawan.krd - a very stable free ChatGPT proxy
-    const response = await axios.post('https://api.pawan.krd/v1/chat/completions', {
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: req.body.message }],
+    // 1. Get the VQD token from DuckDuckGo
+    const statusRes = await axios.get('https://duckduckgo.com/duckchat/v1/status', {
+      headers: { 'x-vqd-accept': '1' }
+    });
+    const vqd = statusRes.headers['x-vqd-4'];
+
+    if (!vqd) throw new Error('Failed to get VQD token');
+
+    // 2. Send the chat request
+    const response = await axios.post('https://duckduckgo.com/duckchat/v1/chat', {
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: req.body.message }]
     }, {
       headers: {
-        'Authorization': 'Bearer pk-something-free', // Public free tier
-        'Content-Type': 'application/json'
-      },
-      timeout: 15000
+        'x-vqd-4': vqd,
+        'Content-Type': 'application/json',
+        'Accept': 'text/event-stream'
+      }
     });
     
-    let aiResponse = response.data.choices[0].message.content;
+    // DuckDuckGo returns a stream, we need to extract the text
+    let aiResponse = "";
+    if (typeof response.data === 'string') {
+      const lines = response.data.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const data = JSON.parse(line.replace('data: ', ''));
+            if (data.message) aiResponse += data.message;
+          } catch (e) {}
+        }
+      }
+    }
+
+    if (!aiResponse) aiResponse = "DuckDuckGo AI is taking a break. Please try again or use your Groq/Gemini key!";
 
     // Save to history
     await saveChatMessage(req.user.id, 'blackbox', 'user', req.body.message);
@@ -253,10 +275,8 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
 
     res.json({ response: aiResponse });
   } catch (error: any) {
-    console.error('Free AI API error:', error.message);
-    
-    // FINAL FALLBACK: If the free API is down, use a smart local response so the user isn't frustrated
-    const fallbackResponse = "The Free Assistant is currently under heavy load. 🚀 PRO TIP: Add your free Groq or Gemini API key to your Render Dashboard for lightning-fast, unlimited answers!";
+    console.error('DuckDuckGo AI error:', error.message);
+    const fallbackResponse = "The Free Assistant is currently under heavy load. 🚀 PRO TIP: Use Groq AI (Llama 3) with your free key for the best experience!";
     res.json({ response: fallbackResponse });
   }
 });
