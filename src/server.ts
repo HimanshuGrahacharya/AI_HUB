@@ -244,10 +244,29 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
       isMicMode: false,
       isChromeExt: false,
       githubToken: null
+    }, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Content-Type': 'application/json',
+        'Origin': 'https://www.blackbox.ai',
+        'Referer': 'https://www.blackbox.ai/'
+      }
     });
     
-    // Blackbox returns raw text in the response body
-    const aiResponse = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+    // Blackbox returns data in a stream-like format sometimes, let's clean it up
+    let aiResponse = response.data;
+    if (typeof aiResponse === 'string' && aiResponse.includes('data:')) {
+      // Extract actual text from the data stream format
+      aiResponse = aiResponse
+        .split('\n')
+        .filter(line => line.startsWith('data: ') && !line.includes('"type":'))
+        .map(line => line.replace('data: ', '').trim())
+        .join('');
+    }
+    
+    if (!aiResponse || aiResponse.length < 2) {
+      aiResponse = "The free assistant is currently busy. Please try again in a moment or use Groq/Gemini!";
+    }
 
     // Save to history
     await saveChatMessage(req.user.id, 'blackbox', 'user', req.body.message);
