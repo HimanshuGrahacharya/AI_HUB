@@ -337,7 +337,9 @@ app.get('/api/user/data', authenticateToken, async (req: AuthRequest, res: Respo
       fullName: user.fullName, 
       email: user.email,
       favorites: user.favorites, 
-      recentlyViewed: user.recentlyViewed 
+      recentlyViewed: user.recentlyViewed,
+      emailNotifications: user.emailNotifications,
+      compactView: user.compactView
     });
   } catch (error) {
     console.error('Fetch user data error:', error);
@@ -402,6 +404,27 @@ app.put('/api/user/update', authenticateToken, async (req: AuthRequest, res: Res
   } catch (error) {
     console.error('Update profile error:', error);
     res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+app.post('/api/user/settings', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const { emailNotifications, compactView } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    if (typeof emailNotifications === 'boolean') user.emailNotifications = emailNotifications;
+    if (typeof compactView === 'boolean') user.compactView = compactView;
+
+    await user.save();
+    res.json({ 
+      message: 'Settings saved successfully',
+      emailNotifications: user.emailNotifications,
+      compactView: user.compactView
+    });
+  } catch (error) {
+    console.error('Save settings error:', error);
+    res.status(500).json({ error: 'Failed to save settings' });
   }
 });
 

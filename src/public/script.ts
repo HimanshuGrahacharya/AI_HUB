@@ -4156,6 +4156,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (data.favorites) localStorage.setItem('ai_hubs_favorites', JSON.stringify(data.favorites));
       if (data.recentlyViewed) localStorage.setItem('ai_hubs_recent', JSON.stringify(data.recentlyViewed));
+      
+      // Populate Settings Toggles
+      const emailToggle = document.getElementById('email-notifications-toggle') as HTMLInputElement;
+      const compactToggle = document.getElementById('compact-view-toggle') as HTMLInputElement;
+      
+      if (emailToggle) emailToggle.checked = data.emailNotifications !== false; // Default true
+      if (compactToggle) {
+        compactToggle.checked = !!data.compactView;
+        if (data.compactView) document.getElementById('ai-grid')?.classList.add('compact-view');
+      }
+
       renderTools();
       renderPagination();
     })
@@ -4398,13 +4409,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Settings Modal Logic
-  const settingsModal = document.getElementById('settings-modal');
+  // Settings Modal Logic (Placeholder for Dark Mode only since it is local)
   const darkModeToggle = document.getElementById('dark-mode-toggle') as HTMLInputElement;
 
-  // Dark Mode Logic
+  // Dark Mode Logic (LocalStorage only for instant theme application)
   if (darkModeToggle) {
-    // Load preference
     const isDark = localStorage.getItem('dark-mode') === 'true';
     darkModeToggle.checked = isDark;
     if (isDark) document.body.classList.add('dark-mode');
@@ -4414,22 +4423,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.toggle('dark-mode', active);
       localStorage.setItem('dark-mode', active.toString());
       showToast(active ? 'Dark Mode On 🌙' : 'Light Mode On ☀️', 'info');
-    });
-  }
-
-  // Compact View Logic
-  const compactToggle = document.querySelector('.switch input:not(#dark-mode-toggle)') as HTMLInputElement;
-  const compactViewToggle = document.querySelectorAll('.switch input')[2] as HTMLInputElement;
-  if (compactViewToggle) {
-    const isCompact = localStorage.getItem('compact-view') === 'true';
-    compactViewToggle.checked = isCompact;
-    if (isCompact) document.getElementById('ai-grid')?.classList.add('compact-view');
-
-    compactViewToggle.addEventListener('change', () => {
-      const active = compactViewToggle.checked;
-      document.getElementById('ai-grid')?.classList.toggle('compact-view', active);
-      localStorage.setItem('compact-view', active.toString());
-      showToast(active ? 'Compact View On' : 'Compact View Off', 'info');
     });
   }
 
@@ -4909,5 +4902,52 @@ function resetInactivityTimer() {
     startInactivityTimer();
   }
 }
+
+// Global function for Save Settings button
+(window as any).saveUserSettings = async function() {
+  const emailToggle = document.getElementById('email-notifications-toggle') as HTMLInputElement;
+  const compactToggle = document.getElementById('compact-view-toggle') as HTMLInputElement;
+  const token = localStorage.getItem('token');
+
+  const settings = {
+    emailNotifications: emailToggle ? emailToggle.checked : true,
+    compactView: compactToggle ? compactToggle.checked : false
+  };
+
+  // Immediate UI update for Compact View
+  if (settings.compactView) {
+    document.getElementById('ai-grid')?.classList.add('compact-view');
+  } else {
+    document.getElementById('ai-grid')?.classList.remove('compact-view');
+  }
+
+  if (!token) {
+    showToast('Settings saved locally! Log in to sync across devices.', 'info');
+    localStorage.setItem('compact-view', settings.compactView.toString());
+    document.getElementById('settings-modal')!.style.display = 'none';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/user/settings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(settings)
+    });
+
+    if (res.ok) {
+      showToast('Settings saved successfully! ✅', 'info');
+      document.getElementById('settings-modal')!.style.display = 'none';
+    } else {
+      showToast('Failed to save settings to server.', 'error');
+    }
+  } catch (err) {
+    console.error('Settings save error:', err);
+    showToast('Error connecting to server.', 'error');
+  }
+};
 
 

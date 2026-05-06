@@ -13,6 +13,8 @@ export interface IUser extends Document {
   otpCode?: string;
   otpExpires?: Date;
   tokenVersion: number;
+  emailNotifications: boolean;
+  compactView: boolean;
 }
 
 const UserSchema: Schema = new Schema({
@@ -27,7 +29,9 @@ const UserSchema: Schema = new Schema({
   resetPasswordExpires: { type: Date },
   otpCode: { type: String },
   otpExpires: { type: Date },
-  tokenVersion: { type: Number, default: 0 }
+  tokenVersion: { type: Number, default: 0 },
+  emailNotifications: { type: Boolean, default: true },
+  compactView: { type: Boolean, default: false }
 }, {
   timestamps: true
 });
