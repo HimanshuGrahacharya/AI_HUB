@@ -53,15 +53,16 @@ function checkAuth(): void {
   }
 }
 
+let resetIdentifier = '';
+let resetTempToken = '';
+
 // Login function
-async function login(email: string, password: string): Promise<void> {
+async function login(identifier: string, password: string): Promise<void> {
   try {
     const response = await fetch('/api/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier, password }),
     });
     const data = await response.json();
     if (response.ok) {
@@ -77,14 +78,12 @@ async function login(email: string, password: string): Promise<void> {
 }
 
 // Signup function
-async function signup(fullName: string, email: string, password: string): Promise<void> {
+async function signup(fullName: string, email: string, mobileNumber: string, password: string): Promise<void> {
   try {
     const response = await fetch('/api/signup', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ fullName, email, password }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fullName, email, mobileNumber, password }),
     });
     const data = await response.json();
     if (response.ok) {
@@ -101,86 +100,93 @@ async function signup(fullName: string, email: string, password: string): Promis
   }
 }
 
-// Forgot Password function
-async function forgotPassword(email: string): Promise<void> {
-  const btn = document.getElementById('forgot-btn') as HTMLButtonElement;
-  if (btn) btn.disabled = true;
+// Forgot Password - Step 1: Send OTP
+async function sendOtp(identifier: string): Promise<void> {
+  const btn = document.getElementById('send-otp-btn') as HTMLButtonElement;
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending...'; }
   try {
-    const response = await fetch('/api/auth/forgot-password', {
+    const response = await fetch('/api/auth/send-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ identifier }),
     });
     const data = await response.json();
     if (response.ok) {
-      if (data.demoUrl) {
-        showToast('Demo Mode: See reset link below!', 'info');
-        
-        const form = document.getElementById('forgot-password-form');
-        if (form) {
-          let existing = document.getElementById('demo-reset-link');
-          if (existing) existing.remove();
-          
-          const linkDiv = document.createElement('div');
-          linkDiv.id = 'demo-reset-link';
-          linkDiv.style.marginTop = '20px';
-          linkDiv.style.padding = '15px';
-          linkDiv.style.background = 'rgba(99, 102, 241, 0.1)';
-          linkDiv.style.border = '1px solid rgba(99, 102, 241, 0.3)';
-          linkDiv.style.borderRadius = '12px';
-          linkDiv.style.textAlign = 'center';
-          linkDiv.style.animation = 'fadeInUp 0.3s ease-out forwards';
-          
-          const a = document.createElement('a');
-          a.href = data.demoUrl;
-          a.innerHTML = '<i class="ph ph-link"></i> Click here to Test Reset (Demo Mode)';
-          a.style.color = '#818cf8';
-          a.style.fontWeight = '700';
-          a.style.textDecoration = 'none';
-          a.style.display = 'flex';
-          a.style.alignItems = 'center';
-          a.style.justifyContent = 'center';
-          a.style.gap = '8px';
-          
-          linkDiv.appendChild(a);
-          form.appendChild(linkDiv);
-        }
-      } else {
-        showToast(data.message || 'If an account exists, a reset link was sent to your email.', 'info');
+      resetIdentifier = identifier;
+      showToast(data.demoOtp ? `Demo OTP: ${data.demoOtp}` : 'Verification code sent.', 'success');
+      if (data.demoOtp) {
+        const otpInput = document.getElementById('otp') as HTMLInputElement;
+        if (otpInput) otpInput.value = data.demoOtp;
       }
+      
+      // UI Transitions
+      document.getElementById('step-1')!.style.display = 'none';
+      document.getElementById('step-2')!.style.display = 'block';
+      document.getElementById('wizard-title')!.textContent = 'Verify Code';
+      document.getElementById('wizard-desc')!.textContent = `We sent a 6-digit code to ${identifier}.`;
     } else {
       showToast(data.error || 'Failed to process request', 'error');
     }
   } catch (error) {
     showToast('Network error occurred', 'error');
   } finally {
-    if (btn) btn.disabled = false;
+    if (btn) { btn.disabled = false; btn.textContent = 'Send Verification Code'; }
   }
 }
 
-// Reset Password function
-async function resetPassword(email: string, token: string, newPassword: string): Promise<void> {
-  const btn = document.getElementById('reset-btn') as HTMLButtonElement;
-  if (btn) btn.disabled = true;
+// Forgot Password - Step 2: Verify OTP
+async function verifyOtp(otp: string): Promise<void> {
+  const btn = document.getElementById('verify-otp-btn') as HTMLButtonElement;
+  if (btn) { btn.disabled = true; btn.textContent = 'Verifying...'; }
   try {
-    const response = await fetch('/api/auth/reset-password', {
+    const response = await fetch('/api/auth/verify-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, token, newPassword }),
+      body: JSON.stringify({ identifier: resetIdentifier, otp }),
     });
     const data = await response.json();
     if (response.ok) {
-      showToast('Password reset successfully! Redirecting...', 'info');
-      setTimeout(() => {
-        window.location.href = 'login.html';
-      }, 2000);
+      resetTempToken = data.tempToken;
+      showToast('Code verified! Create a new password.', 'success');
+      
+      // UI Transitions
+      document.getElementById('step-2')!.style.display = 'none';
+      document.getElementById('step-3')!.style.display = 'block';
+      document.getElementById('wizard-title')!.textContent = 'New Password';
+      document.getElementById('wizard-desc')!.textContent = 'Enter a strong password to secure your account.';
     } else {
-      showToast(data.error || 'Failed to reset password', 'error');
+      showToast(data.error || 'Invalid or expired code', 'error');
     }
   } catch (error) {
     showToast('Network error occurred', 'error');
   } finally {
-    if (btn) btn.disabled = false;
+    if (btn) { btn.disabled = false; btn.textContent = 'Verify Code'; }
+  }
+}
+
+// Forgot Password - Step 3: Update Password
+async function resetPasswordOtp(newPassword: string): Promise<void> {
+  const btn = document.getElementById('reset-pw-btn') as HTMLButtonElement;
+  if (btn) { btn.disabled = true; btn.textContent = 'Updating...'; }
+  try {
+    const response = await fetch('/api/auth/reset-password-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier: resetIdentifier, tempToken: resetTempToken, newPassword }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      showToast('Password updated successfully! Redirecting...', 'success');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1500);
+    } else {
+      showToast(data.error || 'Failed to update password', 'error');
+    }
+  } catch (error) {
+    showToast('Network error occurred', 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Update Password'; }
   }
 }
 
@@ -251,9 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const email = (document.getElementById('email') as HTMLInputElement).value;
+      const identifier = (document.getElementById('identifier') as HTMLInputElement).value;
       const password = (document.getElementById('password') as HTMLInputElement).value;
-      login(email, password);
+      login(identifier, password);
     });
   }
 
@@ -263,47 +269,49 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const fullName = (document.getElementById('fullName') as HTMLInputElement).value;
       const email = (document.getElementById('email') as HTMLInputElement).value;
+      const mobileNumber = (document.getElementById('mobileNumber') as HTMLInputElement)?.value || '';
       const password = (document.getElementById('password') as HTMLInputElement).value;
       const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value;
       if (password !== confirmPassword) {
         showToast('Passwords do not match', 'error');
         return;
       }
-      signup(fullName, email, password);
+      signup(fullName, email, mobileNumber, password);
     });
   }
 
   const forgotPasswordForm = document.getElementById('forgot-password-form') as HTMLFormElement;
   if (forgotPasswordForm) {
     forgotPasswordForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const email = (document.getElementById('email') as HTMLInputElement).value;
-      forgotPassword(email);
+      e.preventDefault(); // Only triggers on step 1 due to type="button" on other steps
+      const identifier = (document.getElementById('identifier') as HTMLInputElement).value;
+      if (identifier) sendOtp(identifier);
     });
-  }
 
-  const resetPasswordForm = document.getElementById('reset-password-form') as HTMLFormElement;
-  if (resetPasswordForm) {
-    resetPasswordForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newPassword = (document.getElementById('password') as HTMLInputElement).value;
-      const confirmPassword = (document.getElementById('confirm-password') as HTMLInputElement).value;
-      if (newPassword !== confirmPassword) {
-        showToast('Passwords do not match', 'error');
-        return;
-      }
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get('token');
-      const email = urlParams.get('email');
-      
-      if (!token || !email) {
-        showToast('Invalid password reset link. Please request a new one.', 'error');
-        return;
-      }
-      
-      resetPassword(email, token, newPassword);
-    });
+    const verifyOtpBtn = document.getElementById('verify-otp-btn');
+    if (verifyOtpBtn) {
+      verifyOtpBtn.addEventListener('click', () => {
+        const otp = (document.getElementById('otp') as HTMLInputElement).value;
+        if (otp && otp.length === 6) verifyOtp(otp);
+        else showToast('Please enter a 6-digit code', 'error');
+      });
+    }
+
+    const resetPwBtn = document.getElementById('reset-pw-btn');
+    if (resetPwBtn) {
+      resetPwBtn.addEventListener('click', () => {
+        const newPassword = (document.getElementById('newPassword') as HTMLInputElement).value;
+        if (newPassword && newPassword.length >= 8) resetPasswordOtp(newPassword);
+        else showToast('Password must be at least 8 characters', 'error');
+      });
+    }
+
+    const resendOtpLink = document.getElementById('resend-otp-link');
+    if (resendOtpLink) {
+      resendOtpLink.addEventListener('click', () => {
+        if (resetIdentifier) sendOtp(resetIdentifier);
+      });
+    }
   }
 
   const logoutBtn = document.getElementById('logout-btn');

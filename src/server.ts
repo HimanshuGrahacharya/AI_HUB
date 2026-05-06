@@ -136,13 +136,25 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
 // Authentication routes
 app.post('/api/signup', async (req: Request, res: Response) => {
   try {
-    const { fullName, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
+    const { fullName, email, mobileNumber, password } = req.body;
+    
+    // Check if email or mobile exists
+    const query: any[] = [{ email }];
+    if (mobileNumber) query.push({ mobileNumber });
+    
+    const existingUser = await User.findOne({ $or: query });
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      if (existingUser.email === email) return res.status(400).json({ error: 'Email already exists' });
+      return res.status(400).json({ error: 'Mobile number already exists' });
     }
+    
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ fullName, email, password: hashedPassword });
+    const user = new User({ 
+      fullName, 
+      email, 
+      mobileNumber: mobileNumber || undefined,
+      password: hashedPassword 
+    });
     await user.save();
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
@@ -153,8 +165,11 @@ app.post('/api/signup', async (req: Request, res: Response) => {
 
 app.post('/api/login', async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { identifier, password } = req.body; // identifier can be email or mobile
+    const user = await User.findOne({ 
+      $or: [{ email: identifier }, { mobileNumber: identifier }]
+    });
+    
     if (!user || !user.password) {
       return res.status(400).json({ error: 'User not found or invalid account type' });
     }
@@ -170,72 +185,96 @@ app.post('/api/login', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
+app.post('/api/auth/send-otp', async (req: Request, res: Response) => {
   try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+    const { identifier } = req.body;
+    const user = await User.findOne({ 
+      $or: [{ email: identifier }, { mobileNumber: identifier }]
+    });
+    
     if (!user) {
-      // Security: Don't reveal if user exists or not
-      return res.status(200).json({ message: 'If an account exists, a reset link was sent.' });
+      return res.status(200).json({ message: 'If an account exists, an OTP was sent.' });
     }
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetTokenHash = await bcrypt.hash(resetToken, 10);
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpHash = await bcrypt.hash(otp, 10);
     
-    user.resetPasswordToken = resetTokenHash;
-    user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
+    user.otpCode = otpHash;
+    user.otpExpires = new Date(Date.now() + 600000); // 10 minutes
     await user.save();
 
-    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password.html?token=${resetToken}&email=${email}`;
-    
-    try {
-      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-        await sendEmail(email, resetUrl);
-        res.status(200).json({ 
-          message: 'If an account exists, a reset link was sent.'
-        });
-      } else {
-        console.warn('EMAIL_USER and EMAIL_PASS are not set. Cannot send real email. Mock link:', resetUrl);
-        res.status(200).json({ 
-          message: 'Demo mode active. Email not configured.',
-          demoUrl: resetUrl
-        });
-      }
-    } catch (err) {
-      console.error('Failed to send email:', err);
-      res.status(200).json({ 
-        message: 'If an account exists, a reset link was sent.'
-      });
-    }
+    // In a real app, send OTP via Twilio SMS or Email here
+    console.log(`[DEMO OTP] Code for ${identifier}: ${otp}`);
+
+    res.status(200).json({ 
+      message: 'OTP sent successfully (Demo Mode)',
+      demoOtp: otp // Send back only for demo purposes!
+    });
   } catch (error) {
-    console.error('Forgot password error:', error);
+    console.error('Send OTP error:', error);
     res.status(500).json({ error: 'Failed to process request' });
   }
 });
 
-app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
+app.post('/api/auth/verify-otp', async (req: Request, res: Response) => {
   try {
-    const { email, token, newPassword } = req.body;
+    const { identifier, otp } = req.body;
     const user = await User.findOne({ 
-      email, 
+      $or: [{ email: identifier }, { mobileNumber: identifier }],
+      otpCode: { $exists: true },
+      otpExpires: { $gt: new Date() }
+    });
+
+    if (!user || !user.otpCode) {
+      return res.status(400).json({ error: 'Invalid or expired OTP' });
+    }
+
+    const isValidOtp = await bcrypt.compare(otp, user.otpCode);
+    if (!isValidOtp) {
+      return res.status(400).json({ error: 'Invalid or expired OTP' });
+    }
+
+    // OTP is valid. Issue a temporary token to allow password reset
+    const tempToken = crypto.randomBytes(32).toString('hex');
+    user.resetPasswordToken = await bcrypt.hash(tempToken, 10);
+    user.resetPasswordExpires = new Date(Date.now() + 900000); // 15 minutes to reset password
+    user.otpCode = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    res.status(200).json({ 
+      message: 'OTP verified',
+      tempToken 
+    });
+  } catch (error) {
+    console.error('Verify OTP error:', error);
+    res.status(500).json({ error: 'Failed to verify OTP' });
+  }
+});
+
+app.post('/api/auth/reset-password-otp', async (req: Request, res: Response) => {
+  try {
+    const { identifier, tempToken, newPassword } = req.body;
+    const user = await User.findOne({ 
+      $or: [{ email: identifier }, { mobileNumber: identifier }],
       resetPasswordToken: { $exists: true },
       resetPasswordExpires: { $gt: new Date() }
     });
 
     if (!user || !user.resetPasswordToken) {
-      return res.status(400).json({ error: 'Invalid or expired password reset token' });
+      return res.status(400).json({ error: 'Session expired. Please restart the process.' });
     }
 
-    const isValidToken = await bcrypt.compare(token, user.resetPasswordToken);
+    const isValidToken = await bcrypt.compare(tempToken, user.resetPasswordToken);
     if (!isValidToken) {
-      return res.status(400).json({ error: 'Invalid or expired password reset token' });
+      return res.status(400).json({ error: 'Session expired. Please restart the process.' });
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
-    // Invalidate all existing sessions globally
-    user.tokenVersion = (user.tokenVersion || 0) + 1;
+    user.tokenVersion = (user.tokenVersion || 0) + 1; // Global session invalidation
     await user.save();
 
     res.status(200).json({ message: 'Password has been successfully reset' });
