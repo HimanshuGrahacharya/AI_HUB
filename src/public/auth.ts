@@ -1,7 +1,7 @@
 declare const google: any;
 
 // Show a styled toast notification
-function showToast(message: string, type: 'error' | 'info' = 'error'): void {
+function showToast(message: string, type: 'error' | 'info' | 'success' = 'error'): void {
   const existing = document.getElementById('auth-toast');
   if (existing) existing.remove();
 
