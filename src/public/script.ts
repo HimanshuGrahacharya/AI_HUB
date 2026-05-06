@@ -4235,14 +4235,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (homeLink) {
     homeLink.addEventListener('click', (e: Event) => {
       e.preventDefault();
-      // Reset search
-      if (searchInput) searchInput.value = '';
-      // Reset categories
+      const sInput = document.getElementById('search-input') as HTMLInputElement;
+      if (sInput) sInput.value = '';
       const allToolsItem = document.querySelector('.category-item[data-category="All"]') as HTMLElement;
       if (allToolsItem) allToolsItem.click();
-      // Back to tools grid
       showTools();
-      // Smooth scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
@@ -4262,6 +4259,15 @@ document.addEventListener('DOMContentLoaded', () => {
       (item as HTMLElement).classList.add('active');
       
       const category = (item as HTMLElement).dataset.category;
+
+      // Update Hero Title
+      const h1 = document.querySelector('.dashboard-hero h1');
+      if (h1) {
+        h1.innerHTML = (!category || category === 'All') 
+          ? 'Unlock the Power of <span class="highlight">Artificial Intelligence</span>'
+          : `Explore <span class="highlight">${category}</span> Tools`;
+      }
+
       if (category) {
         filterByCategory(category);
       } else if (item.id === 'show-favorites') {
