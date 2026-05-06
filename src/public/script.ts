@@ -5081,6 +5081,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (arenaSendBtn) arenaSendBtn.addEventListener('click', executeArena);
 });
 
+(window as any).setArenaPrompt = (prompt: string) => {
+  const input = document.getElementById('arena-input') as HTMLTextAreaElement;
+  if (input) {
+    input.value = prompt;
+    input.focus();
+  }
+};
+
 (window as any).resetSearch = function() {
   const input = document.getElementById('search-input') as HTMLInputElement;
   if (input) input.value = '';

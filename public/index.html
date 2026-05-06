@@ -152,6 +152,12 @@
         </div>
         <div class="arena-input-area glass">
           <textarea id="arena-input" placeholder="Enter a single prompt to test all models at once..."></textarea>
+          <div class="suggested-prompts">
+            <span class="prompt-chip" onclick="setArenaPrompt('Write a professional email about a project delay.')">📧 Project Email</span>
+            <span class="prompt-chip" onclick="setArenaPrompt('Explain Quantum Physics like I am five.')">⚛️ Quantum Physics</span>
+            <span class="prompt-chip" onclick="setArenaPrompt('Write a Python script to scrape a website.')">🐍 Python Code</span>
+            <span class="prompt-chip" onclick="setArenaPrompt('Give me 5 creative business ideas for 2026.')">💡 Business Ideas</span>
+          </div>
           <button id="arena-send-btn" class="btn-primary">Execute All Models ⚡</button>
         </div>
         <div class="arena-grid">
