@@ -81,18 +81,30 @@ function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) 
 // Specific AI API Routes
 app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey || apiKey === 'your-openai-key') {
+      return res.json({ response: "ChatGPT integration is in Demo Mode. To enable real answers, add a valid OPENAI_API_KEY to your Render environment variables!" });
+    }
+
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: req.body.message }],
     }, {
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
     });
     res.json({ response: response.data.choices[0].message.content });
   } catch (error: any) {
     console.error('OpenAI API error:', error.message);
+    // If it's a 401 (Unauthorized) or 429 (Quota), show a helpful message instead of generic error
+    if (error.response?.status === 401) {
+      return res.json({ response: "Invalid OpenAI API Key. Please check your Render environment variables!" });
+    }
+    if (error.response?.status === 429) {
+      return res.json({ response: "OpenAI Quota exceeded. Please add credits to your OpenAI account." });
+    }
     res.status(500).json({ error: 'Failed to get response from ChatGPT' });
   }
 });
