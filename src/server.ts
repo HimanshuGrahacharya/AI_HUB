@@ -105,21 +105,30 @@ app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Respon
 
 app.post('/api/claude', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey || apiKey.startsWith('gsk_')) {
+      const msg = apiKey?.startsWith('gsk_') 
+        ? "You are using a Groq key for Claude. Please use an Anthropic key (starting with sk-ant-) or add a GROQ_API_KEY for Groq models!"
+        : "Claude integration is in Demo Mode. Add ANTHROPIC_API_KEY to Render to enable real answers.";
+      return res.json({ response: msg });
+    }
+
     const response = await axios.post('https://api.anthropic.com/v1/messages', {
       model: 'claude-3-sonnet-20240229',
       max_tokens: 1000,
       messages: [{ role: 'user', content: req.body.message }],
     }, {
       headers: {
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
         'Content-Type': 'application/json',
       },
     });
     res.json({ response: response.data.content[0].text });
   } catch (error: any) {
-    console.error('Anthropic API error:', error.message);
-    res.status(500).json({ error: 'Failed to get response from Claude' });
+    console.error('Anthropic API error:', error.response?.data || error.message);
+    const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Claude';
+    res.status(500).json({ error: errorMessage });
   }
 });
 
@@ -134,8 +143,9 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
     });
     res.json({ response: response.data.candidates[0].content.parts[0].text });
   } catch (error: any) {
-    console.error('Gemini API error:', error.message);
-    res.status(500).json({ error: 'Failed to get response from Gemini' });
+    console.error('Gemini API error:', error.response?.data || error.message);
+    const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Gemini';
+    res.status(500).json({ error: errorMessage });
   }
 });
 
