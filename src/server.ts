@@ -235,9 +235,9 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
 
     // Try multiple versions and models
     const configs = [
-      { ver: 'v1beta', model: 'gemini-1.5-flash' },
       { ver: 'v1', model: 'gemini-1.5-flash' },
-      { ver: 'v1beta', model: 'gemini-pro' }
+      { ver: 'v1beta', model: 'gemini-1.5-flash' },
+      { ver: 'v1', model: 'gemini-pro' }
     ];
     
     let errors: string[] = [];
@@ -270,7 +270,7 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
     if (!apiKey) return res.json({ response: "Free Assistant key missing." });
 
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama-3.1-70b-versatile', // NEW STABLE 70B MODEL
+      model: 'llama-3.3-70b-versatile', // UPGRADED TO LATEST 70B STABLE
       messages: [
         { role: 'system', content: "You are the HSG AI Free Assistant." },
         { role: 'user', content: req.body.message }

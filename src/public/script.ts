@@ -5100,7 +5100,16 @@ async function executeArena() {
         body: JSON.stringify({ message: prompt })
       });
       const data = await res.json();
-      if (element) element.textContent = data.response || data.error || 'Error fetching response';
+      if (element) {
+        element.innerHTML = `
+          <div class="arena-response-content">${data.response || data.error || 'Error fetching response'}</div>
+          <div class="arena-actions" style="display: flex; justify-content: flex-end; margin-top: 10px; gap: 8px;">
+            <button class="voice-toggle" title="Listen" onclick="toggleVoice(this, \`${(data.response || '').replace(/`/g, '\\`').replace(/\n/g, ' ')}\`)">
+              <i class="ph ph-speaker-high"></i>
+            </button>
+          </div>
+        `;
+      }
     } catch (err) {
       if (element) element.textContent = 'Failed to connect to API';
     }
