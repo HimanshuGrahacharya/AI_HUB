@@ -4742,7 +4742,7 @@ function renderPagination() {
   const totalPages = Math.ceil(filteredTools.length / itemsPerPage);
   if (totalPages <= 1) return;
 
-  const maxVisiblePages = 5;
+  const maxVisiblePages = window.innerWidth <= 768 ? 3 : 5;
   let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
   let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
