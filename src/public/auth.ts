@@ -113,7 +113,41 @@ async function forgotPassword(email: string): Promise<void> {
     });
     const data = await response.json();
     if (response.ok) {
-      showToast('If an account exists, a reset link was sent to your email.', 'info');
+      if (data.demoUrl) {
+        showToast('Demo Mode: See reset link below!', 'info');
+        
+        const form = document.getElementById('forgot-password-form');
+        if (form) {
+          let existing = document.getElementById('demo-reset-link');
+          if (existing) existing.remove();
+          
+          const linkDiv = document.createElement('div');
+          linkDiv.id = 'demo-reset-link';
+          linkDiv.style.marginTop = '20px';
+          linkDiv.style.padding = '15px';
+          linkDiv.style.background = 'rgba(99, 102, 241, 0.1)';
+          linkDiv.style.border = '1px solid rgba(99, 102, 241, 0.3)';
+          linkDiv.style.borderRadius = '12px';
+          linkDiv.style.textAlign = 'center';
+          linkDiv.style.animation = 'fadeInUp 0.3s ease-out forwards';
+          
+          const a = document.createElement('a');
+          a.href = data.demoUrl;
+          a.innerHTML = '<i class="ph ph-link"></i> Click here to Test Reset (Demo Mode)';
+          a.style.color = '#818cf8';
+          a.style.fontWeight = '700';
+          a.style.textDecoration = 'none';
+          a.style.display = 'flex';
+          a.style.alignItems = 'center';
+          a.style.justifyContent = 'center';
+          a.style.gap = '8px';
+          
+          linkDiv.appendChild(a);
+          form.appendChild(linkDiv);
+        }
+      } else {
+        showToast(data.message || 'If an account exists, a reset link was sent to your email.', 'info');
+      }
     } else {
       showToast(data.error || 'Failed to process request', 'error');
     }

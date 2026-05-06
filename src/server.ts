@@ -191,16 +191,22 @@ app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
     try {
       if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
         await sendEmail(email, resetUrl);
+        res.status(200).json({ 
+          message: 'If an account exists, a reset link was sent.'
+        });
       } else {
         console.warn('EMAIL_USER and EMAIL_PASS are not set. Cannot send real email. Mock link:', resetUrl);
+        res.status(200).json({ 
+          message: 'Demo mode active. Email not configured.',
+          demoUrl: resetUrl
+        });
       }
     } catch (err) {
       console.error('Failed to send email:', err);
+      res.status(200).json({ 
+        message: 'If an account exists, a reset link was sent.'
+      });
     }
-
-    res.status(200).json({ 
-      message: 'If an account exists, a reset link was sent.'
-    });
   } catch (error) {
     console.error('Forgot password error:', error);
     res.status(500).json({ error: 'Failed to process request' });
