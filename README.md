@@ -71,6 +71,40 @@
 
 ---
 
+## 🚀 Key Features
+
+### 🧠 Advanced AI Capabilities
+- **AI Model Arena:** Compare responses from **ChatGPT, Gemini, and Groq** side-by-side in real-time.
+- **Multi-Model Hub:** Seamless integration with OpenAI, Anthropic, Google Gemini, and Groq.
+- **Blackbox AI (Free Mode):** A 100% free assistant that works without any API keys or credits.
+- **Persistent AI Memory:** Your chat history is securely saved to MongoDB so you never lose a conversation.
+- **Smart Error Handling:** Auto-detects and fixes misconfigured API keys (e.g., Groq keys in Claude slots).
+
+### 💎 Premium UI/UX
+- **Modern Glassmorphism:** A stunning, translucent interface designed for a high-end SaaS feel.
+- **Ultra-Responsive:** Optimized for everything from small mobile screens to 4K ultra-wide monitors.
+- **Dynamic Search & Filter:** Instant access to 500+ AI tools with category-based filtering and pagination.
+- **Compact View Mode:** Toggle between detailed and compact layouts for better productivity.
+- **Real-time Toasts:** Beautiful floating notifications for all user actions and errors.
+
+### 🔐 Secure Infrastructure
+- **3-Step Auth Wizard:** Professional login flow including Identifier detection, OTP verification, and password reset.
+- **Google OAuth:** One-click login with Google integration.
+- **Email & Mobile OTP:** Robust verification system with "Demo Mode" fallback for testing.
+- **Session Management:** Secure JWT-based sessions with global token invalidation on password change.
+
+---
+
+## 🛠️ Tech Stack
+- **Frontend:** HTML5, Vanilla CSS3 (Custom Design System), TypeScript
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB (with Atlas & Memory Server support)
+- **AI Engines:** OpenAI, Anthropic, Google Gemini, Groq, Blackbox AI
+- **Authentication:** JWT, Bcrypt, Google OAuth 2.0
+- **Testing:** Playwright, Jest (Server Suite)
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to open an issue or submit a pull request to help make **HSG AI HUB** even better.
