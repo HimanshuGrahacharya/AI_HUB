@@ -49,7 +49,7 @@ const aiTools: AITool[] = [
     "description": "Experience lightning-fast responses with Groq's high-speed inference engine powered by Llama 3.",
     "category": "AI Assistants",
     "link": "https://groq.com",
-    "logo": "https://groq.com/wp-content/uploads/2024/03/Groq_Logo_RGB_White.png"
+    "logo": "https://www.google.com/s2/favicons?domain=groq.com&sz=128"
   },
   {
     "id": "perplexityai",
