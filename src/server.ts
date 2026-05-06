@@ -149,6 +149,33 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
   }
 });
 
+app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const apiKey = process.env.ANTHROPIC_API_KEY; // Using the key the user already has (which is actually a Groq key)
+    // Note: I'll check both ANTHROPIC_API_KEY (where they put it by mistake) and a dedicated GROQ_API_KEY
+    const groqKey = (apiKey && apiKey.startsWith('gsk_')) ? apiKey : process.env.GROQ_API_KEY;
+
+    if (!groqKey) {
+      return res.json({ response: "Groq integration is in Demo Mode. Add GROQ_API_KEY to Render to enable lightning-fast answers!" });
+    }
+
+    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+      model: 'llama3-8b-8192',
+      messages: [{ role: 'user', content: req.body.message }],
+    }, {
+      headers: {
+        'Authorization': `Bearer ${groqKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    res.json({ response: response.data.choices[0].message.content });
+  } catch (error: any) {
+    console.error('Groq API error:', error.response?.data || error.message);
+    const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Groq';
+    res.status(500).json({ error: errorMessage });
+  }
+});
+
 // Authentication routes
 app.post('/api/signup', async (req: Request, res: Response) => {
   try {
