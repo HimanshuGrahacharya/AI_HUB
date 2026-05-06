@@ -53,6 +53,12 @@
             <p class="user-email" id="dropdown-user-email">...</p>
           </div>
           <div class="dropdown-divider"></div>
+          <a href="dashboard.html" class="dropdown-item">
+            <i class="ph ph-clock-counter-clockwise"></i> Chat History
+          </a>
+          <a href="#" class="dropdown-item" onclick="openPersonasPanel(); return false;">
+            <i class="ph ph-robot"></i> My Personas
+          </a>
           <a href="#" class="dropdown-item" id="profile-link" onclick="document.getElementById('profile-modal').style.display='flex'; return false;">
             <i class="ph ph-user"></i> My Profile
           </a>
@@ -411,8 +417,53 @@
     </div>
   </footer>
 
-  <script src="auth.js?v=5"></script>
-  <script src="script.js?v=5"></script>
+  <!-- Create Custom Persona Modal -->
+  <div id="persona-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px);">
+    <div class="glass" style="max-width:520px; width:95%; padding:35px; border-radius:20px; position:relative;">
+      <button onclick="document.getElementById('persona-modal').style.display='none'" style="position:absolute;top:15px;right:15px;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;font-size:1.5rem;"><i class="ph ph-x"></i></button>
+      <h3 style="margin:0 0 8px 0; font-family:'Outfit',sans-serif; font-size:1.4rem;">🎭 Create Custom AI Persona</h3>
+      <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:25px;">Define a custom AI agent with a unique personality and expertise.</p>
+      
+      <div style="display:flex; gap:12px; margin-bottom:15px;">
+        <div style="flex:0 0 60px;">
+          <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:5px;">Emoji</label>
+          <input type="text" id="persona-emoji" value="🤖" maxlength="2" style="width:100%; text-align:center; font-size:1.5rem; padding:10px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; color:white;">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:5px;">Persona Name *</label>
+          <input type="text" id="persona-name" placeholder="e.g. Senior Python Dev, Marketing Expert..." maxlength="60" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; color:white; font-size:0.95rem;">
+        </div>
+      </div>
+      
+      <label style="font-size:0.8rem; color:var(--text-secondary); display:block; margin-bottom:5px;">System Prompt (Instructions) *</label>
+      <textarea id="persona-prompt" placeholder="e.g. You are a senior Python developer with 10 years of experience. You write clean, efficient, and well-documented code. You explain concepts clearly and always provide examples." rows="5" maxlength="1000" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; color:white; font-size:0.95rem; resize:vertical; font-family:inherit;"></textarea>
+      
+      <div style="display:flex; gap:10px; margin-top:20px; justify-content:flex-end;">
+        <button class="btn-secondary" onclick="document.getElementById('persona-modal').style.display='none'">Cancel</button>
+        <button class="btn-primary" onclick="savePersona()"><i class="ph ph-floppy-disk"></i> Save Persona</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Personas Panel Modal -->
+  <div id="personas-panel" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(8px);">
+    <div class="glass" style="max-width:620px; width:95%; padding:35px; border-radius:20px; position:relative; max-height:85vh; overflow-y:auto;">
+      <button onclick="document.getElementById('personas-panel').style.display='none'" style="position:absolute;top:15px;right:15px;background:transparent;border:none;color:var(--text-secondary);cursor:pointer;font-size:1.5rem;"><i class="ph ph-x"></i></button>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-right:25px;">
+        <div>
+          <h3 style="margin:0; font-family:'Outfit',sans-serif; font-size:1.4rem;">🎭 My AI Personas</h3>
+          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:4px;">Your custom AI agents with unique personalities.</p>
+        </div>
+        <button class="btn-primary btn-sm" onclick="document.getElementById('personas-panel').style.display='none'; document.getElementById('persona-modal').style.display='flex';"><i class="ph ph-plus"></i> New</button>
+      </div>
+      <div id="personas-list" style="display:flex; flex-direction:column; gap:12px;">
+        <div style="text-align:center; padding:30px; color:var(--text-secondary);">Loading personas...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js?v=6"></script>
+  <script src="script.js?v=6"></script>
   <script src="theme.js?v=5"></script>
 </body>
 </html>

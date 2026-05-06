@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import User from './models/User';
 import Chat from './models/Chat';
 import Submission from './models/Submission';
+import Persona from './models/Persona';
 import crypto from 'crypto';
 import { sendEmail, sendOtpEmail } from './utils/sendEmail';
 
@@ -174,28 +175,6 @@ app.post('/api/claude', authenticateToken, async (req: AuthRequest, res: Respons
 
 
 
-app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response) => {
-  try {
-    // Fallback logic for keys
-    const apiKey = process.env.GROQ_API_KEY || (process.env.ANTHROPIC_API_KEY?.startsWith('gsk_') ? process.env.ANTHROPIC_API_KEY : null);
-    if (!apiKey) return res.json({ response: "Groq API Key is missing! Please add GROQ_API_KEY to Render." });
-
-    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama-3.1-8b-instant', // NEW STABLE MODEL
-      messages: [{ role: 'user', content: req.body.message }],
-    }, {
-      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
-    });
-
-    const aiResponse = response.data.choices[0].message.content;
-    await saveChatMessage(req.user.id, 'groq', 'user', req.body.message);
-    await saveChatMessage(req.user.id, 'groq', 'ai', aiResponse);
-    res.json({ response: aiResponse });
-  } catch (error: any) {
-    const detail = error.response?.data?.error?.message || error.message;
-    res.json({ response: `Groq Error: ${detail}` });
-  }
-});
 
 app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
@@ -282,6 +261,68 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
   } catch (error: any) {
     const detail = error.response?.data?.error?.message || error.message;
     res.json({ response: `Free Assistant Error: ${detail}` });
+  }
+});
+
+// ============================================================
+// CUSTOM AI PERSONAS
+// ============================================================
+
+// Get all personas for logged-in user
+app.get('/api/personas', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const personas = await Persona.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    res.json({ personas });
+  } catch (e) { res.status(500).json({ error: 'Failed to fetch personas' }); }
+});
+
+// Create a new persona
+app.post('/api/personas', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const { name, emoji, systemPrompt } = req.body;
+    if (!name || !systemPrompt) return res.status(400).json({ error: 'Name and System Prompt are required' });
+    const count = await Persona.countDocuments({ userId: req.user.id });
+    if (count >= 10) return res.status(400).json({ error: 'Max 10 personas allowed' });
+    const persona = new Persona({ userId: req.user.id, name, emoji: emoji || '🤖', systemPrompt });
+    await persona.save();
+    res.status(201).json({ persona });
+  } catch (e) { res.status(500).json({ error: 'Failed to create persona' }); }
+});
+
+// Delete a persona
+app.delete('/api/personas/:id', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    await Persona.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    res.json({ message: 'Persona deleted' });
+  } catch (e) { res.status(500).json({ error: 'Failed to delete persona' }); }
+});
+
+// Chat with a persona (injects system prompt)
+app.post('/api/personas/:id/chat', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const persona = await Persona.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!persona) return res.status(404).json({ error: 'Persona not found' });
+
+    const apiKey = process.env.GROQ_API_KEY || (process.env.ANTHROPIC_API_KEY?.startsWith('gsk_') ? process.env.ANTHROPIC_API_KEY : null);
+    if (!apiKey) return res.json({ response: 'Groq API key missing. Cannot run persona.' });
+
+    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+      model: 'llama-3.1-8b-instant',
+      messages: [
+        { role: 'system', content: persona.systemPrompt },
+        { role: 'user', content: req.body.message }
+      ],
+    }, {
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      timeout: 15000
+    });
+
+    const aiResponse = response.data.choices[0].message.content;
+    await saveChatMessage(req.user.id, `persona-${persona._id}`, 'user', req.body.message);
+    await saveChatMessage(req.user.id, `persona-${persona._id}`, 'ai', aiResponse);
+    res.json({ response: aiResponse });
+  } catch (error: any) {
+    res.json({ response: `Persona Error: ${error.message}` });
   }
 });
 
@@ -581,9 +622,19 @@ app.post('/api/user/settings', authenticateToken, async (req: AuthRequest, res: 
 });
 
 // Get chat history for a specific tool
+app.get('/api/chat/history/all', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const chats = await Chat.find({ userId: req.user.id }).sort({ updatedAt: -1 });
+    res.json({ chats });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch all chat history' });
+  }
+});
+
 app.get('/api/chat/history/:toolId', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const toolId = req.params.toolId as string;
+    if (toolId === 'all') return; // Handled by route above
     if (!toolId) return res.status(400).json({ error: 'Tool ID is required' });
     const chat = await Chat.findOne({ userId: req.user.id, toolId });
     res.json({ messages: chat ? chat.messages : [] });

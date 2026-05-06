@@ -5240,6 +5240,116 @@ ${getModelText('res-free')}
   });
 };
 
+// ============================================================
+// CUSTOM AI PERSONAS
+// ============================================================
+
+(window as any).openPersonasPanel = async function() {
+  const panel = document.getElementById('personas-panel');
+  if (panel) panel.style.display = 'flex';
+  await renderPersonasList();
+};
+
+async function renderPersonasList() {
+  const list = document.getElementById('personas-list');
+  if (!list) return;
+  const token = localStorage.getItem('token');
+  if (!token) {
+    list.innerHTML = `<div style="color:var(--text-secondary); text-align:center;">Please log in to manage personas.</div>`;
+    return;
+  }
+  try {
+    const res = await fetch('/api/personas', { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    if (!data.personas || data.personas.length === 0) {
+      list.innerHTML = `
+        <div style="text-align:center; padding:30px; color:var(--text-secondary);">
+          <div style="font-size:3rem; margin-bottom:10px;">🤖</div>
+          <p>No personas yet! Create one to get started.</p>
+          <button class="btn-primary" style="margin-top:15px;" onclick="document.getElementById('personas-panel').style.display='none'; document.getElementById('persona-modal').style.display='flex';"><i class="ph ph-plus"></i> Create My First Persona</button>
+        </div>`;
+      return;
+    }
+    list.innerHTML = data.personas.map((p: any) => `
+      <div class="glass" style="padding:16px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+        <div style="display:flex; align-items:center; gap:14px; flex:1; min-width:0;">
+          <div style="font-size:2rem; flex-shrink:0;">${p.emoji}</div>
+          <div style="min-width:0;">
+            <div style="font-weight:600; color:white; font-size:1rem; truncate;">${p.name}</div>
+            <div style="font-size:0.82rem; color:var(--text-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:300px;">${p.systemPrompt}</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-shrink:0;">
+          <button class="btn-primary btn-sm" onclick="selectPersona('${p._id}', '${p.name.replace(/'/g, "\\'")}', '${p.emoji}')">
+            <i class="ph ph-chat-circle"></i> Chat
+          </button>
+          <button class="btn-secondary btn-sm" style="color:#ef4444; border-color:#ef4444;" onclick="deletePersona('${p._id}')">
+            <i class="ph ph-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    list.innerHTML = `<div style="color:#ef4444; text-align:center;">Failed to load personas.</div>`;
+  }
+}
+
+(window as any).savePersona = async function() {
+  const name = (document.getElementById('persona-name') as HTMLInputElement)?.value?.trim();
+  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || '🤖';
+  const systemPrompt = (document.getElementById('persona-prompt') as HTMLTextAreaElement)?.value?.trim();
+  if (!name || !systemPrompt) { showToast('Please fill in the name and system prompt.', 'error'); return; }
+  const token = localStorage.getItem('token');
+  try {
+    const res = await fetch('/api/personas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ name, emoji, systemPrompt })
+    });
+    const data = await res.json();
+    if (!res.ok) { showToast(data.error || 'Failed to save persona', 'error'); return; }
+    showToast(`Persona "${name}" created!`, 'success');
+    document.getElementById('persona-modal')!.style.display = 'none';
+    (document.getElementById('persona-name') as HTMLInputElement).value = '';
+    (document.getElementById('persona-prompt') as HTMLTextAreaElement).value = '';
+    (document.getElementById('persona-emoji') as HTMLInputElement).value = '🤖';
+  } catch(e) { showToast('Connection error', 'error'); }
+};
+
+(window as any).deletePersona = async function(id: string) {
+  const token = localStorage.getItem('token');
+  try {
+    await fetch(`/api/personas/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+    showToast('Persona deleted.', 'info');
+    await renderPersonasList();
+  } catch(e) { showToast('Failed to delete persona', 'error'); }
+};
+
+(window as any).selectPersona = function(id: string, name: string, emoji: string) {
+  // Route chat messages to the persona endpoint
+  selectedAI = `personas/${id}/chat` as any;
+  document.getElementById('personas-panel')!.style.display = 'none';
+
+  // Update the chat header
+  const nameEl = document.getElementById('selected-ai-name');
+  if (nameEl) nameEl.textContent = `${emoji} ${name}`;
+
+  // Show chat interface
+  const grid = document.getElementById('ai-grid');
+  const pagination = document.getElementById('pagination');
+  const sidebar = document.querySelector('.sidebar') as HTMLElement;
+  const chatContainer = document.getElementById('chat-container');
+  if (grid) grid.style.display = 'none';
+  if (pagination) pagination.style.display = 'none';
+  if (sidebar) sidebar.style.display = 'none';
+  if (chatContainer) chatContainer.style.display = 'flex';
+
+  const messagesDiv = document.getElementById('chat-messages');
+  if (messagesDiv) messagesDiv.innerHTML = '';
+  addMessage('ai', `Hello! I am ${emoji} ${name}. How can I help you today?`);
+  startInactivityTimer();
+};
+
 // Event Listeners
 window.addEventListener('load', () => {
   const p = document.getElementById('preloader');
