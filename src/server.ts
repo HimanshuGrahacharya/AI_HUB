@@ -58,10 +58,23 @@ function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) 
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Access token required' });
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
+  jwt.verify(token, JWT_SECRET, async (err, decoded: any) => {
     if (err) return res.status(403).json({ error: 'Invalid token' });
-    req.user = user;
-    next();
+    
+    try {
+      const user = await User.findById(decoded.id);
+      if (!user) return res.status(404).json({ error: 'User not found' });
+      
+      // Verify token version (session invalidation check)
+      if (user.tokenVersion !== decoded.tokenVersion && decoded.tokenVersion !== undefined) {
+        return res.status(403).json({ error: 'Session expired due to password reset. Please log in again.' });
+      }
+      
+      req.user = decoded;
+      next();
+    } catch (dbErr) {
+      return res.status(500).json({ error: 'Server error during authentication' });
+    }
   });
 }
 
@@ -149,7 +162,7 @@ app.post('/api/login', async (req: Request, res: Response) => {
     if (!isPasswordValid) {
       return res.status(400).json({ error: 'Invalid password' });
     }
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET);
+    const token = jwt.sign({ id: user._id, email: user.email, tokenVersion: user.tokenVersion || 0 }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token });
   } catch (error) {
     console.error('Login error:', error);
@@ -215,6 +228,8 @@ app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
     user.password = await bcrypt.hash(newPassword, 10);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
+    // Invalidate all existing sessions globally
+    user.tokenVersion = (user.tokenVersion || 0) + 1;
     await user.save();
 
     res.status(200).json({ message: 'Password has been successfully reset' });
@@ -245,7 +260,7 @@ app.post('/api/auth/google', async (req: Request, res: Response) => {
       await user.save();
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET);
+    const token = jwt.sign({ id: user._id, email: user.email, tokenVersion: user.tokenVersion || 0 }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token });
   } catch (error) {
     console.error('Google Auth error:', error);

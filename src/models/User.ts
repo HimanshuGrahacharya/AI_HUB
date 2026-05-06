@@ -9,6 +9,7 @@ export interface IUser extends Document {
   recentlyViewed: string[];
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
+  tokenVersion: number;
 }
 
 const UserSchema: Schema = new Schema({
@@ -19,7 +20,8 @@ const UserSchema: Schema = new Schema({
   favorites: { type: [String], default: [] },
   recentlyViewed: { type: [String], default: [] },
   resetPasswordToken: { type: String },
-  resetPasswordExpires: { type: Date }
+  resetPasswordExpires: { type: Date },
+  tokenVersion: { type: Number, default: 0 }
 }, {
   timestamps: true
 });
