@@ -78,6 +78,22 @@ function authenticateToken(req: AuthRequest, res: Response, next: NextFunction) 
   });
 }
 
+// Helper to save chat messages
+async function saveChatMessage(userId: string, toolId: string, sender: 'user' | 'ai', text: string) {
+  try {
+    await Chat.findOneAndUpdate(
+      { userId, toolId },
+      { 
+        $push: { messages: { sender, text, timestamp: new Date() } },
+        $set: { updatedAt: new Date() }
+      },
+      { upsert: true }
+    );
+  } catch (error) {
+    console.error('Save chat error:', error);
+  }
+}
+
 // Specific AI API Routes
 app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
@@ -95,7 +111,13 @@ app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Respon
         'Content-Type': 'application/json',
       },
     });
-    res.json({ response: response.data.choices[0].message.content });
+    const aiResponse = response.data.choices[0].message.content;
+
+    // Save to history
+    await saveChatMessage(req.user.id, 'chatgpt', 'user', req.body.message);
+    await saveChatMessage(req.user.id, 'chatgpt', 'ai', aiResponse);
+
+    res.json({ response: aiResponse });
   } catch (error: any) {
     console.error('OpenAI API error:', error.response?.data || error.message);
     const errorMessage = error.response?.data?.error?.message || 'Failed to get response from ChatGPT';
@@ -124,7 +146,13 @@ app.post('/api/claude', authenticateToken, async (req: AuthRequest, res: Respons
         'Content-Type': 'application/json',
       },
     });
-    res.json({ response: response.data.content[0].text });
+    const aiResponse = response.data.content[0].text;
+
+    // Save to history
+    await saveChatMessage(req.user.id, 'claude', 'user', req.body.message);
+    await saveChatMessage(req.user.id, 'claude', 'ai', aiResponse);
+
+    res.json({ response: aiResponse });
   } catch (error: any) {
     console.error('Anthropic API error:', error.response?.data || error.message);
     const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Claude';
@@ -141,7 +169,13 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
     const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
       contents: [{ parts: [{ text: req.body.message }] }]
     });
-    res.json({ response: response.data.candidates[0].content.parts[0].text });
+    const aiResponse = response.data.candidates[0].content.parts[0].text;
+
+    // Save to history
+    await saveChatMessage(req.user.id, 'gemini', 'user', req.body.message);
+    await saveChatMessage(req.user.id, 'gemini', 'ai', aiResponse);
+
+    res.json({ response: aiResponse });
   } catch (error: any) {
     console.error('Gemini API error:', error.response?.data || error.message);
     const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Gemini';
@@ -168,7 +202,13 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
         'Content-Type': 'application/json',
       },
     });
-    res.json({ response: response.data.choices[0].message.content });
+    const aiResponse = response.data.choices[0].message.content;
+
+    // Save to history
+    await saveChatMessage(req.user.id, 'groq', 'user', req.body.message);
+    await saveChatMessage(req.user.id, 'groq', 'ai', aiResponse);
+
+    res.json({ response: aiResponse });
   } catch (error: any) {
     console.error('Groq API error:', error.response?.data || error.message);
     const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Groq';
@@ -480,6 +520,16 @@ app.get('/api/chat/history/:toolId', authenticateToken, async (req: AuthRequest,
     res.json({ messages: chat ? chat.messages : [] });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch chat history' });
+  }
+});
+
+app.delete('/api/chat/:toolId', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const toolId = req.params.toolId as string;
+    await Chat.findOneAndDelete({ userId: req.user.id, toolId });
+    res.json({ message: 'Chat history cleared' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to clear chat history' });
   }
 });
 

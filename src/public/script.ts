@@ -4194,6 +4194,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const backBtn = document.getElementById('back-btn');
   if (backBtn) backBtn.addEventListener('click', showTools);
 
+  const clearChatBtn = document.getElementById('clear-chat-btn');
+  if (clearChatBtn) {
+    clearChatBtn.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to clear your chat history for this tool?')) return;
+      
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const res = await fetch(`/api/chat/${selectedAI}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+          const messagesDiv = document.getElementById('chat-messages');
+          if (messagesDiv) {
+            messagesDiv.innerHTML = '';
+            const tool = aiTools.find(t => t.id === selectedAI);
+            addMessage('ai', `History cleared. How can I help you today?`);
+          }
+          showToast('Chat history cleared', 'info');
+        }
+      } catch (err) {
+        console.error('Clear chat error:', err);
+      }
+    });
+  }
+
   const homeLink = document.getElementById('home-link');
   if (homeLink) {
     homeLink.addEventListener('click', (e: Event) => {
