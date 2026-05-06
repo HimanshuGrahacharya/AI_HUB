@@ -254,17 +254,29 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
     });
     
     // Blackbox returns data in a stream-like format sometimes, let's clean it up
-    let aiResponse = response.data;
-    if (typeof aiResponse === 'string' && aiResponse.includes('data:')) {
-      // Extract actual text from the data stream format
-      aiResponse = aiResponse
-        .split('\n')
-        .filter(line => line.startsWith('data: ') && !line.includes('"type":'))
-        .map(line => line.replace('data: ', '').trim())
-        .join('');
+    let aiResponse = "";
+    if (typeof response.data === 'string') {
+      const lines = response.data.split('\n');
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const content = line.replace('data: ', '').trim();
+          // Filter out markers like [DONE] or type:start
+          if (content !== '[DONE]' && !content.startsWith('{"type":')) {
+            aiResponse += content;
+          }
+        }
+      }
+      
+      // Fallback if no data: markers found
+      if (!aiResponse) aiResponse = response.data.trim();
+    } else {
+      aiResponse = JSON.stringify(response.data);
     }
     
-    if (!aiResponse || aiResponse.length < 2) {
+    // Final cleanup of the [DONE] marker if it leaked in
+    aiResponse = aiResponse.replace(/\[DONE\]/g, '').trim();
+    
+    if (!aiResponse || aiResponse === '[DONE]') {
       aiResponse = "The free assistant is currently busy. Please try again in a moment or use Groq/Gemini!";
     }
 

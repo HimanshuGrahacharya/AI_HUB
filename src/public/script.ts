@@ -73,7 +73,7 @@ const aiTools: AITool[] = [
     "description": "A powerful, 100% free AI assistant that doesn't require any API keys or credits. Perfect for coding and general questions.",
     "category": "AI Assistants",
     "link": "https://blackbox.ai",
-    "logo": "https://www.blackbox.ai/images/blackbox-logo.svg"
+    "logo": "https://www.google.com/s2/favicons?domain=blackbox.ai&sz=128"
   },
   {
     "id": "youchat",
