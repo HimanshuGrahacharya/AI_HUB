@@ -200,16 +200,37 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
 app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
+    const { message, image } = req.body;
+    
+    let parts: any[] = [{ text: message || "Analyze this image." }];
+    
+    if (image) {
+      // image format is "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
+      const mimeType = image.split(';')[0].split(':')[1];
+      const base64Data = image.split(',')[1];
+      parts.push({
+        inlineData: {
+          mimeType: mimeType,
+          data: base64Data
+        }
+      });
+    }
+
     const configs = [
       { v: 'v1', m: 'gemini-1.5-flash' },
-      { v: 'v1beta', m: 'gemini-2.0-flash-exp' },
-      { v: 'v1', m: 'gemini-pro' }
+      { v: 'v1beta', m: 'gemini-2.0-flash-exp' }
     ];
     for (const c of configs) {
       try {
         const r = await axios.post(`https://generativelanguage.googleapis.com/${c.v}/models/${c.m}:generateContent?key=${apiKey}`,
-          { contents: [{ parts: [{ text: req.body.message }] }] }, { timeout: 8000 });
-        return res.json({ response: r.data.candidates[0].content.parts[0].text });
+          { contents: [{ parts: parts }] }, { timeout: 15000 });
+        const aiResponse = r.data.candidates[0].content.parts[0].text;
+        
+        // Save to DB (only save text to avoid massive DB bloat)
+        await saveChatMessage(req.user.id, 'gemini', 'user', image ? `[Image Uploaded] ${message}` : message);
+        await saveChatMessage(req.user.id, 'gemini', 'ai', aiResponse);
+
+        return res.json({ response: aiResponse });
       } catch (e) { continue; }
     }
     res.json({ response: "Gemini is busy. Try again soon." });

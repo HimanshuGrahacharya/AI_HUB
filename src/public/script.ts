@@ -4900,13 +4900,56 @@ if (messageInput) {
   });
 }
 
+let attachedImageBase64: string | null = null;
+
+(window as any).removeImage = function() {
+  attachedImageBase64 = null;
+  const previewContainer = document.getElementById('image-preview-container');
+  const uploadInput = document.getElementById('image-upload') as HTMLInputElement;
+  if (previewContainer) previewContainer.style.display = 'none';
+  if (uploadInput) uploadInput.value = '';
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const imageUpload = document.getElementById('image-upload') as HTMLInputElement;
+  if (imageUpload) {
+    imageUpload.addEventListener('change', function() {
+      const file = this.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          attachedImageBase64 = e.target?.result as string;
+          const previewContainer = document.getElementById('image-preview-container');
+          const previewImage = document.getElementById('image-preview') as HTMLImageElement;
+          if (previewContainer && previewImage) {
+            previewImage.src = attachedImageBase64;
+            previewContainer.style.display = 'block';
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+});
+
 async function sendMessage() {
   const input = document.getElementById('message-input') as HTMLInputElement;
   const message = input.value.trim();
-  if (!message) return;
+  if (!message && !attachedImageBase64) return;
 
-  addMessage('user', message);
+  const displayMessage = attachedImageBase64 
+    ? `<img src="${attachedImageBase64}" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><br>${message}`
+    : message;
+
+  addMessage('user', displayMessage);
   input.value = '';
+  
+  const payload = { 
+    message: message || "Analyze this image.", 
+    image: attachedImageBase64 
+  };
+  
+  (window as any).removeImage(); // clear preview
 
   const token = localStorage.getItem('token');
   
@@ -4927,7 +4970,7 @@ async function sendMessage() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify(payload),
     });
     
     if (typingDiv.parentNode) typingDiv.parentNode.removeChild(typingDiv);
@@ -4936,7 +4979,7 @@ async function sendMessage() {
     if (response.ok) {
       addMessage('ai', data.response);
     } else {
-      addMessage('ai', data.error || 'Sorry, there was an error processing your request.');
+      addMessage('ai', data.error || data.response || 'Sorry, there was an error processing your request.');
     }
   } catch (error) {
     if (typingDiv.parentNode) typingDiv.parentNode.removeChild(typingDiv);
