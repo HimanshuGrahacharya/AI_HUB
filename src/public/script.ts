@@ -5032,10 +5032,12 @@ async function executeArena() {
   const resChatGPT = document.getElementById('res-chatgpt');
   const resGemini = document.getElementById('res-gemini');
   const resGroq = document.getElementById('res-groq');
+  const resFree = document.getElementById('res-free');
 
   if (resChatGPT) resChatGPT.innerHTML = '<div class="loading-spinner"></div> Thinking...';
   if (resGemini) resGemini.innerHTML = '<div class="loading-spinner"></div> Thinking...';
   if (resGroq) resGroq.innerHTML = '<div class="loading-spinner"></div> Thinking...';
+  if (resFree) resFree.innerHTML = '<div class="loading-spinner"></div> Thinking...';
 
   const token = localStorage.getItem('token');
   if (!token) {
@@ -5063,7 +5065,8 @@ async function executeArena() {
   await Promise.all([
     fetchModel('/api/chatgpt', resChatGPT),
     fetchModel('/api/gemini', resGemini),
-    fetchModel('/api/groq', resGroq)
+    fetchModel('/api/groq', resGroq),
+    fetchModel('/api/blackbox', resFree)
   ]);
 }
 
