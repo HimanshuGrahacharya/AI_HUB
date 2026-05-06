@@ -3885,3 +3885,46 @@ body:not(.dark-mode) .profile-details-grid {
 .input-container .voice-search-btn {
   margin: 0 5px;
 }
+
+/* AI Arena Processing States */
+.processing-state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.hsg-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(99, 102, 241, 0.2);
+  border-top-color: var(--primary-light);
+  border-radius: 50%;
+  animation: hsgSpin 1s linear infinite;
+}
+
+@keyframes hsgSpin {
+  to { transform: rotate(360deg); }
+}
+
+.processing-text {
+  background: linear-gradient(90deg, var(--text-secondary) 0%, var(--primary-light) 50%, var(--text-secondary) 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 2s linear infinite;
+}
+
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
+.arena-column.is-processing {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.3), inset 0 0 10px rgba(99, 102, 241, 0.1);
+  transition: all 0.3s ease;
+}

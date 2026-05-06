@@ -216,6 +216,29 @@ app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Respons
   } catch (e) { res.json({ response: "Gemini System Error." }); }
 });
 
+app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const apiKey = process.env.GROQ_API_KEY || (process.env.ANTHROPIC_API_KEY?.startsWith('gsk_') ? process.env.ANTHROPIC_API_KEY : null);
+    if (!apiKey) return res.json({ response: "Groq API Key is missing! Please add GROQ_API_KEY to Render." });
+
+    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+      model: 'llama-3.1-8b-instant',
+      messages: [{ role: 'user', content: req.body.message }],
+    }, {
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      timeout: 10000
+    });
+
+    const aiResponse = response.data.choices[0].message.content;
+    await saveChatMessage(req.user.id, 'groq', 'user', req.body.message);
+    await saveChatMessage(req.user.id, 'groq', 'ai', aiResponse);
+    res.json({ response: aiResponse });
+  } catch (error: any) {
+    const detail = error.response?.data?.error?.message || error.message;
+    res.json({ response: `Groq Error: ${detail}` });
+  }
+});
+
 app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.GROQ_API_KEY || (process.env.ANTHROPIC_API_KEY?.startsWith('gsk_') ? process.env.ANTHROPIC_API_KEY : null);

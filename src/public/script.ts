@@ -5078,10 +5078,22 @@ async function executeArena() {
   const resGroq = document.getElementById('res-groq');
   const resFree = document.getElementById('res-free');
 
-  if (resChatGPT) resChatGPT.innerHTML = '<div class="loading-spinner"></div> Thinking...';
-  if (resGemini) resGemini.innerHTML = '<div class="loading-spinner"></div> Thinking...';
-  if (resGroq) resGroq.innerHTML = '<div class="loading-spinner"></div> Thinking...';
-  if (resFree) resFree.innerHTML = '<div class="loading-spinner"></div> Thinking...';
+  const setThinking = (elId: string, columnId: string) => {
+    const el = document.getElementById(elId);
+    const col = document.getElementById(columnId);
+    if (el) el.innerHTML = `
+      <div class="processing-state">
+        <div class="hsg-spinner"></div>
+        <span class="processing-text">Generating response...</span>
+      </div>
+    `;
+    if (col) col.classList.add('is-processing');
+  };
+
+  setThinking('res-chatgpt', 'arena-chatgpt');
+  setThinking('res-gemini', 'arena-gemini');
+  setThinking('res-groq', 'arena-groq');
+  setThinking('res-free', 'arena-free');
 
   const token = localStorage.getItem('token');
   if (!token) {
@@ -5101,6 +5113,9 @@ async function executeArena() {
       });
       const data = await res.json();
       if (element) {
+        const col = element.closest('.arena-column');
+        if (col) col.classList.remove('is-processing');
+
         element.innerHTML = `
           <div class="arena-response-content">${data.response || data.error || 'Error fetching response'}</div>
           <div class="arena-actions" style="display: flex; justify-content: flex-end; margin-top: 10px; gap: 8px;">
@@ -5111,7 +5126,11 @@ async function executeArena() {
         `;
       }
     } catch (err) {
-      if (element) element.textContent = 'Failed to connect to API';
+      if (element) {
+        const col = element.closest('.arena-column');
+        if (col) col.classList.remove('is-processing');
+        element.textContent = 'Failed to connect to API';
+      }
     }
   };
 
