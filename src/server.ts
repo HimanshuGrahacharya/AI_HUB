@@ -128,11 +128,26 @@ app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Respon
 app.post('/api/claude', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey || apiKey.startsWith('gsk_')) {
-      const msg = apiKey?.startsWith('gsk_') 
-        ? "You are using a Groq key for Claude. Please use an Anthropic key (starting with sk-ant-) or add a GROQ_API_KEY for Groq models!"
-        : "Claude integration is in Demo Mode. Add ANTHROPIC_API_KEY to Render to enable real answers.";
-      return res.json({ response: msg });
+
+    // AUTO-FIX: If they used a Groq key for Claude, just use Groq API for them!
+    if (apiKey && apiKey.startsWith('gsk_')) {
+      const groqResponse = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+        model: 'llama3-8b-8192',
+        messages: [{ role: 'user', content: req.body.message }],
+      }, {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      const aiResponse = `[Auto-Fix: Using Groq] ${groqResponse.data.choices[0].message.content}`;
+      await saveChatMessage(req.user.id, 'claude', 'user', req.body.message);
+      await saveChatMessage(req.user.id, 'claude', 'ai', aiResponse);
+      return res.json({ response: aiResponse });
+    }
+
+    if (!apiKey) {
+      return res.json({ response: "Claude integration is in Demo Mode. Add ANTHROPIC_API_KEY to Render to enable real answers." });
     }
 
     const response = await axios.post('https://api.anthropic.com/v1/messages', {
@@ -231,7 +246,8 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
       githubToken: null
     });
     
-    const aiResponse = response.data; // Blackbox often returns raw text
+    // Blackbox returns raw text in the response body
+    const aiResponse = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
 
     // Save to history
     await saveChatMessage(req.user.id, 'blackbox', 'user', req.body.message);
