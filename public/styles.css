@@ -1935,12 +1935,70 @@ h1 {
     gap: 30px;
   }
 
-  .social-links {
-    justify-content: center;
+  .content-area {
+    padding: 15px 15px 100px;
+  }
+
+  .dashboard-hero {
+    padding: 30px 20px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+  }
+
+  .dashboard-hero h1 {
+    font-size: 1.6rem !important;
+  }
+
+  .dashboard-hero p {
+    font-size: 0.9rem;
+  }
+
+  .hero-search-container {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+
+  .ai-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px;
+  }
+
+  .ai-card {
+    padding: 15px;
+  }
+
+  .ai-card-img {
+    height: 140px;
+  }
+
+  /* Arena Mobile Polish */
+  .arena-input-area {
+    padding: 15px;
+  }
+
+  .arena-grid {
+    gap: 10px;
+  }
+
+  .arena-card {
+    min-height: 200px;
   }
 }
 
 @media (max-width: 480px) {
+  .nav-title {
+    font-size: 1.1rem;
+  }
+  
+  .nav-right {
+    gap: 5px !important;
+  }
+
+  .voice-toggle, .copy-msg {
+    padding: 10px; /* Larger tap target for mobile */
+    font-size: 1.2rem;
+  }
+
   .hero-title {
     font-size: 2rem;
   }
