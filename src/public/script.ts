@@ -5076,6 +5076,10 @@ async function executeArena() {
 }
 
 // Event Listeners
+window.addEventListener('load', () => {
+  const p = document.getElementById('preloader');
+  if (p) setTimeout(() => p.classList.add('fade-out'), 1000);
+});
 document.addEventListener('DOMContentLoaded', () => {
   const arenaSendBtn = document.getElementById('arena-send-btn');
   if (arenaSendBtn) arenaSendBtn.addEventListener('click', executeArena);
