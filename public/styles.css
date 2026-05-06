@@ -3181,3 +3181,44 @@ body:not(.dark-mode) .profile-details-grid {
   background: rgba(99, 102, 241, 0.15);
   color: var(--primary);
 }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — Ultra Wide (> 1600px)
+═══════════════════════════════════════ */
+@media (min-width: 1600px) {
+  .dashboard-main {
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .navbar {
+    padding: 0 calc((100% - 1800px) / 2 + 2rem);
+  }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — Desktop Hover Effects
+═══════════════════════════════════════ */
+@media (hover: hover) {
+  .ai-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Additional Responsive Polish */
+@media (max-width: 768px) {
+  .user-profile-container {
+    margin-left: 10px;
+  }
+  .nav-title {
+    font-size: 1.2rem;
+  }
+  .search-wrapper {
+    max-width: 150px;
+  }
+}
+
