@@ -10,7 +10,7 @@ import User from './models/User';
 import Chat from './models/Chat';
 import Submission from './models/Submission';
 import crypto from 'crypto';
-import { sendEmail } from './utils/sendEmail';
+import { sendEmail, sendOtpEmail } from './utils/sendEmail';
 
 dotenv.config();
 
@@ -204,13 +204,28 @@ app.post('/api/auth/send-otp', async (req: Request, res: Response) => {
     user.otpExpires = new Date(Date.now() + 600000); // 10 minutes
     await user.save();
 
-    // In a real app, send OTP via Twilio SMS or Email here
-    console.log(`[DEMO OTP] Code for ${identifier}: ${otp}`);
+    // Check if we can send a real email
+    let isDemoMode = true;
+    if (identifier.includes('@') && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      try {
+        await sendOtpEmail(identifier, otp);
+        isDemoMode = false;
+      } catch (err) {
+        console.error('Failed to send OTP email:', err);
+      }
+    }
 
-    res.status(200).json({ 
-      message: 'OTP sent successfully (Demo Mode)',
-      demoOtp: otp // Send back only for demo purposes!
-    });
+    if (isDemoMode) {
+      console.log(`[DEMO OTP] Code for ${identifier}: ${otp}`);
+      res.status(200).json({ 
+        message: 'OTP sent successfully (Demo Mode)',
+        demoOtp: otp // Send back only for demo purposes!
+      });
+    } else {
+      res.status(200).json({ 
+        message: 'Verification code sent to your email.'
+      });
+    }
   } catch (error) {
     console.error('Send OTP error:', error);
     res.status(500).json({ error: 'Failed to process request' });

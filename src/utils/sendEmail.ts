@@ -46,3 +46,48 @@ export const sendEmail = async (to: string, resetUrl: string) => {
     throw new Error('Email could not be sent');
   }
 };
+
+export const sendOtpEmail = async (to: string, otp: string) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `"HSG AI HUB" <${process.env.EMAIL_USER}>`,
+      to,
+      subject: 'Your Verification Code - HSG AI HUB',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0a1a; color: #ffffff; padding: 40px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #818cf8; margin: 0;">HSG AI HUB</h1>
+          </div>
+          <h2 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 20px;">Password Reset Verification</h2>
+          <p style="color: rgba(226,232,240,0.8); line-height: 1.6; margin-bottom: 30px;">
+            We received a request to reset the password for your HSG AI HUB account. Please use the verification code below to securely set a new password.
+          </p>
+          <div style="text-align: center; margin-bottom: 30px; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px;">
+            <h1 style="font-size: 42px; letter-spacing: 8px; color: #818cf8; margin: 0;">${otp}</h1>
+          </div>
+          <p style="color: rgba(226,232,240,0.6); font-size: 0.9em; margin-bottom: 20px;">
+            If you did not request this reset, please ignore this email. This code will expire in 10 minutes.
+          </p>
+          <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 30px 0;">
+          <p style="color: rgba(226,232,240,0.4); font-size: 0.8em; text-align: center;">
+            &copy; ${new Date().getFullYear()} HSG AI HUB. All rights reserved.
+          </p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`OTP email successfully sent to ${to}`);
+  } catch (error) {
+    console.error('Error sending OTP email:', error);
+    throw new Error('Email could not be sent');
+  }
+};
