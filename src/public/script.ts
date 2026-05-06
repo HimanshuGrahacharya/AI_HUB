@@ -68,6 +68,14 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=poe.com"
   },
   {
+    "id": "blackbox",
+    "name": "Blackbox AI (Free)",
+    "description": "A powerful, 100% free AI assistant that doesn't require any API keys or credits. Perfect for coding and general questions.",
+    "category": "AI Assistants",
+    "link": "https://blackbox.ai",
+    "logo": "https://www.blackbox.ai/images/blackbox-logo.svg"
+  },
+  {
     "id": "youchat",
     "name": "YouChat",
     "description": "YouChat is a top-tier ai assistants solution.",

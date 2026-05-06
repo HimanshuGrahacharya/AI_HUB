@@ -216,6 +216,34 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
   }
 });
 
+app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const response = await axios.post('https://www.blackbox.ai/api/chat', {
+      messages: [{ role: 'user', content: req.body.message }],
+      id: "chat-free",
+      previewToken: null,
+      userId: null,
+      codeModelMode: true,
+      agentMode: {},
+      trendingAgentMode: {},
+      isMicMode: false,
+      isChromeExt: false,
+      githubToken: null
+    });
+    
+    const aiResponse = response.data; // Blackbox often returns raw text
+
+    // Save to history
+    await saveChatMessage(req.user.id, 'blackbox', 'user', req.body.message);
+    await saveChatMessage(req.user.id, 'blackbox', 'ai', aiResponse);
+
+    res.json({ response: aiResponse });
+  } catch (error: any) {
+    console.error('Blackbox API error:', error.message);
+    res.status(500).json({ error: 'Failed to get response from Free Assistant' });
+  }
+});
+
 // Authentication routes
 app.post('/api/signup', async (req: Request, res: Response) => {
   try {
