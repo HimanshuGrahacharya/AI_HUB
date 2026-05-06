@@ -98,30 +98,27 @@ async function saveChatMessage(userId: string, toolId: string, sender: 'user' | 
 app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey || apiKey === 'your-openai-key') {
-      return res.json({ response: "ChatGPT integration is in Demo Mode. To enable real answers, add a valid OPENAI_API_KEY to your Render environment variables!" });
-    }
+    if (!apiKey) throw new Error('No Key');
 
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: req.body.message }],
     }, {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Authorization': `Bearer ${apiKey}` },
+      timeout: 10000
     });
-    const aiResponse = response.data.choices[0].message.content;
-
-    // Save to history
-    await saveChatMessage(req.user.id, 'chatgpt', 'user', req.body.message);
-    await saveChatMessage(req.user.id, 'chatgpt', 'ai', aiResponse);
-
-    res.json({ response: aiResponse });
-  } catch (error: any) {
-    console.error('OpenAI API error:', error.response?.data || error.message);
-    const errorMessage = error.response?.data?.error?.message || 'Failed to get response from ChatGPT';
-    res.status(500).json({ error: errorMessage });
+    res.json({ response: response.data.choices[0].message.content });
+  } catch (error) {
+    try {
+      const groqKey = process.env.GROQ_API_KEY;
+      const fb = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+        model: 'llama-3.1-8b-instant',
+        messages: [{ role: 'user', content: req.body.message }],
+      }, { headers: { 'Authorization': `Bearer ${groqKey}` } });
+      res.json({ response: fb.data.choices[0].message.content + " (Note: Using High-Speed Fallback Model)" });
+    } catch (e) {
+      res.json({ response: "ChatGPT quota exceeded. Please check your OpenAI billing." });
+    }
   }
 });
 
@@ -175,35 +172,7 @@ app.post('/api/claude', authenticateToken, async (req: AuthRequest, res: Respons
   }
 });
 
-app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Response) => {
-  try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      return res.json({ response: "Gemini integration is in Demo Mode. Add GEMINI_API_KEY to your Render environment variables!" });
-    }
 
-    // Trying v1beta with gemini-1.5-flash which is the most stable combination right now
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        contents: [{ parts: [{ text: req.body.message }] }]
-      },
-      { headers: { 'Content-Type': 'application/json' } }
-    );
-    
-    const aiResponse = response.data.candidates[0].content.parts[0].text;
-
-    // Save to history
-    await saveChatMessage(req.user.id, 'gemini', 'user', req.body.message);
-    await saveChatMessage(req.user.id, 'gemini', 'ai', aiResponse);
-
-    res.json({ response: aiResponse });
-  } catch (error: any) {
-    console.error('Gemini API error:', error.response?.data || error.message);
-    const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Gemini';
-    res.status(500).json({ error: errorMessage });
-  }
-});
 
 app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
@@ -231,37 +200,20 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
 app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.json({ response: "Gemini API Key is missing!" });
-
-    // Try multiple versions and models
     const configs = [
-      { ver: 'v1', model: 'gemini-1.5-flash' },
-      { ver: 'v1beta', model: 'gemini-1.5-flash' },
-      { ver: 'v1', model: 'gemini-pro' }
+      { v: 'v1', m: 'gemini-1.5-flash' },
+      { v: 'v1beta', m: 'gemini-2.0-flash-exp' },
+      { v: 'v1', m: 'gemini-pro' }
     ];
-    
-    let errors: string[] = [];
-
-    for (const config of configs) {
+    for (const c of configs) {
       try {
-        const response = await axios.post(
-          `https://generativelanguage.googleapis.com/${config.ver}/models/${config.model}:generateContent?key=${apiKey}`,
-          { contents: [{ parts: [{ text: req.body.message }] }] },
-          { headers: { 'Content-Type': 'application/json' }, timeout: 8000 }
-        );
-        const aiResponse = response.data.candidates[0].content.parts[0].text;
-        await saveChatMessage(req.user.id, 'gemini', 'user', req.body.message);
-        await saveChatMessage(req.user.id, 'gemini', 'ai', aiResponse);
-        return res.json({ response: aiResponse });
-      } catch (e: any) {
-        errors.push(`${config.model}(${config.ver}): ${e.response?.data?.error?.message || e.message}`);
-        continue;
-      }
+        const r = await axios.post(`https://generativelanguage.googleapis.com/${c.v}/models/${c.m}:generateContent?key=${apiKey}`,
+          { contents: [{ parts: [{ text: req.body.message }] }] }, { timeout: 8000 });
+        return res.json({ response: r.data.candidates[0].content.parts[0].text });
+      } catch (e) { continue; }
     }
-    res.json({ response: `Gemini unavailable. ${errors.join(' | ')}` });
-  } catch (error: any) {
-    res.json({ response: `Gemini system error: ${error.message}` });
-  }
+    res.json({ response: "Gemini is busy. Try again soon." });
+  } catch (e) { res.json({ response: "Gemini System Error." }); }
 });
 
 app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
