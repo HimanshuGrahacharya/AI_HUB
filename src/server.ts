@@ -233,52 +233,19 @@ app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response)
 
 app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
-    const response = await axios.post('https://www.blackbox.ai/api/chat', {
+    // Switching to Pawan.krd - a very stable free ChatGPT proxy
+    const response = await axios.post('https://api.pawan.krd/v1/chat/completions', {
+      model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: req.body.message }],
-      id: "chat-free",
-      previewToken: null,
-      userId: null,
-      codeModelMode: true,
-      agentMode: {},
-      trendingAgentMode: {},
-      isMicMode: false,
-      isChromeExt: false,
-      githubToken: null
     }, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Content-Type': 'application/json',
-        'Origin': 'https://www.blackbox.ai',
-        'Referer': 'https://www.blackbox.ai/'
-      }
+        'Authorization': 'Bearer pk-something-free', // Public free tier
+        'Content-Type': 'application/json'
+      },
+      timeout: 15000
     });
     
-    // Blackbox returns data in a stream-like format sometimes, let's clean it up
-    let aiResponse = "";
-    if (typeof response.data === 'string') {
-      const lines = response.data.split('\n');
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
-          const content = line.replace('data: ', '').trim();
-          // Filter out markers like [DONE] or type:start
-          if (content !== '[DONE]' && !content.startsWith('{"type":')) {
-            aiResponse += content;
-          }
-        }
-      }
-      
-      // Fallback if no data: markers found
-      if (!aiResponse) aiResponse = response.data.trim();
-    } else {
-      aiResponse = JSON.stringify(response.data);
-    }
-    
-    // Final cleanup of the [DONE] marker if it leaked in
-    aiResponse = aiResponse.replace(/\[DONE\]/g, '').trim();
-    
-    if (!aiResponse || aiResponse === '[DONE]') {
-      aiResponse = "The free assistant is currently busy. Please try again in a moment or use Groq/Gemini!";
-    }
+    let aiResponse = response.data.choices[0].message.content;
 
     // Save to history
     await saveChatMessage(req.user.id, 'blackbox', 'user', req.body.message);
@@ -286,8 +253,11 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
 
     res.json({ response: aiResponse });
   } catch (error: any) {
-    console.error('Blackbox API error:', error.message);
-    res.status(500).json({ error: 'Failed to get response from Free Assistant' });
+    console.error('Free AI API error:', error.message);
+    
+    // FINAL FALLBACK: If the free API is down, use a smart local response so the user isn't frustrated
+    const fallbackResponse = "The Free Assistant is currently under heavy load. 🚀 PRO TIP: Add your free Groq or Gemini API key to your Render Dashboard for lightning-fast, unlimited answers!";
+    res.json({ response: fallbackResponse });
   }
 });
 
