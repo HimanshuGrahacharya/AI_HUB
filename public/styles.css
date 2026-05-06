@@ -2403,6 +2403,87 @@ body:not(.dark-mode) .about-stats {
   font-size: 0.85rem !important;
 }
 
+/* AI Arena Styles */
+.arena-container {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.arena-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.arena-input-area {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.arena-input-area textarea {
+  width: 100%;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  padding: 15px;
+  font-size: 1rem;
+  resize: none;
+  outline: none;
+}
+
+.arena-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  height: 600px;
+}
+
+.arena-column {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.column-header {
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.column-header img {
+  width: 20px;
+  height: 20px;
+}
+
+.arena-result {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 1024px) {
+  .arena-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
 /* ═══════════════════════════════════════
    RESPONSIVE — Tablet (≤1024px)
 ═══════════════════════════════════════ */

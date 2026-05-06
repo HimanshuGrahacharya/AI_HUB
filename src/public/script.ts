@@ -4991,8 +4991,93 @@ function resetInactivityTimer() {
     }
   } catch (err) {
     console.error('Settings save error:', err);
-    showToast('Error connecting to server.', 'error');
   }
 };
+
+// AI Model Arena Functions
+(window as any).openArena = function() {
+  const grid = document.getElementById('ai-grid');
+  const pagination = document.getElementById('pagination');
+  const chatContainer = document.getElementById('chat-container');
+  const arenaContainer = document.getElementById('arena-container');
+  const sidebar = document.querySelector('.sidebar') as HTMLElement;
+  const navCenter = document.querySelector('.nav-center') as HTMLElement;
+
+  if (grid) grid.style.display = 'none';
+  if (pagination) pagination.style.display = 'none';
+  if (chatContainer) chatContainer.style.display = 'none';
+  if (sidebar) sidebar.style.display = 'none';
+  if (navCenter) navCenter.style.display = 'none'; 
+  if (arenaContainer) arenaContainer.style.display = 'flex';
+};
+
+(window as any).closeArena = function() {
+  const grid = document.getElementById('ai-grid');
+  const pagination = document.getElementById('pagination');
+  const arenaContainer = document.getElementById('arena-container');
+  const sidebar = document.querySelector('.sidebar') as HTMLElement;
+  const navCenter = document.querySelector('.nav-center') as HTMLElement;
+
+  if (grid) grid.style.display = 'grid';
+  if (pagination) pagination.style.display = 'flex';
+  if (sidebar) sidebar.style.display = 'flex';
+  if (navCenter) navCenter.style.display = 'flex';
+  if (arenaContainer) arenaContainer.style.display = 'none';
+};
+
+async function executeArena() {
+  const prompt = (document.getElementById('arena-input') as HTMLTextAreaElement).value;
+  if (!prompt) return;
+
+  const resChatGPT = document.getElementById('res-chatgpt');
+  const resGemini = document.getElementById('res-gemini');
+  const resGroq = document.getElementById('res-groq');
+
+  if (resChatGPT) resChatGPT.innerHTML = '<div class="loading-spinner"></div> Thinking...';
+  if (resGemini) resGemini.innerHTML = '<div class="loading-spinner"></div> Thinking...';
+  if (resGroq) resGroq.innerHTML = '<div class="loading-spinner"></div> Thinking...';
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    showToast('Please login to use the AI Arena', 'error');
+    return;
+  }
+
+  const fetchModel = async (endpoint: string, element: HTMLElement | null) => {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ message: prompt })
+      });
+      const data = await res.json();
+      if (element) element.textContent = data.response || data.error || 'Error fetching response';
+    } catch (err) {
+      if (element) element.textContent = 'Failed to connect to API';
+    }
+  };
+
+  await Promise.all([
+    fetchModel('/api/chatgpt', resChatGPT),
+    fetchModel('/api/gemini', resGemini),
+    fetchModel('/api/groq', resGroq)
+  ]);
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const arenaSendBtn = document.getElementById('arena-send-btn');
+  if (arenaSendBtn) arenaSendBtn.addEventListener('click', executeArena);
+});
+
+(window as any).resetSearch = function() {
+  const input = document.getElementById('search-input') as HTMLInputElement;
+  if (input) input.value = '';
+  (window as any).handleSearch();
+};
+
 
 
