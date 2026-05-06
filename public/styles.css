@@ -3533,3 +3533,34 @@ body:not(.dark-mode) .profile-details-grid {
   }
 }
 
+/* AI Voice Narration Buttons */
+.speak-msg, .stop-msg, .copy-msg {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.speak-msg:hover, .copy-msg:hover {
+  color: var(--primary-light);
+  background: rgba(110, 86, 207, 0.15);
+}
+
+.stop-msg:hover {
+  color: #ff4d4d;
+  background: rgba(255, 77, 77, 0.15);
+}
+
+.message-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  justify-content: flex-end;
+}

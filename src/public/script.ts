@@ -4935,7 +4935,8 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
         <span class="message-time">${time}</span>
         ${sender === 'ai' ? `
           <button class="copy-msg" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')"><i class="ph ph-copy"></i></button>
-          <button class="speak-msg" onclick="speakText('${text.replace(/'/g, "\\'").replace(/\n/g, " ")}')"><i class="ph ph-speaker-high"></i></button>
+          <button class="speak-msg" title="Speak" onclick="speakText('${text.replace(/'/g, "\\'").replace(/\n/g, " ")}')"><i class="ph ph-speaker-high"></i></button>
+          <button class="stop-msg" title="Stop" onclick="stopSpeaking()"><i class="ph ph-stop"></i></button>
         ` : ''}
       </div>
     </div>
@@ -5112,7 +5113,11 @@ document.addEventListener('DOMContentLoaded', () => {
   (window as any).handleSearch();
 };
 
-// Global TTS Function
+// Global TTS Functions
+(window as any).stopSpeaking = () => {
+  window.speechSynthesis.cancel();
+};
+
 (window as any).speakText = (text: string) => {
   // Cancel any ongoing speech
   window.speechSynthesis.cancel();
