@@ -349,12 +349,23 @@ h1 {
   cursor: pointer;
   text-align: center;
   overflow: hidden;
+  animation: float 6s ease-in-out infinite;
 }
 
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.ai-card:nth-child(2n) { animation-delay: 1s; }
+.ai-card:nth-child(3n) { animation-delay: 2s; }
+
 .ai-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: translateY(-15px) scale(1.02) !important;
+  box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.25);
   border-color: var(--primary);
+  animation-play-state: paused;
 }
 
 .ai-logo {
@@ -2254,60 +2265,47 @@ body:not(.dark-mode) .about-stats {
 .sidebar {
   width: 280px;
   flex-shrink: 0;
-  height: 100%; /* Full height scroll */
+  height: 100%;
   overflow-y: auto;
-  position: relative; /* No longer needs sticky */
   padding: 30px 20px;
-  border-radius: 0; /* Full height sidebar looks cleaner */
-  scrollbar-width: none; /* Hide scrollbar for Firefox */
-  -ms-overflow-style: none; /* Hide for IE/Edge */
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sidebar::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome/Safari */
-}
-
-.sidebar-section {
-  margin-bottom: 30px;
-}
-
-.sidebar-section h3 {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #94a3b8;
-  margin-bottom: 15px;
-}
-
-.category-list {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.dark-mode .sidebar {
+  background: rgba(15, 23, 42, 0.4);
+  border-right-color: rgba(255, 255, 255, 0.05);
 }
 
 .category-item {
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   font-weight: 500;
   color: #64748b;
   display: flex;
   align-items: center;
   gap: 12px;
+  border: 1px solid transparent;
 }
 
 .category-item:hover {
-  background: rgba(99, 102, 241, 0.05);
+  background: rgba(99, 102, 241, 0.08);
   color: var(--primary);
+  transform: translateX(5px);
 }
 
 .category-item.active {
   background: var(--primary);
   color: white;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .content-area {
