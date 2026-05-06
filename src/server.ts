@@ -97,15 +97,9 @@ app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Respon
     });
     res.json({ response: response.data.choices[0].message.content });
   } catch (error: any) {
-    console.error('OpenAI API error:', error.message);
-    // If it's a 401 (Unauthorized) or 429 (Quota), show a helpful message instead of generic error
-    if (error.response?.status === 401) {
-      return res.json({ response: "Invalid OpenAI API Key. Please check your Render environment variables!" });
-    }
-    if (error.response?.status === 429) {
-      return res.json({ response: "OpenAI Quota exceeded. Please add credits to your OpenAI account." });
-    }
-    res.status(500).json({ error: 'Failed to get response from ChatGPT' });
+    console.error('OpenAI API error:', error.response?.data || error.message);
+    const errorMessage = error.response?.data?.error?.message || 'Failed to get response from ChatGPT';
+    res.status(500).json({ error: errorMessage });
   }
 });
 
