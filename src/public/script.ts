@@ -5282,26 +5282,6 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
   const utterance = new SpeechSynthesisUtterance(text);
   window.speechSynthesis.speak(utterance);
 };
-  
-  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  
-  messageDiv.innerHTML = `
-    <div class="message-content">
-      ${text}
-      <div class="message-meta">
-        <span class="message-time">${time}</span>
-        ${sender === 'ai' ? `
-          <button class="copy-msg" title="Copy" onclick="copyToClipboard('${text.replace(/'/g, "\\'")}')"><i class="ph ph-copy"></i></button>
-          <button class="voice-toggle" title="Listen" onclick="toggleVoice(this, '${text.replace(/'/g, "\\'").replace(/\n/g, " ")}')"><i class="ph ph-speaker-high"></i></button>
-        ` : ''}
-      </div>
-    </div>
-  `;
-  
-  messagesDiv.appendChild(messageDiv);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
-  resetInactivityTimer();
-}
 
 (window as any).copyToClipboard = function(text: string) {
   navigator.clipboard.writeText(text);
