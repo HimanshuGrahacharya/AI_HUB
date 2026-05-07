@@ -4872,3 +4872,161 @@ body:not(.dark-mode) .profile-details-grid {
   .warroom-workspace { grid-template-columns: 1fr; }
   .warroom-container { padding: 20px; }
 }
+
+/* ─────────────── UNIVERSAL RESPONSIVENESS OVERHAUL ─────────────── */
+
+/* 1. Main Layout Containers */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 2560px; /* Support for ultra-wide monitors */
+  margin: 0 auto;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  width: 100%;
+  transition: padding 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* 2. Adaptive Grid System */
+.ai-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  width: 100%;
+}
+
+/* 3. Sidebar Drawer for Mobile */
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    left: -280px;
+    top: 0;
+    height: 100vh;
+    z-index: 2000;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #0f172a;
+    width: 280px;
+    display: flex !important; /* Force display in mobile even if display:none was set */
+  }
+
+  .sidebar.active {
+    left: 0;
+    box-shadow: 20px 0 50px rgba(0,0,0,0.5);
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+}
+
+/* 4. Chat Interface Responsiveness */
+.chat-container {
+  max-width: 1000px;
+  width: 95%;
+  height: calc(100vh - 140px);
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .chat-container {
+    width: 100%;
+    height: calc(100vh - 100px);
+    border-radius: 0;
+    border: none;
+    margin: 0;
+  }
+  .chat-messages { padding: 15px; gap: 15px; }
+  .message { max-width: 90%; }
+  .input-container { padding: 15px; flex-wrap: wrap; }
+  #message-input { order: 1; width: 100%; margin-top: 10px; }
+}
+
+/* 5. AI Model Arena Stacking */
+.arena-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 1200px) {
+  .arena-grid {
+    grid-template-columns: 1fr;
+  }
+  .arena-column {
+    height: auto;
+  }
+}
+
+/* 6. War Room Tactical Scaling */
+.warroom-workspace {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 1100px) {
+  .warroom-workspace {
+    grid-template-columns: 1fr;
+  }
+  .warroom-agents {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    gap: 15px;
+  }
+  .agent-pod {
+    min-width: 280px;
+  }
+  .warroom-core {
+    height: 600px;
+  }
+}
+
+/* 7. Morning Briefing (News) */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+@media (max-width: 600px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+  .morning-briefing-header {
+    height: auto;
+    padding: 30px 20px;
+  }
+  .morning-briefing-header h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* 8. Desktop Mode & Large Monitors */
+@media (min-width: 2000px) {
+  .ai-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+  .main-content {
+    padding: 60px;
+  }
+}
+
+/* 9. Mobile Scaling Fixes (No Desktop Mode) */
+@media (max-width: 480px) {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  .nav-center { display: none !important; }
+  .dashboard-hero h1 { font-size: 1.8rem; }
+  .btn-primary, .btn-secondary { padding: 10px 15px; font-size: 0.9rem; }
+  .message-content { font-size: 0.9rem; padding: 12px 16px; }
+  .warroom-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+  .warroom-title h2 { font-size: 1.5rem; }
+}
