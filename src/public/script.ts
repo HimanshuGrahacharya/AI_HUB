@@ -6581,7 +6581,8 @@ function loadArtGallery() {
     <div class="gallery-item">
       <img src="${item.url}" alt="Masterpiece" onerror="this.onerror=null; this.src='https://placehold.co/600x600/0a0a1a/818cf8?text=Masterpiece+Materializing...'">
       <div class="gallery-overlay">
-        <div class="gallery-info">
+        <div class="gallery-info" onclick="remixMasterpiece('${item.prompt.replace(/'/g, "\\'")}')" title="Click to Remix this vision">
+          <i class="ph ph-arrows-counter-clockwise"></i>
           <p>${item.prompt.substring(0, 40)}...</p>
         </div>
         <button class="gallery-delete-btn" onclick="deleteArtFromGallery(${index})" title="Delete Masterpiece">
@@ -6591,6 +6592,19 @@ function loadArtGallery() {
     </div>
   `).join('');
 }
+
+(window as any).remixMasterpiece = function(prompt: string) {
+  const input = document.getElementById('studio-prompt') as HTMLTextAreaElement;
+  if (input) {
+    input.value = prompt;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Vision reloaded! Ready to remix.', 'success');
+    
+    // Add a subtle glow effect to the input
+    input.style.boxShadow = '0 0 20px var(--primary)';
+    setTimeout(() => input.style.boxShadow = '', 2000);
+  }
+};
 
 (window as any).deleteArtFromGallery = function(index: number) {
   if (!confirm('Are you sure you want to delete this masterpiece from your legacy?')) return;

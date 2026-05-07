@@ -5440,7 +5440,36 @@ body:not(.dark-mode) .profile-details-grid {
 
 .gallery-item:hover .gallery-overlay { opacity: 1; }
 .gallery-item:hover { transform: translateY(-5px); border-color: var(--primary); }
-.gallery-info p { color: white; font-size: 0.85rem; font-weight: 600; margin: 0; flex: 1; }
+.gallery-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.gallery-info:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.gallery-info i {
+  color: var(--primary-light);
+  font-size: 1rem;
+  transition: transform 0.5s;
+}
+
+.gallery-info:hover i {
+  transform: rotate(180deg);
+}
+
+.gallery-info p { color: white; font-size: 0.85rem; font-weight: 600; margin: 0; }
 
 .gallery-delete-btn {
   background: rgba(239, 68, 68, 0.1);
