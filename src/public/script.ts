@@ -6550,10 +6550,16 @@ document.querySelectorAll('.style-card').forEach(card => {
   }
 };
 
-(window as any).publishArt = function() {
+(window as any).publishToGallery = function() {
   const img = document.getElementById('generated-art') as HTMLImageElement;
-  const prompt = (document.getElementById('studio-prompt') as HTMLTextAreaElement).value;
+  const promptInput = document.getElementById('studio-prompt') as HTMLTextAreaElement;
+  const prompt = promptInput.value || "AI Masterpiece";
   
+  // QUALITY GUARD: Prevent publishing if no image is materialized
+  if (!img.src || img.src.includes('display: none') || img.style.display === 'none') {
+    return showToast('Mission Failed: Materialize an image first!', 'error');
+  }
+
   const gallery = JSON.parse(localStorage.getItem('studio_gallery') || '[]');
   gallery.unshift({ url: img.src, prompt: prompt, date: new Date().toISOString() });
   localStorage.setItem('studio_gallery', JSON.stringify(gallery.slice(0, 20))); // Keep last 20
@@ -6583,8 +6589,14 @@ function loadArtGallery() {
   `).join('');
 }
 
-(window as any).downloadArt = function() {
+(window as any).saveArtToDevice = function() {
   const img = document.getElementById('generated-art') as HTMLImageElement;
+  
+  // QUALITY GUARD: Prevent downloading if no image
+  if (!img.src || img.style.display === 'none') {
+    return showToast('Nothing to save. Materialize a vision first.', 'error');
+  }
+
   const link = document.createElement('a');
   link.href = img.src;
   link.download = `HSG-Masterpiece-${Date.now()}.jpg`;

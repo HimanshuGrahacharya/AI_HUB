@@ -49,7 +49,8 @@ interface AuthRequest extends Request {
 }
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, '../public'), { index: false }));
 app.use(express.static(path.join(__dirname, '../dist/public'), { index: false }));
 
@@ -244,26 +245,37 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
     const apiKey = process.env.GROQ_API_KEY || (process.env.ANTHROPIC_API_KEY?.startsWith('gsk_') ? process.env.ANTHROPIC_API_KEY : null);
     if (!apiKey) return res.json({ response: "Free Assistant key missing." });
 
+    const { message, image } = req.body;
+    
+    // Prepare Multimodal Content
+    const content: any[] = [{ type: "text", text: message }];
+    if (image && image.startsWith('data:image')) {
+      content.push({
+        type: "image_url",
+        image_url: { url: image }
+      });
+    }
+
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama-3.3-70b-versatile',
+      model: 'llama-3.2-11b-vision-preview',
       messages: [
         { 
           role: 'system', 
-          content: "You are the HSG AI Premium Assistant. Always respond using clean Markdown. Use bold headers, lists, and code blocks where appropriate. If the user asks for Resume Analysis or ATS score, provide a detailed breakdown including: 1. ATS Score (0-100), 2. Key Issues, 3. Suggested Improvements, and 4. Formatting Tips." 
+          content: "You are the HSG AI Visual Master. If an image is provided, describe it in extreme artistic detail and reverse-engineer a cinematic art prompt from it. If only text is provided, expand it into a high-end art prompt. Always return clean Markdown." 
         },
-        { role: 'user', content: req.body.message }
+        { role: 'user', content: content }
       ],
     }, {
       headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
     });
     
     const aiResponse = response.data.choices[0].message.content;
-    await saveChatMessage(req.user.id, 'blackbox', 'user', req.body.message);
+    await saveChatMessage(req.user.id, 'blackbox', 'user', message);
     await saveChatMessage(req.user.id, 'blackbox', 'ai', aiResponse);
     res.json({ response: aiResponse });
   } catch (error: any) {
     const detail = error.response?.data?.error?.message || error.message;
-    res.json({ response: `Free Assistant Error: ${detail}` });
+    res.json({ response: `Vision Error: ${detail}` });
   }
 });
 
