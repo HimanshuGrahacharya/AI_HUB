@@ -6715,3 +6715,28 @@ const originalAddWarLog = addWarLog;
   tacticalBeep.play().catch(() => {}); // Play tactical beep
   return originalAddWarLog(text, type);
 };
+
+
+// ==========================================
+// MOBILE RESPONSIVE LOGIC
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  const menuToggle = document.getElementById('menu-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  
+  if (menuToggle && sidebar) {
+    menuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebar.classList.toggle('active');
+      document.body.classList.toggle('sidebar-open');
+    });
+
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+      if (sidebar.classList.contains('active') && !sidebar.contains(e.target as Node) && e.target !== menuToggle) {
+        sidebar.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+      }
+    });
+  }
+});
