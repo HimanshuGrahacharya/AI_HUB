@@ -6577,17 +6577,31 @@ function loadArtGallery() {
     return;
   }
 
-  container!.innerHTML = gallery.map((item: any) => `
+  container!.innerHTML = gallery.map((item: any, index: number) => `
     <div class="gallery-item">
       <img src="${item.url}" alt="Masterpiece" onerror="this.onerror=null; this.src='https://placehold.co/600x600/0a0a1a/818cf8?text=Masterpiece+Materializing...'">
       <div class="gallery-overlay">
         <div class="gallery-info">
           <p>${item.prompt.substring(0, 40)}...</p>
         </div>
+        <button class="gallery-delete-btn" onclick="deleteArtFromGallery(${index})" title="Delete Masterpiece">
+          <i class="ph ph-trash"></i>
+        </button>
       </div>
     </div>
   `).join('');
 }
+
+(window as any).deleteArtFromGallery = function(index: number) {
+  if (!confirm('Are you sure you want to delete this masterpiece from your legacy?')) return;
+  
+  const gallery = JSON.parse(localStorage.getItem('studio_gallery') || '[]');
+  gallery.splice(index, 1);
+  localStorage.setItem('studio_gallery', JSON.stringify(gallery));
+  
+  loadArtGallery();
+  showToast('Masterpiece removed from legacy.', 'success');
+};
 
 (window as any).saveArtToDevice = function() {
   const img = document.getElementById('generated-art') as HTMLImageElement;
