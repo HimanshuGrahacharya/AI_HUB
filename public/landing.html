@@ -205,21 +205,40 @@
     .footer-bottom p span { color:#818cf8; }
 
     /* ─────────────── MOBILE ─────────────── */
-    @media (max-width: 768px) {
-      .landing-nav { padding:0 4%; }
-      .landing-nav .nav-links a.nav-link:not(.btn-nav-signup):not(.btn-nav-login) { display:none; }
-      .hero { padding:100px 5% 60px; }
-      .hero-stats { gap:28px; padding:20px 24px; }
-      .hero-stats .stat-num { font-size:1.5rem; }
-      .footer-grid { grid-template-columns:1fr 1fr; }
-      .footer-brand { grid-column:span 2; }
-      .footer-bottom { flex-direction:column; text-align:center; }
+    @media (max-width: 1024px) {
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-brand { grid-column: span 2; }
     }
+
+    @media (max-width: 768px) {
+      .landing-nav { padding: 0 4%; }
+      .landing-nav .nav-links a.nav-link:not(.btn-nav-signup):not(.btn-nav-login) { display: none; }
+      .hero { padding: 120px 5% 60px; }
+      .hero h1 { font-size: 2.5rem; }
+      .hero-stats { gap: 20px; padding: 20px; }
+      .hero-stats .stat-item { flex: 1; min-width: 120px; }
+      .hero-stats .stat-num { font-size: 1.5rem; }
+      
+      .features, .how-it-works, .newsletter { padding: 60px 5%; }
+      .section-header { margin-bottom: 40px; }
+      .section-header h2 { font-size: 1.8rem; }
+      
+      .footer-bottom { flex-direction: column; text-align: center; gap: 15px; }
+    }
+
     @media (max-width: 480px) {
-      .footer-grid { grid-template-columns:1fr; }
-      .footer-brand { grid-column:span 1; }
-      .newsletter-form { flex-direction:column; }
-      .newsletter-form button { width:100%; }
+      .landing-nav .btn-nav-signup, .landing-nav .btn-nav-login { padding: 8px 14px !important; font-size: 0.85rem !important; }
+      .hero-cta { flex-direction: column; width: 100%; }
+      .hero-cta a { width: 100%; justify-content: center; }
+      .hero-stats { flex-direction: column; align-items: center; }
+      .hero-stats .stat-item { width: 100%; }
+      
+      .newsletter-inner { padding: 40px 20px; }
+      .newsletter-form { flex-direction: column; }
+      .newsletter-form button { width: 100%; }
+      
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-brand { grid-column: span 1; }
     }
   </style>
 </head>

@@ -4054,7 +4054,7 @@ body:not(.dark-mode) .profile-details-grid {
 
 .dark-mode .ticker-item { color: #94a3b8; }
 
-.section-header {
+.intelligence-feed .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -4149,6 +4149,37 @@ body:not(.dark-mode) .profile-details-grid {
 }
 
 .video-grid::-webkit-scrollbar { display: none; }
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+@media (max-width: 1024px) {
+  .feed-header { flex-direction: column; align-items: stretch; gap: 20px; }
+  .morning-brief { padding: 20px; }
+}
+
+@media (max-width: 768px) {
+  .morning-brief { padding: 20px; gap: 15px; }
+  .brief-icon { width: 50px; height: 50px; font-size: 1.5rem; }
+  .brief-text h2 { font-size: 1.3rem; }
+  .brief-text p { font-size: 0.85rem; }
+  
+  .section-header h3 { font-size: 1.2rem; }
+  
+  .video-card { width: 240px; }
+}
+
+@media (max-width: 480px) {
+  .intelligence-feed { padding-top: 10px; }
+  .morning-brief { flex-direction: column; text-align: center; }
+  .brief-icon { margin: 0 auto; }
+  
+  .trending-ticker { max-width: 100%; }
+}
 
 .video-card {
   flex-shrink: 0;
