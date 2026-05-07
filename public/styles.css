@@ -3981,6 +3981,7 @@ body:not(.dark-mode) .profile-details-grid {
   margin-bottom: 4px;
   background: linear-gradient(135deg, var(--primary), #818cf8);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
