@@ -6254,6 +6254,281 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
 };
 
 // ==========================================
+// AI GLOBAL COMMAND PALETTE (SPOTLIGHT)
+// ==========================================
+
+let paletteIndex = -1;
+let currentPaletteResults: any[] = [];
+
+(window as any).toggleCommandPalette = function(forceClose = false) {
+  const palette = document.getElementById('command-palette');
+  const input = document.getElementById('palette-input') as HTMLInputElement;
+  
+  if (forceClose || palette?.style.display === 'flex') {
+    palette!.style.display = 'none';
+    paletteIndex = -1;
+  } else {
+    palette!.style.display = 'flex';
+    input.value = '';
+    input.focus();
+    renderPaletteResults([]);
+  }
+};
+
+// Keyboard Listeners
+document.addEventListener('keydown', (e) => {
+  // Ctrl + K to open
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+    e.preventDefault();
+    (window as any).toggleCommandPalette();
+  }
+  
+  // ESC to close
+  if (e.key === 'Escape') {
+    (window as any).toggleCommandPalette(true);
+  }
+
+  // Navigation
+  const palette = document.getElementById('command-palette');
+  if (palette?.style.display === 'flex') {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      paletteIndex = Math.min(paletteIndex + 1, currentPaletteResults.length - 1);
+      updatePaletteSelection();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      paletteIndex = Math.max(paletteIndex - 1, 0);
+      updatePaletteSelection();
+    } else if (e.key === 'Enter' && paletteIndex >= 0) {
+      e.preventDefault();
+      executePaletteAction(currentPaletteResults[paletteIndex]);
+    }
+  }
+});
+
+function updatePaletteSelection() {
+  const items = document.querySelectorAll('.palette-item');
+  items.forEach((item, idx) => {
+    if (idx === paletteIndex) {
+      item.classList.add('active');
+      item.scrollIntoView({ block: 'nearest' });
+    } else {
+      item.classList.remove('active');
+    }
+  });
+}
+
+const paletteInput = document.getElementById('palette-input');
+paletteInput?.addEventListener('input', (e) => {
+  const query = (e.target as HTMLInputElement).value.toLowerCase().trim();
+  if (!query) {
+    renderPaletteResults([]);
+    return;
+  }
+
+  // 1. Search Tools
+  const toolResults = (window as any).aiTools
+    .filter((t: any) => t.name.toLowerCase().includes(query) || t.category.toLowerCase().includes(query))
+    .slice(0, 5)
+    .map((t: any) => ({ type: 'tool', icon: 'ph-app-window', name: t.name, desc: `Open ${t.name}`, action: () => (window as any).openChat(t.id) }));
+
+  // 2. System Commands
+  const systemCommands = [
+    { name: 'Launch AI War Room', icon: 'ph-shield-star', desc: 'Deploy multi-agent swarm', action: () => (window as any).openWarRoom() },
+    { name: 'Go to Model Arena', icon: 'ph-sword', desc: 'Compare AI models', action: () => (window as any).openArena() },
+    { name: 'Morning Briefing', icon: 'ph-newspaper', desc: 'Latest AI news', action: () => (window as any).openNews() },
+    { name: 'User Profile', icon: 'ph-user-circle', desc: 'Manage your account', action: () => document.getElementById('profile-modal')!.style.display = 'flex' },
+    { name: 'Toggle Dark Mode', icon: 'ph-moon', desc: 'Switch appearance', action: () => document.getElementById('theme-toggle')?.click() }
+  ].filter(c => c.name.toLowerCase().includes(query));
+
+  // 3. Quick AI Fallback
+  const aiFallback = { type: 'ai', icon: 'ph-sparkle', name: `Ask AI: "${query}"`, desc: 'Instant AI response', action: () => {
+    (window as any).openChat('chatgpt');
+    setTimeout(() => {
+      const input = document.getElementById('message-input') as HTMLInputElement;
+      if (input) {
+        input.value = query;
+        (window as any).sendMessage();
+      }
+    }, 500);
+  }};
+
+  currentPaletteResults = [...systemCommands, ...toolResults, aiFallback];
+  paletteIndex = 0;
+  renderPaletteResults(currentPaletteResults);
+});
+
+function renderPaletteResults(results: any[]) {
+  const container = document.getElementById('palette-results');
+  if (!container) return;
+
+  if (results.length === 0) {
+    container.innerHTML = `<div class="palette-empty-state"><p>Search tools, missions, or system actions...</p></div>`;
+    return;
+  }
+
+  container.innerHTML = results.map((res, idx) => `
+    <div class="palette-item ${idx === 0 ? 'active' : ''}" onclick="executePaletteActionByIndex(${idx})">
+      <i class="ph ${res.icon}"></i>
+      <div class="item-info">
+        <h4>${res.name}</h4>
+        <p>${res.desc}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+(window as any).executePaletteActionByIndex = function(idx: number) {
+  executePaletteAction(currentPaletteResults[idx]);
+};
+
+function executePaletteAction(res: any) {
+  (window as any).toggleCommandPalette(true);
+  res.action();
+}
+
+// ==========================================
+// AI CREATIVE STUDIO LOGIC
+// ==========================================
+
+let activeArtStyle = 'cinematic';
+
+(window as any).openCreativeStudio = function() {
+  document.getElementById('ai-grid')!.style.display = 'none';
+  document.getElementById('pagination')!.style.display = 'none';
+  document.getElementById('chat-container')!.style.display = 'none';
+  document.getElementById('arena-container')!.style.display = 'none';
+  document.getElementById('warroom-container')!.style.display = 'none';
+  const sidebar = document.querySelector('.sidebar') as HTMLElement;
+  const hero = document.querySelector('.dashboard-hero') as HTMLElement;
+
+  if (sidebar) sidebar.style.display = 'none';
+  if (hero) hero.style.display = 'none';
+  document.getElementById('creative-studio')!.style.display = 'flex';
+  
+  loadArtGallery();
+};
+
+(window as any).closeCreativeStudio = function() {
+  document.getElementById('ai-grid')!.style.display = 'grid';
+  document.getElementById('pagination')!.style.display = 'flex';
+  const sidebar = document.querySelector('.sidebar') as HTMLElement;
+  const hero = document.querySelector('.dashboard-hero') as HTMLElement;
+  if (sidebar) sidebar.style.display = 'flex';
+  if (hero) hero.style.display = 'block';
+  document.getElementById('creative-studio')!.style.display = 'none';
+};
+
+// Style selection
+document.querySelectorAll('.style-card').forEach(card => {
+  card.addEventListener('click', function() {
+    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    activeArtStyle = this.getAttribute('data-style') || 'cinematic';
+  });
+});
+
+(window as any).generateAIArt = async function() {
+  const promptInput = document.getElementById('studio-prompt') as HTMLTextAreaElement;
+  const rawPrompt = promptInput.value.trim();
+  if (!rawPrompt) return showToast('Please enter a vision to materialise.', 'error');
+
+  const btn = document.getElementById('art-generate-btn') as HTMLButtonElement;
+  const loader = document.getElementById('art-loading');
+  const empty = document.querySelector('.canvas-empty-state') as HTMLElement;
+  const img = document.getElementById('generated-art') as HTMLImageElement;
+  const actions = document.getElementById('art-actions');
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ph ph-circle-notch-bold"></i> Brewing...';
+  loader!.style.display = 'flex';
+  empty.style.display = 'none';
+  img.style.display = 'none';
+  actions!.style.display = 'none';
+
+  try {
+    // 1. Refine Prompt (Magic Alchemist)
+    const refinementPrompt = `You are an AI Art Prompt Engineer. Expand this simple idea into a high-end, detailed, cinematic art prompt for ${activeArtStyle} style. Include lighting, mood, and texture. Keep it to 100 words max.
+    IDEA: ${rawPrompt}`;
+
+    const token = localStorage.getItem('token');
+    const refRes = await fetch('/api/blackbox', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ message: refinementPrompt })
+    });
+    const refData = await refRes.json();
+    const finalPrompt = encodeURIComponent(refData.response + `, style: ${activeArtStyle}, high resolution, 8k, masterpiece`);
+
+    // 2. Generate Image (Pollinations API)
+    const seed = Math.floor(Math.random() * 1000000);
+    const imageUrl = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+
+    // Wait for image to load
+    const tempImg = new Image();
+    tempImg.src = imageUrl;
+    tempImg.onload = () => {
+      img.src = imageUrl;
+      img.style.display = 'block';
+      loader!.style.display = 'none';
+      actions!.style.display = 'flex';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ph ph-magic-wand"></i> Brew Masterpiece';
+      showToast('Masterpiece Materialised!', 'success');
+    };
+  } catch (e) {
+    showToast('Failed to materialise image. System disturbance detected.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ph ph-magic-wand"></i> Brew Masterpiece';
+    loader!.style.display = 'none';
+    empty.style.display = 'block';
+  }
+};
+
+(window as any).publishArt = function() {
+  const img = document.getElementById('generated-art') as HTMLImageElement;
+  const prompt = (document.getElementById('studio-prompt') as HTMLTextAreaElement).value;
+  
+  const gallery = JSON.parse(localStorage.getItem('studio_gallery') || '[]');
+  gallery.unshift({ url: img.src, prompt: prompt, date: new Date().toISOString() });
+  localStorage.setItem('studio_gallery', JSON.stringify(gallery.slice(0, 20))); // Keep last 20
+  
+  loadArtGallery();
+  showToast('Published to your Masterpiece Gallery!', 'success');
+};
+
+function loadArtGallery() {
+  const container = document.getElementById('studio-gallery');
+  const gallery = JSON.parse(localStorage.getItem('studio_gallery') || '[]');
+  
+  if (gallery.length === 0) {
+    container!.innerHTML = '<p style="color: #64748b; grid-column: 1/-1; text-align: center;">Your gallery is empty. Start brewing!</p>';
+    return;
+  }
+
+  container!.innerHTML = gallery.map((item: any) => `
+    <div class="gallery-item">
+      <img src="${item.url}" alt="Masterpiece">
+      <div class="gallery-overlay">
+        <div class="gallery-info">
+          <p>${item.prompt.substring(0, 40)}...</p>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+(window as any).downloadArt = function() {
+  const img = document.getElementById('generated-art') as HTMLImageElement;
+  const link = document.createElement('a');
+  link.href = img.src;
+  link.download = `HSG-Masterpiece-${Date.now()}.jpg`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+// ==========================================
 // TACTICAL AUDIO & VOICE SUITE
 // ==========================================
 

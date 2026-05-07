@@ -170,6 +170,9 @@
           <li class="category-item" id="show-warroom" onclick="openWarRoom()">
             <i class="ph ph-shield-star"></i> AI War Room <span class="badge-new">WAR</span>
           </li>
+          <li class="category-item" id="show-studio" onclick="openCreativeStudio()">
+            <i class="ph ph-paint-brush-broad"></i> Creative Studio <span class="badge-premium">ART</span>
+          </li>
         </ul>
       </div>
     </aside>
@@ -182,15 +185,97 @@
           <p>Access the world's most powerful AI models in one unified platform.</p>
           <div class="search-wrapper">
             <i class="ph ph-magnifying-glass search-icon"></i>
-            <input type="text" id="search-input" class="search-input" placeholder="Search for tools, models, or categories..." onkeyup="handleSearch()">
+            <input type="text" id="search-input" class="search-input" placeholder="Search for tools, models, or missions... (Ctrl+K)" onkeyup="handleSearch()">
             <div id="search-results-overlay" class="search-results-overlay glass"></div>
             <button id="voice-search-btn" class="voice-search-btn" title="Voice Search"><i class="ph ph-microphone"></i></button>
+            <span class="search-kbd-hint">Ctrl K</span>
           </div>
         </div>
         <div class="hero-visual">
           <div class="glow-circle"></div>
         </div>
       </section>
+
+      <!-- NEW: AI Creative Studio -->
+      <div id="creative-studio" class="creative-studio-container" style="display: none;">
+        <div class="studio-header">
+          <div class="studio-title">
+            <h2><i class="ph ph-paint-brush-broad"></i> AI Creative Studio</h2>
+            <p>Transform your imagination into high-end visual masterpieces.</p>
+          </div>
+          <button class="btn-secondary" onclick="closeCreativeStudio()"><i class="ph ph-x"></i> Exit Studio</button>
+        </div>
+
+        <div class="studio-workspace">
+          <!-- Control Panel -->
+          <div class="studio-controls glass">
+            <div class="control-section">
+              <label><i class="ph ph-sparkle"></i> Magic Prompt Alchemist</label>
+              <textarea id="studio-prompt" placeholder="Describe your vision (e.g., 'A golden owl in a neon library'). AI will refine it automatically."></textarea>
+              <button class="btn-primary w-full" id="art-generate-btn" onclick="generateAIArt()">
+                <i class="ph ph-magic-wand"></i> Brew Masterpiece
+              </button>
+            </div>
+
+            <div class="control-section">
+              <label><i class="ph ph-palette"></i> Visual DNA (Styles)</label>
+              <div class="style-grid">
+                <div class="style-card active" data-style="cinematic">
+                  <div class="style-thumb" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=200&auto=format&fit=crop')"></div>
+                  <span>Cinematic</span>
+                </div>
+                <div class="style-card" data-style="cyberpunk">
+                  <div class="style-thumb" style="background-image: url('https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=200&auto=format&fit=crop')"></div>
+                  <span>Cyberpunk</span>
+                </div>
+                <div class="style-card" data-style="oil-painting">
+                  <div class="style-thumb" style="background-image: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=200&auto=format&fit=crop')"></div>
+                  <span>Oil Art</span>
+                </div>
+                <div class="style-card" data-style="anime">
+                  <div class="style-thumb" style="background-image: url('https://images.unsplash.com/photo-1578632292335-df3abbb0d586?w=200&auto=format&fit=crop')"></div>
+                  <span>Anime</span>
+                </div>
+                <div class="style-card" data-style="minimalist">
+                  <div class="style-thumb" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=200&auto=format&fit=crop')"></div>
+                  <span>Minimalist</span>
+                </div>
+                <div class="style-card" data-style="3d-render">
+                  <div class="style-thumb" style="background-image: url('https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=200&auto=format&fit=crop')"></div>
+                  <span>3D Render</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Canvas Panel -->
+          <div class="studio-canvas-area">
+            <div id="art-canvas" class="art-canvas glass">
+              <div class="canvas-empty-state">
+                <i class="ph ph-image"></i>
+                <p>Awaiting your creative spark...</p>
+              </div>
+              <div id="art-loading" class="art-loader" style="display: none;">
+                <div class="scan-line"></div>
+                <span>MATERIALIZING IMAGINATION...</span>
+              </div>
+              <img id="generated-art" style="display: none;">
+            </div>
+            
+            <div class="art-actions" id="art-actions" style="display: none; margin-top: 20px; display: flex; gap: 15px; justify-content: center;">
+              <button class="btn-secondary" onclick="downloadArt()"><i class="ph ph-download"></i> Save to Device</button>
+              <button class="btn-primary" onclick="publishArt()"><i class="ph ph-globe"></i> Publish to Gallery</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="studio-gallery-section">
+          <h3><i class="ph ph-books"></i> Your Masterpiece Gallery</h3>
+          <div id="studio-gallery" class="studio-gallery-grid">
+            <!-- Gallery items -->
+          </div>
+        </div>
+      </div>
 
       <div class="ai-grid" id="ai-grid">
         <!-- AI tool cards will be dynamically generated here -->
@@ -642,6 +727,27 @@
       </div>
       <div id="personas-list" style="display:flex; flex-direction:column; gap:12px;">
         <div style="text-align:center; padding:30px; color:var(--text-secondary);">Loading personas...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVOLUTIONARY: AI GLOBAL COMMAND PALETTE (Spotlight) -->
+  <div id="command-palette" class="command-palette-overlay" style="display: none;">
+    <div class="command-palette-modal glass">
+      <div class="palette-header">
+        <i class="ph ph-magnifying-glass"></i>
+        <input type="text" id="palette-input" placeholder="Search tools, missions, or ask AI... (Ctrl+K)">
+        <span class="palette-esc">ESC</span>
+      </div>
+      <div id="palette-results" class="palette-results">
+        <div class="palette-empty-state">
+          <p>Type to search tools or start a quick AI mission...</p>
+        </div>
+      </div>
+      <div class="palette-footer">
+        <span class="palette-hint"><kbd>↑↓</kbd> Navigate</span>
+        <span class="palette-hint"><kbd>Enter</kbd> Select</span>
+        <span class="palette-hint"><kbd>ESC</kbd> Close</span>
       </div>
     </div>
   </div>
