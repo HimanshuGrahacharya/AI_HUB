@@ -4304,29 +4304,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // NEW: Initialize Mobile Category Bar
-  const mobileCategoryBar = document.getElementById('mobile-category-bar');
-  if (mobileCategoryBar) {
-    const originalCategories = document.querySelectorAll('.category-list .category-item');
-    originalCategories.forEach(item => {
-      const category = (item as HTMLElement).dataset.category;
-      if (category) {
-        const chip = document.createElement('div');
-        chip.className = `mobile-cat-item ${item.classList.contains('active') ? 'active' : ''}`;
-        chip.textContent = category;
-        chip.dataset.category = category;
-        chip.onclick = () => {
-          (item as HTMLElement).click();
-          // Sync active state in mobile bar
-          document.querySelectorAll('.mobile-cat-item').forEach(c => c.classList.remove('active'));
-          chip.classList.add('active');
-          chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        };
-        mobileCategoryBar.appendChild(chip);
-      }
-    });
-  }
-
   // Top Filter Buttons Logic
   const filterBtns = document.querySelectorAll('.filter-btn');
   filterBtns.forEach(btn => {
@@ -4584,21 +4561,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 });
-
-// NEW: Global Mobile Navigation Helpers
-(window as any).setActiveNavItem = function(el: HTMLElement) {
-  const navItems = document.querySelectorAll('.nav-item');
-  navItems.forEach(item => item.classList.remove('active'));
-  el.classList.add('active');
-  
-  // Close sidebar if open
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  if (sidebar?.classList.contains('active')) {
-    sidebar.classList.remove('active');
-    overlay?.classList.remove('show');
-  }
-};
 
 function filterByCategory(category: string) {
   if (category.toLowerCase() === 'all') {
