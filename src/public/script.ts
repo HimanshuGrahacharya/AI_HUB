@@ -5265,6 +5265,7 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
   }
   
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  resetInactivityTimer();
 }
 
 (window as any).copyMessageText = function(btn: HTMLButtonElement, text: string) {
