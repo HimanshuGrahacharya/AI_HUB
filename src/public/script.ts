@@ -6496,7 +6496,7 @@ document.querySelectorAll('.style-card').forEach(card => {
     
     if (attachedStudioFile) {
       if (attachedStudioFile.type.startsWith('image')) {
-        refinementPrompt += `\nREVERSE ENGINEER THIS IMAGE DESCRIPTION: [IMAGE DATA ATTACHED] - Describe its essence and create a similar masterpiece.`;
+        refinementPrompt += `\nREVERSE ENGINEER THIS IMAGE: [IMAGE ATTACHED] - Describe the person/subject perfectly. Maintain their face and features. Ensure the output is a high-end PHOTOREALISTIC PORTRAIT.`;
       } else {
         refinementPrompt += `\nEXTRACT ARTISTIC ESSENCE FROM THIS DOC CONTENT: ${attachedStudioFile.data.substring(0, 500)}`;
       }

@@ -261,7 +261,7 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
       messages: [
         { 
           role: 'system', 
-          content: "You are the HSG AI Visual Master. If an image is provided, describe it in extreme artistic detail and reverse-engineer a cinematic art prompt from it. If only text is provided, expand it into a high-end art prompt. Always return clean Markdown." 
+          content: "You are the HSG AI Visual Master. If an image is provided, your ABSOLUTE PRIORITY is to describe the subject's identity, face, and features accurately. Do not change the species or basic look. Reverse-engineer a cinematic art prompt that keeps this specific person/subject but places them in the design requested by the user. If only text is provided, expand it into a high-end art prompt." 
         },
         { role: 'user', content: content }
       ],
