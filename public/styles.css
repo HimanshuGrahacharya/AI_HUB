@@ -4394,6 +4394,141 @@ body:not(.dark-mode) .profile-details-grid {
 }
 
 /* PREMIUM ARENA UPGRADES */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #020617;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+#preloader::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, transparent 0%, rgba(99, 102, 241, 0.05) 50%, transparent 100%);
+  background-size: 100% 4px;
+  animation: scanlines 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanlines {
+  from { background-position: 0 0; }
+  to { background-position: 0 100%; }
+}
+
+.neural-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.holographic-logo {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.holographic-logo img {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 20px var(--primary));
+  position: relative;
+  z-index: 2;
+}
+
+.logo-pulse {
+  position: absolute;
+  inset: -20px;
+  background: var(--primary);
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.2;
+  animation: pulseLogo 2s ease-in-out infinite;
+}
+
+@keyframes pulseLogo {
+  0%, 100% { transform: scale(1); opacity: 0.1; }
+  50% { transform: scale(1.5); opacity: 0.3; }
+}
+
+.boot-sequence {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.boot-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--primary-light);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.boot-progress {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.boot-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
+  transition: width 0.3s;
+}
+
+.boot-status {
+  display: flex;
+  gap: 20px;
+}
+
+.status-indicator {
+  font-size: 0.65rem;
+  color: #475569;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-indicator::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #22c55e;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+#preloader.loaded {
+  opacity: 0;
+  filter: blur(20px) scale(1.1);
+  pointer-events: none;
+}
+
 .arena-grid {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
