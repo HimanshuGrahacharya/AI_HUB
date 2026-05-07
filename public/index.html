@@ -395,7 +395,12 @@
               </div>
             </div>
             <div class="core-input-area">
-              <textarea id="warroom-input" placeholder="Enter a complex mission or problem to solve..."></textarea>
+              <div style="position: relative;">
+                <textarea id="warroom-input" placeholder="Enter a complex mission or problem to solve..."></textarea>
+                <button id="warroom-mic-btn" class="voice-search-btn" onclick="toggleWarRoomMic()" style="position: absolute; right: 20px; top: 20px; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--primary-light);">
+                  <i class="ph ph-microphone"></i>
+                </button>
+              </div>
               <button id="warroom-execute-btn" class="btn-primary" onclick="executeWarRoom()">Launch Multi-Agent Mission ⚡</button>
             </div>
           </div>
@@ -404,8 +409,10 @@
             <div class="output-header">
               <h3><i class="ph ph-lightning"></i> MASTER STRATEGY SYNTHESIZED</h3>
               <div style="display: flex; gap: 10px;">
-                <button class="btn-secondary btn-sm" onclick="shareWarRoomResult()"><i class="ph ph-share-network"></i> Share Intelligence</button>
-                <button class="btn-secondary btn-sm" onclick="copyMasterPlan()"><i class="ph ph-copy"></i> Copy Plan</button>
+                <button class="btn-secondary btn-sm" onclick="speakMasterPlan(this)"><i class="ph ph-speaker-high"></i> Listen Briefing</button>
+                <button class="btn-secondary btn-sm" onclick="downloadWarRoomPDF()"><i class="ph ph-file-pdf"></i> Download Report</button>
+                <button class="btn-secondary btn-sm" onclick="shareWarRoomResult()"><i class="ph ph-share-network"></i> Share</button>
+                <button class="btn-secondary btn-sm" onclick="copyMasterPlan()"><i class="ph ph-copy"></i> Copy</button>
               </div>
             </div>
             <div id="warroom-master-output" class="master-output"></div>

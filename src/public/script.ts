@@ -6252,3 +6252,86 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
     window.open(twitterUrl, '_blank');
   }
 };
+
+// ==========================================
+// TACTICAL AUDIO & VOICE SUITE
+// ==========================================
+
+const tacticalBeep = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+tacticalBeep.volume = 0.2;
+
+(window as any).toggleWarRoomMic = function() {
+  const btn = document.getElementById('warroom-mic-btn');
+  const input = document.getElementById('warroom-input') as HTMLTextAreaElement;
+  
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  if (!SpeechRecognition) return showToast('Speech Recognition not supported in this browser.', 'error');
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'en-US';
+  
+  recognition.onstart = () => {
+    btn?.classList.add('active');
+    btn!.style.background = '#ef4444';
+    showToast('Listening for mission command...', 'info');
+  };
+
+  recognition.onresult = (event: any) => {
+    const transcript = event.results[0][0].transcript;
+    input.value = transcript;
+    btn?.classList.remove('active');
+    btn!.style.background = 'rgba(99, 102, 241, 0.1)';
+  };
+
+  recognition.onerror = () => {
+    btn?.classList.remove('active');
+    btn!.style.background = 'rgba(99, 102, 241, 0.1)';
+  };
+
+  recognition.start();
+};
+
+(window as any).speakMasterPlan = function(btn: HTMLButtonElement) {
+  const text = document.getElementById('warroom-master-output')?.innerText || '';
+  if (!text) return;
+
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    btn.innerHTML = '<i class="ph ph-speaker-high"></i> Listen Briefing';
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.95;
+  utterance.pitch = 1;
+  
+  utterance.onstart = () => btn.innerHTML = '<i class="ph ph-stop-circle"></i> Stop Briefing';
+  utterance.onend = () => btn.innerHTML = '<i class="ph ph-speaker-high"></i> Listen Briefing';
+
+  window.speechSynthesis.speak(utterance);
+};
+
+(window as any).downloadWarRoomPDF = function() {
+  const element = document.getElementById('warroom-output-panel');
+  if (!element) return;
+
+  const mission = (document.getElementById('warroom-input') as HTMLTextAreaElement).value;
+  
+  const opt = {
+    margin: [15, 15],
+    filename: `HSG-Intelligence-Report-${Date.now()}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  showToast('Generating Tactical Intelligence Report...', 'info');
+  (window as any).html2pdf().set(opt).from(element).save();
+};
+
+// Hook into addWarLog to add audio feedback
+const originalAddWarLog = addWarLog;
+(window as any).addWarLog = async function(text: string, type: 'system' | 'agent' | 'success' = 'agent') {
+  tacticalBeep.play().catch(() => {}); // Play tactical beep
+  return originalAddWarLog(text, type);
+};
