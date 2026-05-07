@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HSG AI HUB | The World's Most Powerful AI Dashboard</title>
-  <meta name="description" content="Access ChatGPT, Gemini, Groq, and more in one unified AI Arena. The most powerful AI tool directory for professionals.">
+  <meta name="description" content="Access ChatGPT, Blackbox AI, Groq, and more in one unified AI Arena. The most powerful AI tool directory for professionals.">
   <meta property="og:title" content="HSG AI HUB | All Your AI Tools in One Place">
   <meta property="og:image" content="https://himanshu-ai-hub.onrender.com/logos/ai-hubs-logo.svg">
   <meta name="twitter:card" content="summary_large_image">
@@ -191,18 +191,19 @@
       <div id="intelligence-feed" class="intelligence-feed" style="display: none;">
         <div class="feed-header">
           <div class="morning-brief">
-            <div class="brief-icon"><i class="ph ph-sun-dim"></i></div>
+            <div class="brief-icon"><i class="ph ph-sparkle"></i></div>
             <div class="brief-text">
-              <h2>Your AI Morning Briefing</h2>
+              <h2>AI Intelligence Feed</h2>
               <p id="brief-date"></p>
             </div>
           </div>
           <div class="trending-ticker">
-            <span class="live-indicator"><span class="pulse"></span> LIVE</span>
+            <span class="live-indicator"><span class="pulse"></span> LIVE TRENDS</span>
             <div class="ticker-content">
-              <span class="ticker-item">GPT-5 training rumors intensify...</span>
-              <span class="ticker-item">Gemini 2.0 Ultra leaked benchmarks...</span>
-              <span class="ticker-item">NVIDIA stock hits new all-time high...</span>
+              <span class="ticker-item">🔥 OpenAI Operator Autonomous Agent Released</span>
+              <span class="ticker-item">🚀 NVIDIA Blackwell Chips Volume Production</span>
+              <span class="ticker-item">💡 DeepSeek-V3 Open Source Revolution</span>
+              <span class="ticker-item">🤖 Google Gemini 2.0 Ultra Preview Leaked</span>
             </div>
           </div>
         </div>
@@ -265,11 +266,14 @@
         </div>
       </div>
 
-      <!-- AI Arena Interface -->
       <div class="arena-container" id="arena-container" style="display: none;">
         <div class="arena-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-          <h2 style="margin: 0;">AI Model Arena</h2>
+          <div class="arena-title-group">
+            <h2 style="margin: 0; display: flex; align-items: center; gap: 10px;"><i class="ph ph-sword" style="color: var(--primary);"></i> AI Model Arena</h2>
+            <p style="margin: 5px 0 0; font-size: 0.9rem; color: var(--text-secondary);">Benchmark the world's leading models side-by-side.</p>
+          </div>
           <div class="arena-export-actions" style="display: flex; gap: 10px;">
+            <button id="arena-clear-btn" class="btn-secondary btn-sm" onclick="clearArena()" title="Reset the Arena"><i class="ph ph-trash"></i> Clear Results</button>
             <button id="export-pdf-btn" class="btn-secondary btn-sm" onclick="exportArenaPDF()" title="Download PDF Report" style="display: none;"><i class="ph ph-file-pdf"></i> Export PDF</button>
             <button id="export-md-btn" class="btn-secondary btn-sm" onclick="exportArenaMarkdown()" title="Copy Markdown" style="display: none;"><i class="ph ph-copy"></i> Copy MD</button>
             <button class="btn-secondary" onclick="closeArena()">Back to Tools</button>
@@ -286,24 +290,56 @@
             <span class="prompt-chip" onclick="setArenaPrompt('Write a Python script to scrape a website.')">🐍 Python Code</span>
             <span class="prompt-chip" onclick="setArenaPrompt('Give me 5 creative business ideas for 2026.')">💡 Business Ideas</span>
           </div>
-          <button id="arena-send-btn" class="btn-primary">Execute All Models ⚡</button>
+          <button id="arena-send-btn" class="btn-primary" style="height: 56px; font-size: 1.1rem; letter-spacing: 0.5px;">Execute All Models ⚡</button>
         </div>
         <div class="arena-grid">
           <div class="arena-column glass" id="arena-chatgpt">
-            <div class="column-header"><img src="https://www.google.com/s2/favicons?domain=openai.com&sz=64" alt=""> ChatGPT</div>
+            <div class="column-header">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="https://www.google.com/s2/favicons?domain=openai.com&sz=64" alt=""> ChatGPT
+              </div>
+              <div class="winner-badge"><i class="ph ph-crown"></i> WINNER</div>
+            </div>
             <div class="arena-result" id="res-chatgpt">Waiting for prompt...</div>
+            <div class="arena-footer">
+              <div class="arena-metrics">
+                <span class="metric"><i class="ph ph-timer"></i> <span id="time-chatgpt">-</span>s</span>
+                <span class="metric"><i class="ph ph-text-aa"></i> <span id="words-chatgpt">-</span> words</span>
+              </div>
+              <button class="btn-best" onclick="voteWinner('chatgpt')">Choose as Best</button>
+            </div>
           </div>
-          <div class="arena-column glass" id="arena-gemini">
-            <div class="column-header"><img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64" alt=""> Gemini</div>
-            <div class="arena-result" id="res-gemini">Waiting for prompt...</div>
+          <div class="arena-column glass" id="arena-blackbox">
+            <div class="column-header">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="https://www.google.com/s2/favicons?domain=blackbox.ai&sz=64" alt=""> Blackbox AI
+              </div>
+              <div class="winner-badge"><i class="ph ph-crown"></i> WINNER</div>
+            </div>
+            <div class="arena-result" id="res-blackbox">Waiting for prompt...</div>
+            <div class="arena-footer">
+              <div class="arena-metrics">
+                <span class="metric"><i class="ph ph-timer"></i> <span id="time-blackbox">-</span>s</span>
+                <span class="metric"><i class="ph ph-text-aa"></i> <span id="words-blackbox">-</span> words</span>
+              </div>
+              <button class="btn-best" onclick="voteWinner('blackbox')">Choose as Best</button>
+            </div>
           </div>
           <div class="arena-column glass" id="arena-groq">
-            <div class="column-header"><img src="https://www.google.com/s2/favicons?domain=groq.com&sz=64" alt=""> Groq (Llama 3)</div>
+            <div class="column-header">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="https://www.google.com/s2/favicons?domain=groq.com&sz=64" alt=""> Groq (Llama 3)
+              </div>
+              <div class="winner-badge"><i class="ph ph-crown"></i> WINNER</div>
+            </div>
             <div class="arena-result" id="res-groq">Waiting for prompt...</div>
-          </div>
-          <div class="arena-column glass" id="arena-free">
-            <div class="column-header"><img src="https://www.google.com/s2/favicons?domain=duckduckgo.com&sz=64" alt=""> Free Assistant</div>
-            <div class="arena-result" id="res-free">Waiting for prompt...</div>
+            <div class="arena-footer">
+              <div class="arena-metrics">
+                <span class="metric"><i class="ph ph-timer"></i> <span id="time-groq">-</span>s</span>
+                <span class="metric"><i class="ph ph-text-aa"></i> <span id="words-groq">-</span> words</span>
+              </div>
+              <button class="btn-best" onclick="voteWinner('groq')">Choose as Best</button>
+            </div>
           </div>
         </div>
       </div>

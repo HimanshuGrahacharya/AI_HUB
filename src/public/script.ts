@@ -5321,9 +5321,8 @@ async function executeArena() {
   if (!prompt) return;
 
   const resChatGPT = document.getElementById('res-chatgpt');
-  const resGemini = document.getElementById('res-gemini');
+  const resBlackbox = document.getElementById('res-blackbox');
   const resGroq = document.getElementById('res-groq');
-  const resFree = document.getElementById('res-free');
 
   const setThinking = (elId: string, columnId: string) => {
     const el = document.getElementById(elId);
@@ -5338,9 +5337,8 @@ async function executeArena() {
   };
 
   setThinking('res-chatgpt', 'arena-chatgpt');
-  setThinking('res-gemini', 'arena-gemini');
+  setThinking('res-blackbox', 'arena-blackbox');
   setThinking('res-groq', 'arena-groq');
-  setThinking('res-free', 'arena-free');
 
   const token = localStorage.getItem('token');
   if (!token) {
@@ -5348,7 +5346,10 @@ async function executeArena() {
     return;
   }
 
-  const fetchModel = async (endpoint: string, element: HTMLElement | null) => {
+  const startTime = performance.now();
+  
+  const fetchModel = async (endpoint: string, element: HTMLElement | null, modelId: string) => {
+    const modelStartTime = performance.now();
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -5359,18 +5360,32 @@ async function executeArena() {
         body: JSON.stringify({ message: prompt })
       });
       const data = await res.json();
+      const endTime = performance.now();
+      const duration = ((endTime - modelStartTime) / 1000).toFixed(2);
+      const responseText = data.response || data.error || 'Error fetching response';
+      const wordCount = responseText.split(/\s+/).filter(Boolean).length;
+
       if (element) {
         const col = element.closest('.arena-column');
         if (col) col.classList.remove('is-processing');
 
         element.innerHTML = `
-          <div class="arena-response-content">${data.response || data.error || 'Error fetching response'}</div>
+          <div class="arena-response-content">${responseText}</div>
           <div class="arena-actions" style="display: flex; justify-content: flex-end; margin-top: 10px; gap: 8px;">
             <button class="voice-toggle" title="Listen" onclick="toggleVoice(this, \`${(data.response || '').replace(/`/g, '\\`').replace(/\n/g, ' ')}\`)">
               <i class="ph ph-speaker-high"></i>
             </button>
+            <button class="copy-msg" title="Copy" onclick="copyToClipboard(\`${(data.response || '').replace(/`/g, '\\`').replace(/\n/g, ' ')}\`)">
+              <i class="ph ph-copy"></i>
+            </button>
           </div>
         `;
+        
+        // Update metrics
+        const timeEl = document.getElementById(`time-${modelId}`);
+        const wordsEl = document.getElementById(`words-${modelId}`);
+        if (timeEl) timeEl.textContent = duration;
+        if (wordsEl) wordsEl.textContent = wordCount.toString();
       }
     } catch (err) {
       if (element) {
@@ -5382,10 +5397,9 @@ async function executeArena() {
   };
 
   await Promise.all([
-    fetchModel('/api/chatgpt', resChatGPT),
-    fetchModel('/api/gemini', resGemini),
-    fetchModel('/api/groq', resGroq),
-    fetchModel('/api/blackbox', resFree)
+    fetchModel('/api/chatgpt', resChatGPT, 'chatgpt'),
+    fetchModel('/api/blackbox', resBlackbox, 'blackbox'),
+    fetchModel('/api/groq', resGroq, 'groq')
   ]);
   
   // Show export buttons after execution
@@ -5427,14 +5441,11 @@ async function executeArena() {
 ## ChatGPT
 ${getModelText('res-chatgpt')}
 
-## Gemini
-${getModelText('res-gemini')}
+## Blackbox AI
+${getModelText('res-blackbox')}
 
 ## Groq (Llama 3)
 ${getModelText('res-groq')}
-
-## Free Assistant
-${getModelText('res-free')}
 `;
 
   navigator.clipboard.writeText(markdown).then(() => {
@@ -5443,6 +5454,56 @@ ${getModelText('res-free')}
     showToast('Failed to copy Markdown', 'error');
   });
 };
+
+(window as any).voteWinner = function(modelId: string) {
+  // Remove existing winner states
+  document.querySelectorAll('.arena-column').forEach(col => {
+    col.classList.remove('winner-glow');
+  });
+  
+  const winningCol = document.getElementById(`arena-${modelId}`);
+  if (winningCol) {
+    winningCol.classList.add('winner-glow');
+    showToast(`Awarded Winner Badge to ${modelId.toUpperCase()}!`, 'success');
+    
+    // Add particle effect if possible (basic implementation)
+    confettiEffect();
+  }
+};
+
+(window as any).clearArena = function() {
+  (document.getElementById('arena-input') as HTMLTextAreaElement).value = '';
+  document.querySelectorAll('.arena-result').forEach(res => res.textContent = 'Waiting for prompt...');
+  document.querySelectorAll('.arena-column').forEach(col => col.classList.remove('winner-glow', 'is-processing'));
+  document.querySelectorAll('[id^="time-"]').forEach(el => el.textContent = '-');
+  document.querySelectorAll('[id^="words-"]').forEach(el => el.textContent = '-');
+  
+  const pdfBtn = document.getElementById('export-pdf-btn');
+  const mdBtn = document.getElementById('export-md-btn');
+  if (pdfBtn) pdfBtn.style.display = 'none';
+  if (mdBtn) mdBtn.style.display = 'none';
+  
+  showToast('Arena reset successfully', 'info');
+};
+
+function confettiEffect() {
+  // Simple "confetti" flash effect using a background blink
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.backgroundColor = 'rgba(255, 215, 0, 0.1)';
+  overlay.style.pointerEvents = 'none';
+  overlay.style.zIndex = '9999';
+  overlay.style.transition = 'opacity 0.5s ease-out';
+  document.body.appendChild(overlay);
+  setTimeout(() => {
+    overlay.style.opacity = '0';
+    setTimeout(() => document.body.removeChild(overlay), 500);
+  }, 100);
+}
 
 // ============================================================
 // CUSTOM AI PERSONAS
@@ -5809,7 +5870,7 @@ async function fetchLiveAINews() {
           pubDate: item.publishedAt,
           source: item.source.name || 'AI News',
           excerpt: item.description ? (item.description.substring(0, 150) + '...') : 'Read more about this story...',
-          image: item.urlToImage || 'https://images.unsplash.com/photo-1677442136019-21780ecad995'
+          image: item.urlToImage || getRandomAIImage()
         });
       });
     } else if (data.code === 'corsNotAllowed') {
@@ -5849,7 +5910,7 @@ async function fetchFallbackRSS() {
             pubDate: item.pubDate,
             source: data.feed.title.split(' - ')[0] || 'AI News',
             excerpt: item.description.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...',
-            image: item.thumbnail || item.enclosure?.link || extractImageFromContent(item.content) || 'https://images.unsplash.com/photo-1677442136019-21780ecad995'
+            image: item.thumbnail || item.enclosure?.link || extractImageFromContent(item.content) || getRandomAIImage()
           });
         });
       }
@@ -5948,4 +6009,18 @@ function timeAgo(dateString: string) {
   if (mins < 60) return `${mins}m ago`;
   if (hours < 24) return `${hours}h ago`;
   return `${days}d ago`;
+}
+
+function getRandomAIImage() {
+  const aiImages = [
+    'https://images.unsplash.com/photo-1677442136019-21780ecad995',
+    'https://images.unsplash.com/photo-1591405351990-4726e33df58d',
+    'https://images.unsplash.com/photo-1620712943543-bcc4628c6750',
+    'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe',
+    'https://images.unsplash.com/photo-1550751827-4bd374c3f58b',
+    'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
+    'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158',
+    'https://images.unsplash.com/photo-1518770660439-4636190af475'
+  ];
+  return aiImages[Math.floor(Math.random() * aiImages.length)] + '?w=800&auto=format&fit=crop';
 }
