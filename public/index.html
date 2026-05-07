@@ -14,6 +14,12 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <link rel="stylesheet" href="styles.css?v=6">
+  <!-- Markdown & Code Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 </head>
 <body class="dashboard-body">
   <!-- Global Preloader -->
@@ -239,7 +245,10 @@
         <div class="chat-header">
         <div class="chat-tool-info">
           <img id="selected-ai-logo" src="" alt="">
-          <h2 id="selected-ai-name">AI Assistant</h2>
+          <div style="display: flex; flex-direction: column;">
+            <h2 id="selected-ai-name" style="margin: 0; font-size: 1.2rem;">AI Assistant</h2>
+            <span id="chat-mode-badge" style="font-size: 0.7rem; color: var(--primary-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: none;"><i class="ph ph-briefcase"></i> Resume Analysis Mode</span>
+          </div>
         </div>
         <div class="chat-actions">
           <button id="clear-chat-btn" class="btn-secondary btn-sm" title="Clear conversation history">
@@ -249,20 +258,26 @@
         </div>
       </div>
         <div id="chat-messages" class="chat-messages"></div>
-        <div id="image-preview-container" style="display: none; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 12px 12px 0 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
-          <div style="position: relative; display: inline-block;">
-            <img id="image-preview" src="" style="max-height: 80px; border-radius: 8px; border: 1px solid var(--border);">
-            <button onclick="removeImage()" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="ph ph-x"></i></button>
+        <div id="file-preview-container" style="display: none; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 20px 20px 0 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <div style="position: relative; display: flex; align-items: center; gap: 15px;">
+            <div id="image-preview-wrapper" style="display: none;">
+              <img id="image-preview" src="" style="max-height: 80px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+            </div>
+            <div id="doc-preview-wrapper" style="display: none; background: rgba(99, 102, 241, 0.1); padding: 10px 15px; border-radius: 12px; border: 1px solid var(--primary-light); display: flex; align-items: center; gap: 10px;">
+              <i class="ph ph-file-pdf" style="font-size: 1.5rem; color: var(--primary-light);"></i>
+              <span id="doc-name" style="font-size: 0.9rem; font-weight: 500;">resume.pdf</span>
+            </div>
+            <button onclick="removeFile()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 28px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: absolute; top: -10px; right: -5px;"><i class="ph ph-x"></i></button>
           </div>
         </div>
         <div class="input-container">
-          <input type="file" id="image-upload" accept="image/*" style="display: none;">
-          <button id="attachment-btn" class="voice-search-btn" title="Attach Image" onclick="document.getElementById('image-upload').click()">
+          <input type="file" id="file-upload" accept="image/*,.pdf,.doc,.docx" style="display: none;" onchange="handleFileSelect(this)">
+          <button id="attachment-btn" class="voice-search-btn" title="Attach Image or Document" onclick="document.getElementById('file-upload').click()">
             <i class="ph ph-paperclip"></i>
           </button>
-          <input type="text" id="message-input" placeholder="Ask anything or describe the image...">
+          <input type="text" id="message-input" placeholder="Ask anything, analyze your resume, or describe the file...">
           <button id="voice-chat-btn" class="voice-search-btn" title="Voice Input"><i class="ph ph-microphone"></i></button>
-          <button id="send-btn" class="btn-primary">Send</button>
+          <button id="send-btn" class="btn-primary" style="padding: 0 25px;">Send <i class="ph ph-paper-plane-right"></i></button>
         </div>
       </div>
 

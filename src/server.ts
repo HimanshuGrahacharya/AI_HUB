@@ -245,9 +245,12 @@ app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Respo
     if (!apiKey) return res.json({ response: "Free Assistant key missing." });
 
     const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama-3.3-70b-versatile', // UPGRADED TO LATEST 70B STABLE
+      model: 'llama-3.3-70b-versatile',
       messages: [
-        { role: 'system', content: "You are the HSG AI Free Assistant." },
+        { 
+          role: 'system', 
+          content: "You are the HSG AI Premium Assistant. Always respond using clean Markdown. Use bold headers, lists, and code blocks where appropriate. If the user asks for Resume Analysis or ATS score, provide a detailed breakdown including: 1. ATS Score (0-100), 2. Key Issues, 3. Suggested Improvements, and 4. Formatting Tips." 
+        },
         { role: 'user', content: req.body.message }
       ],
     }, {

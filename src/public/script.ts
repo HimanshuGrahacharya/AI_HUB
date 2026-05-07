@@ -5104,56 +5104,90 @@ if (messageInput) {
   });
 }
 
-let attachedImageBase64: string | null = null;
+let attachedFileBase64: string | null = null;
+let attachedFileName: string | null = null;
+let attachedFileType: string | null = null;
 
-(window as any).removeImage = function() {
-  attachedImageBase64 = null;
-  const previewContainer = document.getElementById('image-preview-container');
-  const uploadInput = document.getElementById('image-upload') as HTMLInputElement;
+(window as any).removeFile = function() {
+  attachedFileBase64 = null;
+  attachedFileName = null;
+  attachedFileType = null;
+  const previewContainer = document.getElementById('file-preview-container');
+  const uploadInput = document.getElementById('file-upload') as HTMLInputElement;
   if (previewContainer) previewContainer.style.display = 'none';
   if (uploadInput) uploadInput.value = '';
+  document.getElementById('chat-mode-badge')!.style.display = 'none';
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  const imageUpload = document.getElementById('image-upload') as HTMLInputElement;
-  if (imageUpload) {
-    imageUpload.addEventListener('change', function() {
-      const file = this.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          attachedImageBase64 = e.target?.result as string;
-          const previewContainer = document.getElementById('image-preview-container');
-          const previewImage = document.getElementById('image-preview') as HTMLImageElement;
-          if (previewContainer && previewImage) {
-            previewImage.src = attachedImageBase64;
-            previewContainer.style.display = 'block';
+(window as any).handleFileSelect = function(input: HTMLInputElement) {
+  const file = input.files?.[0];
+  if (file) {
+    attachedFileName = file.name;
+    attachedFileType = file.type;
+    
+    const isImage = file.type.startsWith('image/');
+    const isResume = file.name.toLowerCase().includes('resume') || file.name.toLowerCase().includes('cv');
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      attachedFileBase64 = e.target?.result as string;
+      const previewContainer = document.getElementById('file-preview-container');
+      const imgWrapper = document.getElementById('image-preview-wrapper');
+      const docWrapper = document.getElementById('doc-preview-wrapper');
+      const previewImage = document.getElementById('image-preview') as HTMLImageElement;
+      const docName = document.getElementById('doc-name');
+      const modeBadge = document.getElementById('chat-mode-badge');
+
+      if (previewContainer) {
+        previewContainer.style.display = 'block';
+        if (isImage) {
+          if (imgWrapper) imgWrapper.style.display = 'block';
+          if (docWrapper) docWrapper.style.display = 'none';
+          if (previewImage) previewImage.src = attachedFileBase64!;
+        } else {
+          if (imgWrapper) imgWrapper.style.display = 'none';
+          if (docWrapper) {
+            docWrapper.style.display = 'flex';
+            if (docName) docName.textContent = file.name;
           }
-        };
-        reader.readAsDataURL(file);
+        }
       }
-    });
+
+      if (isResume && modeBadge) {
+        modeBadge.style.display = 'inline-block';
+        showToast('Resume detected! Resume Analysis Mode activated.', 'success');
+      }
+    };
+    reader.readAsDataURL(file);
   }
-});
+};
 
 async function sendMessage() {
   const input = document.getElementById('message-input') as HTMLInputElement;
-  const message = input.value.trim();
-  if (!message && !attachedImageBase64) return;
+  let message = input.value.trim();
+  if (!message && !attachedFileBase64) return;
 
-  const displayMessage = attachedImageBase64 
-    ? `<img src="${attachedImageBase64}" style="max-width: 100%; border-radius: 8px; margin-bottom: 8px;"><br>${message}`
-    : message;
+  const isResumeMode = document.getElementById('chat-mode-badge')!.style.display !== 'none';
+  
+  if (isResumeMode && message.length < 5) {
+    message = "Analyze my resume for issues and provide an ATS score (out of 100). List specific improvements.";
+  }
+
+  const displayMessage = (attachedFileBase64 && attachedFileType?.startsWith('image/'))
+    ? `<img src="${attachedFileBase64}" style="max-height: 200px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1);"><br>${message}`
+    : (attachedFileBase64 ? `<div style="background: rgba(99, 102, 241, 0.1); padding: 10px 15px; border-radius: 10px; margin-bottom: 10px; display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--primary-light);"><i class="ph ph-file-pdf"></i> ${attachedFileName}</div><br>${message}` : message);
 
   addMessage('user', displayMessage);
   input.value = '';
   
   const payload = { 
-    message: message || "Analyze this image.", 
-    image: attachedImageBase64 
+    message: message || (attachedFileType?.startsWith('image/') ? "Analyze this image." : "Analyze this document."), 
+    image: attachedFileType?.startsWith('image/') ? attachedFileBase64 : null,
+    fileName: attachedFileName,
+    isResume: isResumeMode
   };
   
-  (window as any).removeImage(); // clear preview
+  (window as any).removeFile(); // clear preview
 
   const token = localStorage.getItem('token');
   
@@ -5198,6 +5232,56 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
   
   const messageDiv = document.createElement('div');
   messageDiv.className = `message ${sender} ${animate ? 'new' : ''}`;
+  
+  const rawContent = text;
+  let htmlContent = text;
+  
+  if (sender === 'ai') {
+    // Render Markdown for AI responses
+    htmlContent = (window as any).marked.parse(text);
+  }
+
+  messageDiv.innerHTML = `
+    <div class="message-content">
+      ${htmlContent}
+    </div>
+    ${sender === 'ai' ? `
+      <div class="message-actions">
+        <button class="message-btn" onclick="copyMessageText(this, \`${rawContent.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">
+          <i class="ph ph-copy"></i> Copy
+        </button>
+        <button class="message-btn" onclick="speakMessage(\`${rawContent.replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/\n/g, ' ')}\`)">
+          <i class="ph ph-speaker-high"></i> Listen
+        </button>
+      </div>
+    ` : ''}
+  `;
+  
+  messagesDiv.appendChild(messageDiv);
+  
+  // Highlight code blocks
+  if (sender === 'ai') {
+    (window as any).Prism.highlightAllUnder(messageDiv);
+  }
+  
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+(window as any).copyMessageText = function(btn: HTMLButtonElement, text: string) {
+  navigator.clipboard.writeText(text).then(() => {
+    const icon = btn.querySelector('i');
+    if (icon) {
+      icon.className = 'ph ph-check-circle';
+      setTimeout(() => icon.className = 'ph ph-copy', 2000);
+    }
+    showToast('Copied to clipboard', 'success');
+  });
+};
+
+(window as any).speakMessage = function(text: string) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  window.speechSynthesis.speak(utterance);
+};
   
   const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   
