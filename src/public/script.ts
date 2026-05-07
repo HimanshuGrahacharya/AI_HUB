@@ -4899,8 +4899,108 @@ function renderPagination() {
   pagination.appendChild(nextBtn);
 }
 
-function handleSearch() {
+let globalNewsStore: any[] = [];
+
+async function handleSearch() {
   const query = (document.getElementById('search-input') as HTMLInputElement).value.toLowerCase();
+  const overlay = document.getElementById('search-results-overlay');
+  
+  if (!query) {
+    if (overlay) overlay.classList.remove('active');
+    filteredTools = aiTools;
+    currentPage = 1;
+    renderTools();
+    renderPagination();
+    return;
+  }
+
+  // Show overlay
+  if (overlay) {
+    overlay.classList.add('active');
+    overlay.innerHTML = '<div class="search-no-results"><div class="hsg-spinner" style="margin: 0 auto 10px;"></div>Searching everything...</div>';
+  }
+
+  // Filter Tools
+  const toolResults = aiTools.filter(tool =>
+    tool.name.toLowerCase().includes(query) ||
+    tool.description.toLowerCase().includes(query) ||
+    tool.category.toLowerCase().includes(query)
+  ).slice(0, 5);
+
+  // Filter News from store
+  const newsResults = globalNewsStore.filter(news =>
+    news.title.toLowerCase().includes(query) ||
+    news.excerpt.toLowerCase().includes(query)
+  ).slice(0, 3);
+
+  // Filter Videos (mock filter for now)
+  const videoResults = (aiVideosData as any[]).filter(v => 
+    v.title.toLowerCase().includes(query)
+  ).slice(0, 3);
+
+  // Build Overlay HTML
+  let html = '';
+  
+  if (toolResults.length > 0) {
+    html += `<div class="search-section">
+      <h4><i class="ph ph-cube"></i> AI Tools</h4>
+      ${toolResults.map(t => `
+        <div class="search-item" onclick="selectAI('${t.id}')">
+          <img src="${t.logo}" alt="">
+          <div class="search-item-info">
+            <span class="search-item-title">${t.name}</span>
+            <span class="search-item-meta">${t.category}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+
+  if (newsResults.length > 0) {
+    html += `<div class="search-section">
+      <h4><i class="ph ph-newspaper"></i> News Articles</h4>
+      ${newsResults.map(n => `
+        <div class="search-item" onclick="window.open('${n.link}', '_blank')">
+          <img src="${n.image}" alt="">
+          <div class="search-item-info">
+            <span class="search-item-title">${n.title}</span>
+            <span class="search-item-meta">${n.source} â€¢ ${timeAgo(n.pubDate)}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+
+  if (videoResults.length > 0) {
+    html += `<div class="search-section">
+      <h4><i class="ph ph-youtube-logo"></i> Tutorials</h4>
+      ${videoResults.map(v => `
+        <div class="search-item">
+          <i class="ph ph-play-circle" style="font-size: 20px; color: #ff0000;"></i>
+          <div class="search-item-info">
+            <span class="search-item-title">${v.title}</span>
+            <span class="search-item-meta">YouTube Video</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+
+  html += `
+    <div class="search-external-link" onclick="window.open('https://www.google.com/search?q=${encodeURIComponent(query)}', '_blank')">
+      <i class="ph ph-google-logo"></i> Search everything on Google
+    </div>
+  `;
+
+  if (overlay) {
+    if (toolResults.length === 0 && newsResults.length === 0 && videoResults.length === 0) {
+      overlay.innerHTML = `<div class="search-no-results">No local results for "${query}". Try Google search below.</div>` + html;
+    } else {
+      overlay.innerHTML = html;
+    }
+  }
+
+  // Also update the main grid (standard behavior)
   filteredTools = aiTools.filter(tool =>
     tool.name.toLowerCase().includes(query) ||
     tool.description.toLowerCase().includes(query) ||
@@ -4910,6 +5010,15 @@ function handleSearch() {
   renderTools();
   renderPagination();
 }
+
+// Close overlay when clicking outside
+document.addEventListener('click', (e) => {
+  const overlay = document.getElementById('search-results-overlay');
+  const searchInput = document.getElementById('search-input');
+  if (overlay && searchInput && !overlay.contains(e.target as Node) && e.target !== searchInput) {
+    overlay.classList.remove('active');
+  }
+});
 
 function changePage(page: number) {
   currentPage = page;
@@ -5682,33 +5791,99 @@ const aiVideosData = [
   }
 };
 
-function initializeFeed() {
-  // Set Date
+async function fetchLiveAINews() {
+  const feeds = [
+    'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml',
+    'https://techcrunch.com/category/artificial-intelligence/feed/',
+    'https://wired.com/feed/category/ai/latest/rss'
+  ];
+  
+  const allNews: any[] = [];
+  
+  for (const feed of feeds) {
+    try {
+      const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed)}`);
+      const data = await res.json();
+      if (data.status === 'ok') {
+        data.items.forEach((item: any) => {
+          allNews.push({
+            title: item.title,
+            link: item.link,
+            pubDate: item.pubDate,
+            source: data.feed.title.split(' - ')[0] || 'AI News',
+            excerpt: item.description.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...',
+            image: item.thumbnail || item.enclosure?.link || extractImageFromContent(item.content) || 'https://images.unsplash.com/photo-1677442136019-21780ecad995'
+          });
+        });
+      }
+    } catch (e) {
+      console.warn('Failed to fetch feed:', feed);
+    }
+  }
+  
+  // Sort and Store globally for search
+  const sorted = allNews.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+  globalNewsStore = sorted; 
+  return sorted.slice(0, 15); // Return a good amount for the feed
+}
+
+async function initializeFeed() {
   const dateEl = document.getElementById('brief-date');
   if (dateEl) {
     const now = new Date();
     dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
   }
   
-  // Populate News
   const newsGrid = document.getElementById('news-grid');
   if (newsGrid) {
-    newsGrid.innerHTML = aiNewsData.map(item => `
-      <div class="news-card">
-        <img src="${item.image}" class="news-img" alt="${item.title}">
-        <div class="news-content">
-          <span class="news-tag">${item.tag}</span>
-          <h4>${item.title}</h4>
-          <p>${item.excerpt}</p>
-        </div>
+    newsGrid.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+        <div class="hsg-spinner" style="margin: 0 auto 15px;"></div>
+        <p>Connecting to global AI intelligence feeds...</p>
       </div>
-    `).join('');
+    `;
+
+    try {
+      const news = await fetchLiveAINews();
+      if (news.length > 0) {
+        let newsHtml = '';
+        let showedEarlierDivider = false;
+        
+        news.forEach((item, index) => {
+          const isToday = new Date(item.pubDate).toDateString() === new Date().toDateString();
+          
+          if (!isToday && !showedEarlierDivider && index > 0) {
+            newsHtml += `<div style="grid-column: 1/-1; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px;">
+              <h4 style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin:0;">Earlier this week</h4>
+            </div>`;
+            showedEarlierDivider = true;
+          }
+
+          newsHtml += `
+            <div class="news-card" onclick="window.open('${item.link}', '_blank')">
+              <img src="${item.image}" class="news-img" alt="${item.title}">
+              <div class="news-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                  <span class="news-tag">${item.source}</span>
+                  <span style="font-size: 0.75rem; color: var(--text-secondary); opacity: 0.8;">${timeAgo(item.pubDate)}</span>
+                </div>
+                <h4>${item.title}</h4>
+                <p>${item.excerpt}</p>
+              </div>
+            </div>
+          `;
+        });
+        newsGrid.innerHTML = newsHtml;
+      }
+    } catch (err) {
+      console.error('Feed Error:', err);
+      newsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">Unable to connect to live news. Please try again later.</div>';
+    }
   }
   
-  // Populate Videos
   const videoGrid = document.getElementById('video-grid');
   if (videoGrid) {
-    videoGrid.innerHTML = aiVideosData.map(item => `
+    videoGrid.innerHTML = (aiVideosData as any[]).map(item => `
       <div class="video-card">
         <div class="video-thumb" style="background-image: url('${item.thumb}'); background-size: cover;">
           <div class="play-overlay"><i class="ph ph-play-fill"></i></div>
@@ -5717,4 +5892,26 @@ function initializeFeed() {
       </div>
     `).join('');
   }
+}
+
+function extractImageFromContent(content: string) {
+  if (!content) return null;
+  const div = document.createElement('div');
+  div.innerHTML = content;
+  const img = div.querySelector('img');
+  return img ? img.src : null;
+}
+
+function timeAgo(dateString: string) {
+  const now = new Date();
+  const past = new Date(dateString);
+  const diff = now.getTime() - past.getTime();
+  const mins = Math.floor(diff / 60000);
+  const hours = Math.floor(mins / 60);
+  const days = Math.floor(hours / 24);
+  
+  if (mins < 1) return 'Just now';
+  if (mins < 60) return `${mins}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  return `${days}d ago`;
 }
