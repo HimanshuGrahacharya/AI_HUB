@@ -6509,7 +6509,7 @@ function loadArtGallery() {
 
   container!.innerHTML = gallery.map((item: any) => `
     <div class="gallery-item">
-      <img src="${item.url}" alt="Masterpiece">
+      <img src="${item.url}" alt="Masterpiece" onerror="this.onerror=null; this.src='https://placehold.co/600x600/0a0a1a/818cf8?text=Masterpiece+Materializing...'">
       <div class="gallery-overlay">
         <div class="gallery-info">
           <p>${item.prompt.substring(0, 40)}...</p>
