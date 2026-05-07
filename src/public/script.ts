@@ -6235,3 +6235,20 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
   const text = document.getElementById('warroom-master-output')?.innerText || '';
   navigator.clipboard.writeText(text).then(() => showToast('Master Strategy copied to clipboard!', 'success'));
 };
+
+(window as any).shareWarRoomResult = function() {
+  const mission = (document.getElementById('warroom-input') as HTMLTextAreaElement).value.trim();
+  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! 🚀 #AIHUB #StrategicIntelligence`;
+  const url = window.location.href;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'HSG AI War Room Strategy',
+      text: text,
+      url: url,
+    }).catch(console.error);
+  } else {
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, '_blank');
+  }
+};

@@ -240,6 +240,36 @@
       .footer-grid { grid-template-columns: 1fr; }
       .footer-brand { grid-column: span 1; }
     }
+    /* ─────────────── MODELS TICKER ─────────────── */
+    .models-ticker-section { padding: 40px 0; background: var(--landing-bg); border-top: 1px solid var(--nav-border); border-bottom: 1px solid var(--nav-border); overflow: hidden; }
+    .ticker-wrap { width: 100%; overflow: hidden; }
+    .ticker { display: flex; width: max-content; animation: ticker 40s linear infinite; gap: 60px; align-items: center; }
+    @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .ticker-item { display: flex; align-items: center; gap: 10px; color: var(--landing-text-muted); font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; opacity: 0.6; transition: opacity 0.3s; cursor: default; }
+    .ticker-item:hover { opacity: 1; color: var(--primary-light); }
+    .ticker-item i { font-size: 1.4rem; color: #818cf8; }
+
+    /* ─────────────── TACTICAL SUITE ─────────────── */
+    .tactical-suite { padding: 100px 5%; background: var(--landing-bg); position: relative; }
+    .suite-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+    .suite-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 30px; padding: 40px; display: flex; gap: 30px; transition: all 0.4s; overflow: hidden; position: relative; }
+    .suite-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 30px 60px rgba(99, 102, 241, 0.15); }
+    .suite-content { flex: 1; position: relative; z-index: 2; }
+    .badge-new { background: #10b981; color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; vertical-align: middle; margin-right: 8px; }
+    .badge-premium { background: #fbbf24; color: #78350f; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; vertical-align: middle; margin-right: 8px; }
+    .suite-card h3 { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.8rem; color: var(--hero-h1); margin-bottom: 15px; }
+    .suite-card p { color: var(--landing-text-muted); line-height: 1.6; margin-bottom: 25px; }
+    .suite-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .suite-list li { display: flex; align-items: center; gap: 10px; color: var(--landing-text); font-weight: 600; font-size: 0.95rem; }
+    .suite-list li i { color: #10b981; font-size: 1.2rem; }
+    .suite-visual { width: 120px; height: 120px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1)); border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #818cf8; opacity: 0.8; transition: transform 0.4s; }
+    .suite-card:hover .suite-visual { transform: scale(1.1) rotate(5deg); }
+    
+    @media (max-width: 768px) {
+      .suite-card { flex-direction: column; text-align: center; padding: 30px; }
+      .suite-list { align-items: center; }
+      .suite-visual { margin: 0 auto; }
+    }
   </style>
 </head>
 <body>
@@ -313,6 +343,66 @@
         <div class="feat-icon"><i class="ph ph-moon"></i></div>
         <h3>Dark Mode</h3>
         <p>Work comfortably day or night with a beautifully crafted dark theme that's easy on your eyes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODELS TICKER -->
+  <section class="models-ticker-section">
+    <div class="ticker-wrap">
+      <div class="ticker">
+        <div class="ticker-item"><i class="ph ph-cpu"></i> GPT-4o</div>
+        <div class="ticker-item"><i class="ph ph-brain"></i> Claude 3.5</div>
+        <div class="ticker-item"><i class="ph ph-lightning"></i> Groq Llama 3</div>
+        <div class="ticker-item"><i class="ph ph-code"></i> Blackbox AI</div>
+        <div class="ticker-item"><i class="ph ph-google-logo"></i> Gemini Pro</div>
+        <div class="ticker-item"><i class="ph ph-cube"></i> Mistral Large</div>
+        <!-- Duplicate for seamless loop -->
+        <div class="ticker-item"><i class="ph ph-cpu"></i> GPT-4o</div>
+        <div class="ticker-item"><i class="ph ph-brain"></i> Claude 3.5</div>
+        <div class="ticker-item"><i class="ph ph-lightning"></i> Groq Llama 3</div>
+        <div class="ticker-item"><i class="ph ph-code"></i> Blackbox AI</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVOLUTIONARY SUITE -->
+  <section class="tactical-suite">
+    <div class="section-header">
+      <div class="section-label">Exclusive Technology</div>
+      <h2>The Tactical AI Suite</h2>
+      <p>Exclusive features you won't find on any other AI directory.</p>
+    </div>
+    <div class="suite-grid">
+      <div class="suite-card warroom">
+        <div class="suite-content">
+          <span class="badge-new">NEW</span>
+          <h3>AI War Room</h3>
+          <p>Orchestrate multiple AI agents simultaneously. Launch complex missions and receive a synthesized "Master Strategy" from ChatGPT, Groq, and Blackbox working together.</p>
+          <ul class="suite-list">
+            <li><i class="ph ph-check-circle"></i> Multi-Agent Swarm</li>
+            <li><i class="ph ph-check-circle"></i> Tactical Mission Logs</li>
+            <li><i class="ph ph-check-circle"></i> Automated Synthesis</li>
+          </ul>
+        </div>
+        <div class="suite-visual">
+          <i class="ph ph-shield-star"></i>
+        </div>
+      </div>
+      <div class="suite-card resume">
+        <div class="suite-content">
+          <span class="badge-premium">PREMIUM</span>
+          <h3>ATS Resume Suite</h3>
+          <p>Upload your resume and activate "Analysis Mode". Get instant ATS scoring, detailed issue detection, and AI-powered suggestions to land your dream job.</p>
+          <ul class="suite-list">
+            <li><i class="ph ph-check-circle"></i> 0-100 ATS Scoring</li>
+            <li><i class="ph ph-check-circle"></i> Gap Analysis</li>
+            <li><i class="ph ph-check-circle"></i> Formatting Correction</li>
+          </ul>
+        </div>
+        <div class="suite-visual">
+          <i class="ph ph-briefcase"></i>
+        </div>
       </div>
     </div>
   </section>

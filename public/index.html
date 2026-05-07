@@ -403,7 +403,10 @@
           <div class="warroom-output-panel glass" id="warroom-output-panel" style="display: none;">
             <div class="output-header">
               <h3><i class="ph ph-lightning"></i> MASTER STRATEGY SYNTHESIZED</h3>
-              <button class="btn-secondary btn-sm" onclick="copyMasterPlan()"><i class="ph ph-copy"></i> Copy Plan</button>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn-secondary btn-sm" onclick="shareWarRoomResult()"><i class="ph ph-share-network"></i> Share Intelligence</button>
+                <button class="btn-secondary btn-sm" onclick="copyMasterPlan()"><i class="ph ph-copy"></i> Copy Plan</button>
+              </div>
             </div>
             <div id="warroom-master-output" class="master-output"></div>
           </div>
