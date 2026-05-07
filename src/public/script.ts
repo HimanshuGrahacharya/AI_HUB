@@ -6089,3 +6089,149 @@ function getRandomAIImage() {
   ];
   return aiImages[Math.floor(Math.random() * aiImages.length)] + '?w=800&auto=format&fit=crop';
 }
+
+// ==========================================
+// REVOLUTIONARY: AI WAR ROOM LOGIC
+// ==========================================
+
+(window as any).openWarRoom = function() {
+  const grid = document.getElementById('ai-grid');
+  const pagination = document.getElementById('pagination');
+  const chatContainer = document.getElementById('chat-container');
+  const arenaContainer = document.getElementById('arena-container');
+  const warroomContainer = document.getElementById('warroom-container');
+  const sidebar = document.querySelector('.sidebar') as HTMLElement;
+  const hero = document.querySelector('.dashboard-hero') as HTMLElement;
+
+  if (grid) grid.style.display = 'none';
+  if (pagination) pagination.style.display = 'none';
+  if (chatContainer) chatContainer.style.display = 'none';
+  if (arenaContainer) arenaContainer.style.display = 'none';
+  if (sidebar) sidebar.style.display = 'none';
+  if (hero) hero.style.display = 'none';
+  if (warroomContainer) warroomContainer.style.display = 'flex';
+  
+  // Reset logs
+  const log = document.getElementById('warroom-log');
+  if (log) log.innerHTML = '<div class="log-entry system">> SYSTEM INITIALIZED. AWAITING STRATEGIC COMMAND...</div>';
+};
+
+(window as any).closeWarRoom = function() {
+  const grid = document.getElementById('ai-grid');
+  const pagination = document.getElementById('pagination');
+  const warroomContainer = document.getElementById('warroom-container');
+  const sidebar = document.querySelector('.sidebar') as HTMLElement;
+  const hero = document.querySelector('.dashboard-hero') as HTMLElement;
+
+  if (grid) grid.style.display = 'grid';
+  if (pagination) pagination.style.display = 'flex';
+  if (sidebar) sidebar.style.display = 'flex';
+  if (hero) hero.style.display = 'block';
+  if (warroomContainer) warroomContainer.style.display = 'none';
+};
+
+async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'agent') {
+  const log = document.getElementById('warroom-log');
+  if (log) {
+    const entry = document.createElement('div');
+    entry.className = `log-entry ${type}`;
+    entry.textContent = `> ${text}`;
+    log.appendChild(entry);
+    log.scrollTop = log.scrollHeight;
+  }
+}
+
+(window as any).executeWarRoom = async function() {
+  const input = document.getElementById('warroom-input') as HTMLTextAreaElement;
+  const mission = input.value.trim();
+  if (!mission) return showToast('Please enter a mission command.', 'error');
+
+  const btn = document.getElementById('warroom-execute-btn') as HTMLButtonElement;
+  btn.disabled = true;
+  btn.textContent = 'EXECUTING MISSION...';
+
+  // UI States
+  document.getElementById('warroom-output-panel')!.style.display = 'none';
+  const pods = ['chatgpt', 'blackbox', 'groq'];
+  pods.forEach(p => {
+    const pod = document.getElementById(`pod-${p}`);
+    pod?.classList.add('processing', 'active');
+    pod!.querySelector('.pod-status')!.innerHTML = '<span class="status-dot"></span> ANALYZING...';
+  });
+
+  await addWarLog(`INCOMING MISSION: "${mission.substring(0, 50)}..."`, 'system');
+  await addWarLog(`ORCHESTRATING MULTI-AGENT SWARM...`, 'system');
+
+  const token = localStorage.getItem('token');
+  const responses: any = {};
+
+  const fetchAgent = async (id: string, endpoint: string) => {
+    try {
+      await addWarLog(`${id.toUpperCase()} AGENT DEPLOYED.`, 'agent');
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ message: mission })
+      });
+      const data = await res.json();
+      responses[id] = data.response;
+      
+      const pod = document.getElementById(`pod-${id}`);
+      pod?.classList.remove('processing');
+      pod?.classList.add('complete');
+      pod!.querySelector('.pod-status')!.innerHTML = '<span class="status-dot"></span> DATA ACQUIRED';
+      await addWarLog(`${id.toUpperCase()} INTEL SECURED.`, 'success');
+    } catch (e) {
+      await addWarLog(`${id.toUpperCase()} CONNECTION FAILED.`, 'system');
+    }
+  };
+
+  // Parallel Execution
+  await Promise.all([
+    fetchAgent('chatgpt', '/api/chatgpt'),
+    fetchAgent('blackbox', '/api/blackbox'),
+    fetchAgent('groq', '/api/groq')
+  ]);
+
+  // Synthesis Stage
+  await addWarLog(`ALL INTEL GATHERED. INITIATING MASTER SYNTHESIS...`, 'system');
+  
+  const synthPrompt = `You are the War Room Synthesizer. I will give you 3 different AI responses to a mission. Your job is to combine them into one MASTER STRATEGY. Pick the best ideas from each and create a professional, structured plan.
+  
+  MISSION: ${mission}
+  
+  AGENT 1 (Creative): ${responses.chatgpt || 'N/A'}
+  AGENT 2 (Technical): ${responses.blackbox || 'N/A'}
+  AGENT 3 (Speed/Efficiency): ${responses.groq || 'N/A'}
+  
+  Return the MASTER STRATEGY in clean Markdown.`;
+
+  try {
+    const synthRes = await fetch('/api/blackbox', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ message: synthPrompt })
+    });
+    const synthData = await synthRes.json();
+    
+    await addWarLog(`MISSION COMPLETE. MASTER STRATEGY READY.`, 'success');
+    
+    const outputPanel = document.getElementById('warroom-output-panel');
+    const masterOutput = document.getElementById('warroom-master-output');
+    if (outputPanel && masterOutput) {
+      masterOutput.innerHTML = (window as any).marked.parse(synthData.response);
+      outputPanel.style.display = 'block';
+      outputPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+  } catch (e) {
+    await addWarLog(`SYNTHESIS FAILED. SYSTEM RECOVERY INITIATED.`, 'system');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Launch Multi-Agent Mission ⚡';
+};
+
+(window as any).copyMasterPlan = function() {
+  const text = document.getElementById('warroom-master-output')?.innerText || '';
+  navigator.clipboard.writeText(text).then(() => showToast('Master Strategy copied to clipboard!', 'success'));
+};

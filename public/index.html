@@ -167,6 +167,9 @@
           <li class="category-item" id="show-arena" onclick="openArena()">
             <i class="ph ph-flask"></i> AI Model Arena 🚀
           </li>
+          <li class="category-item" id="show-warroom" onclick="openWarRoom()">
+            <i class="ph ph-shield-star"></i> AI War Room <span class="badge-new">WAR</span>
+          </li>
         </ul>
       </div>
     </aside>
@@ -355,6 +358,54 @@
               </div>
               <button class="btn-best" onclick="voteWinner('groq')">Choose as Best</button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVOLUTIONARY: AI War Room -->
+      <div class="warroom-container" id="warroom-container" style="display: none;">
+        <div class="warroom-header">
+          <div class="warroom-title">
+            <h2><i class="ph ph-shield-star"></i> Tactical AI War Room</h2>
+            <p>Orchestrating multiple models into one Master Strategy.</p>
+          </div>
+          <button class="btn-secondary" onclick="closeWarRoom()">Exit Command Center</button>
+        </div>
+
+        <div class="warroom-workspace">
+          <div class="warroom-agents">
+            <div class="agent-pod" id="pod-chatgpt">
+              <div class="pod-header"><img src="https://www.google.com/s2/favicons?domain=openai.com&sz=64"> ChatGPT</div>
+              <div class="pod-status"><span class="status-dot"></span> STANDBY</div>
+            </div>
+            <div class="agent-pod" id="pod-blackbox">
+              <div class="pod-header"><img src="https://www.google.com/s2/favicons?domain=blackbox.ai&sz=64"> Blackbox</div>
+              <div class="pod-status"><span class="status-dot"></span> STANDBY</div>
+            </div>
+            <div class="agent-pod" id="pod-groq">
+              <div class="pod-header"><img src="https://www.google.com/s2/favicons?domain=groq.com&sz=64"> Groq AI</div>
+              <div class="pod-status"><span class="status-dot"></span> STANDBY</div>
+            </div>
+          </div>
+
+          <div class="warroom-core glass">
+            <div class="core-display">
+              <div id="warroom-log" class="warroom-log">
+                <div class="log-entry system">> SYSTEM INITIALIZED. AWAITING STRATEGIC COMMAND...</div>
+              </div>
+            </div>
+            <div class="core-input-area">
+              <textarea id="warroom-input" placeholder="Enter a complex mission or problem to solve..."></textarea>
+              <button id="warroom-execute-btn" class="btn-primary" onclick="executeWarRoom()">Launch Multi-Agent Mission ⚡</button>
+            </div>
+          </div>
+
+          <div class="warroom-output-panel glass" id="warroom-output-panel" style="display: none;">
+            <div class="output-header">
+              <h3><i class="ph ph-lightning"></i> MASTER STRATEGY SYNTHESIZED</h3>
+              <button class="btn-secondary btn-sm" onclick="copyMasterPlan()"><i class="ph ph-copy"></i> Copy Plan</button>
+            </div>
+            <div id="warroom-master-output" class="master-output"></div>
           </div>
         </div>
       </div>

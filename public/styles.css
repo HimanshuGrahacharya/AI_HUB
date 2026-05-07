@@ -4684,3 +4684,191 @@ body:not(.dark-mode) .profile-details-grid {
 .winner-glow .winner-badge {
   animation: winnerPulse 2s infinite;
 }
+
+/* ==========================================
+   REVOLUTIONARY: AI WAR ROOM STYLES
+   ========================================== */
+.warroom-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.warroom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+}
+
+.warroom-title h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.warroom-title p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.warroom-workspace {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 30px;
+}
+
+.warroom-agents {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.agent-pod {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  transition: all 0.4s ease;
+}
+
+.agent-pod.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+  transform: translateX(10px);
+}
+
+.pod-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.pod-header img {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.pod-status {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #64748b;
+  border-radius: 50%;
+}
+
+.agent-pod.processing .status-dot {
+  background: #fbbf24;
+  animation: pulse 1s infinite;
+}
+
+.agent-pod.complete .status-dot {
+  background: #10b981;
+}
+
+.warroom-core {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 700px;
+}
+
+.core-display {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background: linear-gradient(rgba(0,0,0,0.5), transparent);
+}
+
+.warroom-log {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.log-entry {
+  color: #94a3b8;
+  padding: 5px 0;
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.log-entry.system { color: var(--primary-light); font-weight: 700; }
+.log-entry.agent { color: #fff; }
+.log-entry.success { color: #10b981; }
+
+.core-input-area {
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#warroom-input {
+  width: 100%;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  color: white;
+  font-size: 1.1rem;
+  resize: none;
+  outline: none;
+}
+
+.warroom-output-panel {
+  grid-column: 1 / -1;
+  padding: 40px;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 30px;
+  border: 1px solid var(--primary);
+  margin-top: 30px;
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.master-output {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #e2e8f0;
+}
+
+@media (max-width: 1024px) {
+  .warroom-workspace { grid-template-columns: 1fr; }
+  .warroom-container { padding: 20px; }
+}
