@@ -6421,10 +6421,11 @@ let activeArtStyle = 'cinematic';
 
 // Style selection
 document.querySelectorAll('.style-card').forEach(card => {
-  card.addEventListener('click', function() {
+  card.addEventListener('click', (e) => {
+    const target = e.currentTarget as HTMLElement;
     document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
-    this.classList.add('active');
-    activeArtStyle = this.getAttribute('data-style') || 'cinematic';
+    target.classList.add('active');
+    activeArtStyle = target.getAttribute('data-style') || 'cinematic';
   });
 });
 
