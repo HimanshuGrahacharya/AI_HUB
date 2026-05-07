@@ -155,6 +155,9 @@
           <li class="category-item" id="show-recent">
             <i class="ph ph-clock-counter-clockwise"></i> Recently Viewed
           </li>
+          <li class="category-item" id="show-feed" onclick="showFeed()">
+            <i class="ph ph-sparkle"></i> Intelligence Feed <span class="badge-new">NEW</span>
+          </li>
           <li class="category-item" id="show-arena" onclick="openArena()">
             <i class="ph ph-flask"></i> AI Model Arena 🚀
           </li>
@@ -181,6 +184,49 @@
 
       <div class="ai-grid" id="ai-grid">
         <!-- AI tool cards will be dynamically generated here -->
+      </div>
+
+      <!-- NEW: Global AI Intelligence Feed -->
+      <div id="intelligence-feed" class="intelligence-feed" style="display: none;">
+        <div class="feed-header">
+          <div class="morning-brief">
+            <div class="brief-icon"><i class="ph ph-sun-dim"></i></div>
+            <div class="brief-text">
+              <h2>Your AI Morning Briefing</h2>
+              <p id="brief-date"></p>
+            </div>
+          </div>
+          <div class="trending-ticker">
+            <span class="live-indicator"><span class="pulse"></span> LIVE</span>
+            <div class="ticker-content">
+              <span class="ticker-item">GPT-5 training rumors intensify...</span>
+              <span class="ticker-item">Gemini 2.0 Ultra leaked benchmarks...</span>
+              <span class="ticker-item">NVIDIA stock hits new all-time high...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="feed-grid">
+          <section class="feed-section">
+            <div class="section-header">
+              <h3><i class="ph ph-newspaper"></i> Latest AI & IT News</h3>
+              <a href="#" class="view-all">View All</a>
+            </div>
+            <div class="news-grid" id="news-grid">
+              <!-- News cards will be generated here -->
+            </div>
+          </section>
+
+          <section class="feed-section">
+            <div class="section-header">
+              <h3><i class="ph ph-youtube-logo"></i> Trending AI Tutorials</h3>
+              <a href="#" class="view-all">View All</a>
+            </div>
+            <div class="video-grid" id="video-grid">
+              <!-- Video cards will be generated here -->
+            </div>
+          </section>
+        </div>
       </div>
       <div class="pagination" id="pagination">
         <!-- Pagination buttons will be dynamically generated here -->

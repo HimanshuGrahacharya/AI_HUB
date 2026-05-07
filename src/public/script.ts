@@ -4387,10 +4387,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (category) {
+        (window as any).showTools();
         filterByCategory(category);
       } else if (item.id === 'show-favorites') {
+        (window as any).showTools();
         showFavorites();
       } else if (item.id === 'show-recent') {
+        (window as any).showTools();
         showRecentlyViewed();
       }
     });
@@ -5590,3 +5593,128 @@ window.addEventListener('load', () => {
   });
   initVoiceRecognition('voice-arena-btn', 'arena-input');
 });
+
+// ==========================================
+// GLOBAL AI INTELLIGENCE FEED LOGIC
+// ==========================================
+
+interface IntelligenceItem {
+  title: string;
+  excerpt: string;
+  tag: string;
+  image: string;
+  link: string;
+}
+
+const aiNewsData: IntelligenceItem[] = [
+  {
+    title: "OpenAI Unveils 'Operator' Autonomous Browser Agent",
+    excerpt: "The new agent can book flights, shop online, and perform complex research tasks autonomously by controlling the user's browser.",
+    tag: "Breaking News",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop",
+    link: "#"
+  },
+  {
+    title: "NVIDIA's Blackwell Chips Hit Volume Production",
+    excerpt: "The next generation of AI chips is expected to deliver a 30x performance increase for LLM inference tasks.",
+    tag: "Hardware",
+    image: "https://images.unsplash.com/photo-1591405351990-4726e33df58d?w=800&auto=format&fit=crop",
+    link: "#"
+  },
+  {
+    title: "Apple Intelligence Officially Expands to EU & Asia",
+    excerpt: "Apple's on-device AI suite is now rolling out globally with support for 15 additional languages and local data processing.",
+    tag: "Tech Updates",
+    image: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&auto=format&fit=crop",
+    link: "#"
+  },
+  {
+    title: "Google Gemini 2.0 Benchmarks Leak Online",
+    excerpt: "Early tests show significant improvements in long-context reasoning and multimodal understanding across 100+ languages.",
+    tag: "AI Research",
+    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop",
+    link: "#"
+  }
+];
+
+const aiVideosData = [
+  { title: "Building Autonomous Agents with CrewAI", thumb: "https://images.unsplash.com/photo-1620712943543-bcc4628c6bb5?w=800&auto=format&fit=crop" },
+  { title: "Mastering LangGraph for Complex Workflows", thumb: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop" },
+  { title: "Next-Gen UI Design with AI Tools", thumb: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=800&auto=format&fit=crop" },
+  { title: "Fine-Tuning Llama 3.1 for Specific Tasks", thumb: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop" }
+];
+
+(window as any).showFeed = function() {
+  const grid = document.getElementById('ai-grid');
+  const feed = document.getElementById('intelligence-feed');
+  const hero = document.querySelector('.dashboard-hero');
+  const pagination = document.getElementById('pagination');
+  
+  if (grid && feed && hero && pagination) {
+    grid.style.display = 'none';
+    pagination.style.display = 'none';
+    (hero as HTMLElement).style.display = 'none';
+    feed.style.display = 'block';
+    
+    // Update active sidebar state
+    document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
+    document.getElementById('show-feed')?.classList.add('active');
+    
+    // Initialize Feed Content
+    initializeFeed();
+  }
+};
+
+(window as any).showTools = function() {
+  const grid = document.getElementById('ai-grid');
+  const feed = document.getElementById('intelligence-feed');
+  const hero = document.querySelector('.dashboard-hero');
+  const pagination = document.getElementById('pagination');
+  
+  if (grid && feed && hero && pagination) {
+    grid.style.display = 'grid';
+    pagination.style.display = 'flex';
+    (hero as HTMLElement).style.display = 'block';
+    feed.style.display = 'none';
+    
+    document.getElementById('show-feed')?.classList.remove('active');
+    document.querySelector('[data-category="All"]')?.classList.add('active');
+  }
+};
+
+function initializeFeed() {
+  // Set Date
+  const dateEl = document.getElementById('brief-date');
+  if (dateEl) {
+    const now = new Date();
+    dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  }
+  
+  // Populate News
+  const newsGrid = document.getElementById('news-grid');
+  if (newsGrid) {
+    newsGrid.innerHTML = aiNewsData.map(item => `
+      <div class="news-card">
+        <img src="${item.image}" class="news-img" alt="${item.title}">
+        <div class="news-content">
+          <span class="news-tag">${item.tag}</span>
+          <h4>${item.title}</h4>
+          <p>${item.excerpt}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  // Populate Videos
+  const videoGrid = document.getElementById('video-grid');
+  if (videoGrid) {
+    videoGrid.innerHTML = aiVideosData.map(item => `
+      <div class="video-card">
+        <div class="video-thumb" style="background-image: url('${item.thumb}'); background-size: cover;">
+          <div class="play-overlay"><i class="ph ph-play-fill"></i></div>
+        </div>
+        <h5>${item.title}</h5>
+      </div>
+    `).join('');
+  }
+}
