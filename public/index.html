@@ -211,8 +211,19 @@
           <div class="studio-controls glass">
             <div class="control-section">
               <label><i class="ph ph-sparkle"></i> Magic Prompt Alchemist</label>
-              <textarea id="studio-prompt" placeholder="Describe your vision (e.g., 'A golden owl in a neon library'). AI will refine it automatically."></textarea>
-              <button class="btn-primary w-full" id="art-generate-btn" onclick="generateAIArt()">
+              <div class="prompt-wrapper" style="position: relative;">
+                <textarea id="studio-prompt" placeholder="Describe your vision or upload a file for AI to reverse-engineer..."></textarea>
+                <div class="studio-attachments" id="studio-attachments">
+                  <!-- File chips will appear here -->
+                </div>
+                <div class="prompt-actions-bar">
+                  <button class="btn-attach" onclick="document.getElementById('studio-file-input').click()" title="Attach Image or Document">
+                    <i class="ph ph-paperclip"></i>
+                  </button>
+                  <input type="file" id="studio-file-input" style="display: none;" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleStudioFileUpload(this)">
+                </div>
+              </div>
+              <button class="btn-primary w-full" id="art-generate-btn" onclick="generateAIArt()" style="margin-top: 15px;">
                 <i class="ph ph-magic-wand"></i> Brew Masterpiece
               </button>
             </div>

@@ -5358,12 +5358,14 @@ function resetInactivityTimer() {
   const arenaContainer = document.getElementById('arena-container');
   const sidebar = document.querySelector('.sidebar') as HTMLElement;
   const navCenter = document.querySelector('.nav-center') as HTMLElement;
+  const hero = document.querySelector('.dashboard-hero') as HTMLElement;
 
   if (grid) grid.style.display = 'none';
   if (pagination) pagination.style.display = 'none';
   if (chatContainer) chatContainer.style.display = 'none';
   if (sidebar) sidebar.style.display = 'none';
   if (navCenter) navCenter.style.display = 'none'; 
+  if (hero) hero.style.display = 'none'; 
   if (arenaContainer) arenaContainer.style.display = 'flex';
 };
 
@@ -5373,6 +5375,8 @@ function resetInactivityTimer() {
   const arenaContainer = document.getElementById('arena-container');
   const sidebar = document.querySelector('.sidebar') as HTMLElement;
   const navCenter = document.querySelector('.nav-center') as HTMLElement;
+  const hero = document.querySelector('.dashboard-hero') as HTMLElement;
+  const main = document.querySelector('.dashboard-main') as HTMLElement;
 
   if (grid) grid.style.display = 'grid';
   if (pagination) pagination.style.display = 'flex';
@@ -6392,6 +6396,39 @@ function executePaletteAction(res: any) {
 // ==========================================
 
 let activeArtStyle = 'cinematic';
+let attachedStudioFile: { name: string, type: string, data: string } | null = null;
+
+(window as any).handleStudioFileUpload = function(input: HTMLInputElement) {
+  const file = input.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    attachedStudioFile = {
+      name: file.name,
+      type: file.type,
+      data: e.target?.result as string
+    };
+    
+    // Update UI
+    const container = document.getElementById('studio-attachments');
+    if (container) {
+      container.innerHTML = `
+        <div class="file-chip">
+          <i class="ph ${file.type.startsWith('image') ? 'ph-image' : 'ph-file-text'}"></i>
+          ${file.name.substring(0, 10)}...
+        </div>
+      `;
+    }
+    showToast('Intelligence Attached!', 'success');
+  };
+  
+  if (file.type.startsWith('image')) {
+    reader.readAsDataURL(file);
+  } else {
+    reader.readAsText(file);
+  }
+};
 
 (window as any).openCreativeStudio = function() {
   document.getElementById('ai-grid')!.style.display = 'none';
@@ -6412,10 +6449,15 @@ let activeArtStyle = 'cinematic';
 (window as any).closeCreativeStudio = function() {
   document.getElementById('ai-grid')!.style.display = 'grid';
   document.getElementById('pagination')!.style.display = 'flex';
+  
+  const main = document.querySelector('.dashboard-main') as HTMLElement;
   const sidebar = document.querySelector('.sidebar') as HTMLElement;
   const hero = document.querySelector('.dashboard-hero') as HTMLElement;
-  if (sidebar) sidebar.style.display = 'flex';
+  
+  if (main) main.style.display = 'flex'; 
+  if (sidebar) sidebar.style.display = 'flex'; 
   if (hero) hero.style.display = 'block';
+  
   document.getElementById('creative-studio')!.style.display = 'none';
 };
 
@@ -6432,7 +6474,8 @@ document.querySelectorAll('.style-card').forEach(card => {
 (window as any).generateAIArt = async function() {
   const promptInput = document.getElementById('studio-prompt') as HTMLTextAreaElement;
   const rawPrompt = promptInput.value.trim();
-  if (!rawPrompt) return showToast('Please enter a vision to materialise.', 'error');
+  
+  if (!rawPrompt && !attachedStudioFile) return showToast('Please enter a vision or attach a file.', 'error');
 
   const btn = document.getElementById('art-generate-btn') as HTMLButtonElement;
   const loader = document.getElementById('art-loading');
@@ -6441,25 +6484,40 @@ document.querySelectorAll('.style-card').forEach(card => {
   const actions = document.getElementById('art-actions');
 
   btn.disabled = true;
-  btn.innerHTML = '<i class="ph ph-circle-notch-bold"></i> Brewing...';
+  btn.innerHTML = '<i class="ph ph-circle-notch-bold"></i> Materializing...';
   loader!.style.display = 'flex';
   empty.style.display = 'none';
   img.style.display = 'none';
   actions!.style.display = 'none';
 
   try {
-    // 1. Refine Prompt (Magic Alchemist)
-    const refinementPrompt = `You are an AI Art Prompt Engineer. Expand this simple idea into a high-end, detailed, cinematic art prompt for ${activeArtStyle} style. Include lighting, mood, and texture. Keep it to 100 words max.
-    IDEA: ${rawPrompt}`;
+    // 1. Refine Prompt (Magic Alchemist with Multimodal Support)
+    let refinementPrompt = `You are an AI Art Prompt Engineer. Expand this idea into a high-end, detailed, cinematic art prompt for ${activeArtStyle} style. Include lighting, mood, and texture. Keep it to 100 words max.`;
+    
+    if (attachedStudioFile) {
+      if (attachedStudioFile.type.startsWith('image')) {
+        refinementPrompt += `\nREVERSE ENGINEER THIS IMAGE DESCRIPTION: [IMAGE DATA ATTACHED] - Describe its essence and create a similar masterpiece.`;
+      } else {
+        refinementPrompt += `\nEXTRACT ARTISTIC ESSENCE FROM THIS DOC CONTENT: ${attachedStudioFile.data.substring(0, 500)}`;
+      }
+    }
+    
+    refinementPrompt += `\nUSER CONCEPT: ${rawPrompt || 'A masterpiece matching the attachment'}`;
 
     const token = localStorage.getItem('token');
+    // Using Blackbox Vision/LLM for refinement
     const refRes = await fetch('/api/blackbox', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ message: refinementPrompt })
+      body: JSON.stringify({ 
+        message: refinementPrompt,
+        image: attachedStudioFile?.type.startsWith('image') ? attachedStudioFile.data : undefined
+      })
     });
+    
     const refData = await refRes.json();
-    const finalPrompt = encodeURIComponent(refData.response + `, style: ${activeArtStyle}, high resolution, 8k, masterpiece`);
+    const finalPromptText = refData.response + `, style: ${activeArtStyle}, high resolution, 8k, masterpiece`;
+    const finalPrompt = encodeURIComponent(finalPromptText);
 
     // 2. Generate Image (Pollinations API)
     const seed = Math.floor(Math.random() * 1000000);
@@ -6475,10 +6533,16 @@ document.querySelectorAll('.style-card').forEach(card => {
       actions!.style.display = 'flex';
       btn.disabled = false;
       btn.innerHTML = '<i class="ph ph-magic-wand"></i> Brew Masterpiece';
+      
+      // Clear attachment after use
+      attachedStudioFile = null;
+      document.getElementById('studio-attachments')!.innerHTML = '';
+      (document.getElementById('studio-file-input') as HTMLInputElement).value = '';
+      
       showToast('Masterpiece Materialised!', 'success');
     };
   } catch (e) {
-    showToast('Failed to materialise image. System disturbance detected.', 'error');
+    showToast('Failed to materialize. System disturbance detected.', 'error');
     btn.disabled = false;
     btn.innerHTML = '<i class="ph ph-magic-wand"></i> Brew Masterpiece';
     loader!.style.display = 'none';
