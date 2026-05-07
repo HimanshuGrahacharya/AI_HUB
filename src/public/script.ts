@@ -5792,6 +5792,43 @@ const aiVideosData = [
 };
 
 async function fetchLiveAINews() {
+  const apiKey = '35fbf2639a3949b2b4d72d549e1935e5';
+  const url = `https://newsapi.org/v2/everything?q=artificial intelligence OR "AI" OR "generative AI"&language=en&sortBy=publishedAt&pageSize=30&apiKey=${apiKey}`;
+  
+  const allNews: any[] = [];
+  
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    
+    if (data.status === 'ok') {
+      data.articles.forEach((item: any) => {
+        allNews.push({
+          title: item.title,
+          link: item.url,
+          pubDate: item.publishedAt,
+          source: item.source.name || 'AI News',
+          excerpt: item.description ? (item.description.substring(0, 150) + '...') : 'Read more about this story...',
+          image: item.urlToImage || 'https://images.unsplash.com/photo-1677442136019-21780ecad995'
+        });
+      });
+    } else if (data.code === 'corsNotAllowed') {
+      // Fallback to RSS2JSON proxy if browser direct fetch is blocked by CORS (common for NewsAPI free tier on client side)
+      console.warn('NewsAPI CORS issue, falling back to proxy feeds...');
+      return fetchFallbackRSS();
+    }
+  } catch (e) {
+    console.warn('NewsAPI fetch failed, falling back to proxy feeds...');
+    return fetchFallbackRSS();
+  }
+  
+  // Sort and Store globally for search
+  const sorted = allNews.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+  globalNewsStore = sorted; 
+  return sorted.slice(0, 18); 
+}
+
+async function fetchFallbackRSS() {
   const feeds = [
     'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml',
     'https://techcrunch.com/category/artificial-intelligence/feed/',
@@ -5816,15 +5853,12 @@ async function fetchLiveAINews() {
           });
         });
       }
-    } catch (e) {
-      console.warn('Failed to fetch feed:', feed);
-    }
+    } catch (e) {}
   }
   
-  // Sort and Store globally for search
   const sorted = allNews.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
-  globalNewsStore = sorted; 
-  return sorted.slice(0, 15); // Return a good amount for the feed
+  globalNewsStore = sorted;
+  return sorted.slice(0, 15);
 }
 
 async function initializeFeed() {
