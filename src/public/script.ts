@@ -10,6 +10,98 @@ interface AITool {
 declare function showToast(message: string, type?: 'error' | 'info' | 'success'): void;
 
 const aiTools: AITool[] = [
+  // AI Agent Platforms
+  {
+    "id": "langchain",
+    "name": "LangChain",
+    "description": "The leading framework for building stateful, production-ready AI agents and LLM applications.",
+    "category": "AI Agent Platforms",
+    "link": "https://langchain.com",
+    "logo": "https://www.google.com/s2/favicons?domain=langchain.com&sz=128"
+  },
+  {
+    "id": "crewai",
+    "name": "CrewAI",
+    "description": "Cutting-edge framework for orchestrating role-playing, autonomous AI agents to solve complex tasks.",
+    "category": "AI Agent Platforms",
+    "link": "https://crewai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=crewai.com&sz=128"
+  },
+  {
+    "id": "langgraph",
+    "name": "LangGraph",
+    "description": "Build resilient, stateful multi-agent workflows with cyclic graphs and human-in-the-loop features.",
+    "category": "AI Agent Platforms",
+    "link": "https://langchain.com/langgraph",
+    "logo": "https://www.google.com/s2/favicons?domain=langchain.com&sz=128"
+  },
+  {
+    "id": "llamaindex",
+    "name": "LlamaIndex",
+    "description": "The data framework for LLM applications, specializing in RAG and connecting agents to private data.",
+    "category": "AI Agent Platforms",
+    "link": "https://llamaindex.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=llamaindex.ai&sz=128"
+  },
+  // AI Coding Agents
+  {
+    "id": "bolt-new",
+    "name": "Bolt.new",
+    "description": "Full-stack web development in the browser. Prompt, run, edit, and deploy with an autonomous AI agent.",
+    "category": "AI Coding Agents",
+    "link": "https://bolt.new",
+    "logo": "https://www.google.com/s2/favicons?domain=bolt.new&sz=128"
+  },
+  {
+    "id": "lovable",
+    "name": "Lovable",
+    "description": "The ultimate GPT-engineer. Build and ship production-ready web apps through natural conversation.",
+    "category": "AI Coding Agents",
+    "link": "https://lovable.dev",
+    "logo": "https://www.google.com/s2/favicons?domain=lovable.dev&sz=128"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "description": "The AI-first code editor designed for pair programming with powerful autonomous coding agents.",
+    "category": "AI Coding Agents",
+    "link": "https://cursor.com",
+    "logo": "https://www.google.com/s2/favicons?domain=cursor.com&sz=128"
+  },
+  // Browser & Automation Agents
+  {
+    "id": "openai-operator",
+    "name": "OpenAI Operator",
+    "description": "Autonomous browser agent that can use your computer to perform complex tasks on the web.",
+    "category": "Browser Agents",
+    "link": "https://openai.com/index/introducing-operator/",
+    "logo": "https://www.google.com/s2/favicons?domain=openai.com&sz=128"
+  },
+  {
+    "id": "n8n",
+    "name": "n8n AI",
+    "description": "The workflow automation platform with native AI capabilities to build complex agentic pipelines.",
+    "category": "AI Automation",
+    "link": "https://n8n.io",
+    "logo": "https://www.google.com/s2/favicons?domain=n8n.io&sz=128"
+  },
+  // Media Agents
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "description": "The world's most advanced AI voice platform. Perfect for voice agents and natural narration.",
+    "category": "AI Voice Agents",
+    "link": "https://elevenlabs.io",
+    "logo": "https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128"
+  },
+  {
+    "id": "heygen",
+    "name": "HeyGen",
+    "description": "AI video generation platform for creating lifelike AI avatars and autonomous video content.",
+    "category": "AI Video Agents",
+    "link": "https://heygen.com",
+    "logo": "https://www.google.com/s2/favicons?domain=heygen.com&sz=128"
+  },
 
   {
     "id": "chatgpt",
