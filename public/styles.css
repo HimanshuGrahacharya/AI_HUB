@@ -5690,6 +5690,9 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   .dashboard-main { flex-direction: column; }
   .sidebar {
     width: 280px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     max-width: 80vw !important;
     height: 100vh !important;
     position: fixed;
@@ -5715,7 +5718,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     transform: translateX(0);
   }
   /* Overlay when sidebar is active */
-  body.sidebar-open::after {
+  body.sidebar-open .dashboard-main::before {
     content: '';
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
