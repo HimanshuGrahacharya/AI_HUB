@@ -5685,60 +5685,6 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   }
 }
 
-/* Sidebar behavior */
-@media (max-width: 768px) {
-  .dashboard-main { flex-direction: column; }
-  .sidebar {
-    width: 280px !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    max-width: 80vw !important;
-    height: 100vh !important;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    max-height: 100vh;
-    overflow-y: auto;
-    border-radius: 0;
-    box-shadow: 10px 0 20px rgba(0,0,0,0.3);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    border-right: 1px solid var(--glass-border);
-    padding-top: 20px;
-    padding-bottom: 80px;
-  }
-  .dark-mode .sidebar {
-    background: rgba(15, 23, 42, 0.98);
-  }
-  .sidebar.active {
-    transform: translateX(0);
-  }
-  /* Overlay when sidebar is active */
-  body.sidebar-open .dashboard-main::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 9998;
-    backdrop-filter: blur(4px);
-  }
-  
-  .category-list {
-    display: block !important;
-    padding: 0 !important;
-  }
-  .category-item {
-    margin-bottom: 8px;
-    padding: 15px 20px !important;
-    display: flex !important;
-    font-size: 1rem !important;
-  }
-}
-
 /* AI Arena Stacking */
 @media (max-width: 1200px) {
   .arena-grid { grid-template-columns: repeat(2, 1fr) !important; }

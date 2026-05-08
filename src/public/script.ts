@@ -6725,17 +6725,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const sidebar = document.querySelector('.sidebar');
   
   if (menuToggle && sidebar) {
+    const overlay = document.getElementById('sidebar-overlay');
+    
     menuToggle.addEventListener('click', (e) => {
       e.stopPropagation();
       sidebar.classList.toggle('active');
-      document.body.classList.toggle('sidebar-open');
+      if (overlay) overlay.classList.toggle('show');
     });
 
     // Close sidebar when clicking outside
     document.addEventListener('click', (e) => {
       if (sidebar.classList.contains('active') && !sidebar.contains(e.target as Node) && e.target !== menuToggle) {
         sidebar.classList.remove('active');
-        document.body.classList.remove('sidebar-open');
+        if (overlay) overlay.classList.remove('show');
       }
     });
   }
