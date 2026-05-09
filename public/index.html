@@ -461,12 +461,12 @@
               <button onclick="removeArenaFile()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: absolute; top: -10px; right: -5px;"><i class="ph ph-x"></i></button>
             </div>
           </div>
-          <div class="arena-textarea-wrapper" style="position: relative; width: 100%; display: flex; gap: 10px;">
+          <div class="arena-textarea-wrapper" style="position: relative; width: 100%;">
             <input type="file" id="arena-file-upload" accept="image/*,.pdf,.doc,.docx,video/*" style="display: none;" onchange="handleArenaFileSelect(this)">
-            <button class="voice-search-btn" title="Attach Media" onclick="document.getElementById('arena-file-upload').click()" style="height: 100%; min-width: 50px;">
+            <button class="voice-search-btn" title="Attach Media" onclick="document.getElementById('arena-file-upload').click()" style="position: absolute; left: 15px; bottom: 15px; background: rgba(99, 102, 241, 0.1); border: 1px solid var(--primary-light);">
               <i class="ph ph-paperclip"></i>
             </button>
-            <textarea id="arena-input" placeholder="Enter a single prompt to test all models at once..."></textarea>
+            <textarea id="arena-input" placeholder="Enter a single prompt to test all models at once..." style="padding-left: 65px;"></textarea>
             <button id="voice-arena-btn" class="voice-search-btn" title="Voice Input" style="position: absolute; right: 15px; bottom: 15px;"><i class="ph ph-microphone"></i></button>
           </div>
           <div class="suggested-prompts">
