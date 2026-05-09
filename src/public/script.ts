@@ -5054,6 +5054,10 @@ function switchView(viewId: string) {
       sidebar.classList.remove('active');
     }
     if (navCenter) navCenter.style.display = 'flex';
+    // Clear the hash when returning to home
+    if (window.location.hash && window.location.hash !== '#dashboard') {
+      history.pushState(null, '', window.location.pathname);
+    }
   } else {
     const target = document.getElementById(viewId);
     if (target) {
@@ -5062,8 +5066,22 @@ function switchView(viewId: string) {
     if (hero) hero.style.display = 'none';
     if (sidebar) sidebar.style.display = 'none';
     if (navCenter) navCenter.style.display = 'none';
+
+    // Map container ID to clean hash
+    const hashMap: Record<string, string> = {
+      'arena-container': '#arena',
+      'warroom-container': '#warroom',
+      'creative-studio': '#studio',
+      'intelligence-feed': '#feed',
+      'chat-container': '#chat',
+    };
+    const hash = hashMap[viewId];
+    if (hash && window.location.hash !== hash) {
+      history.pushState(null, '', hash);
+    }
   }
 }
+
 function selectAI(toolId: string) {
   selectedAI = toolId;
   addToRecentlyViewed(toolId);
@@ -6869,3 +6887,39 @@ const originalAddWarLog = addWarLog;
 
 (window as any).openChat = selectAI;
 (window as any).openNews = (window as any).showFeed;
+
+
+// ============================================================
+// PROFESSIONAL SPA HASH ROUTER
+// Enables refresh persistence and browser back/forward support
+// ============================================================
+function handleRouting() {
+  const hash = window.location.hash;
+  switch (hash) {
+    case '#arena':
+      (window as any).openArena();
+      break;
+    case '#warroom':
+      (window as any).openWarRoom();
+      break;
+    case '#studio':
+      (window as any).openCreativeStudio();
+      break;
+    case '#feed':
+      (window as any).showFeed();
+      break;
+    default:
+      switchView('dashboard');
+      break;
+  }
+}
+
+// Listen for hash changes triggered by browser back/forward
+window.addEventListener('hashchange', handleRouting);
+
+// Restore the correct view on page load/refresh
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.hash && window.location.hash !== '') {
+    setTimeout(handleRouting, 150);
+  }
+});
