@@ -6002,3 +6002,51 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   color: #fff;
   font-weight: 700;
 }
+
+/* ==========================================================================
+   ENHANCED ARENA TYPOGRAPHY
+   ========================================================================== */
+.arena-result {
+  padding: 25px !important;
+  line-height: 1.8 !important;
+  font-size: 1.05rem !important;
+  letter-spacing: 0.01em;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.arena-response-content p {
+  margin-bottom: 1.5rem !important;
+}
+
+.arena-response-content h1, 
+.arena-response-content h2, 
+.arena-response-content h3 {
+  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+  font-weight: 800 !important;
+}
+
+.arena-response-content ul, 
+.arena-response-content ol {
+  margin-bottom: 1.5rem !important;
+  border-left: 2px solid rgba(99, 102, 241, 0.1);
+  padding-left: 2rem !important;
+}
+
+.arena-response-content li {
+  margin-bottom: 0.8rem !important;
+  position: relative;
+}
+
+/* Custom bullet for better look */
+.arena-response-content ul li::before {
+  content: 'â—‹';
+  position: absolute;
+  left: -1.5rem;
+  color: var(--primary-light);
+  font-weight: bold;
+}
