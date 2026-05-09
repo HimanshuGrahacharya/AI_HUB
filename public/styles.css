@@ -2760,9 +2760,9 @@ body:not(.dark-mode) .about-stats {
   }
 }
 
-/* ═══════════════════════════════════════
-   RESPONSIVE — Tablet (≤1024px)
-═══════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESPONSIVE â€” Tablet (â‰¤1024px)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 1024px) {
   .sidebar {
     position: fixed;
@@ -2926,9 +2926,9 @@ body:not(.dark-mode) .about-stats {
   }
 }
 
-/* ═══════════════════════════════════════
-   RESPONSIVE — Mobile (≤768px)
-═══════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESPONSIVE â€” Mobile (â‰¤768px)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 768px) {
   /* Navbar */
   .navbar {
@@ -3053,9 +3053,9 @@ body:not(.dark-mode) .about-stats {
   }
 }
 
-/* ═══════════════════════════════════════
-   RESPONSIVE — Small Mobile (≤480px)
-═══════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESPONSIVE â€” Small Mobile (â‰¤480px)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 480px) {
   /* Navbar */
   .navbar {
@@ -3351,7 +3351,7 @@ body:not(.dark-mode) .about-stats {
   padding-left: 45px !important;
 }
 
-/* ── Shared Landing/Dashboard Footer ── */
+/* â”€â”€ Shared Landing/Dashboard Footer â”€â”€ */
 .landing-footer { 
   background: var(--footer-bg, #f8fafc); 
   border-top: 1px solid var(--nav-border, rgba(0,0,0,0.05)); 
@@ -3678,9 +3678,9 @@ body:not(.dark-mode) .profile-details-grid {
   color: var(--primary);
 }
 
-/* ═══════════════════════════════════════
-   RESPONSIVE — Ultra Wide (> 1600px)
-═══════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESPONSIVE â€” Ultra Wide (> 1600px)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (min-width: 1600px) {
   .dashboard-main {
     max-width: 1800px;
@@ -3695,9 +3695,9 @@ body:not(.dark-mode) .profile-details-grid {
   }
 }
 
-/* ═══════════════════════════════════════
-   RESPONSIVE — Desktop Hover Effects
-═══════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RESPONSIVE â€” Desktop Hover Effects
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (hover: hover) {
   .ai-card:hover {
     transform: translateY(-8px) scale(1.02);
@@ -5017,7 +5017,7 @@ body:not(.dark-mode) .profile-details-grid {
   .warroom-container { padding: 20px; }
 }
 
-/* ─────────────── UNIVERSAL RESPONSIVENESS OVERHAUL ─────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ UNIVERSAL RESPONSIVENESS OVERHAUL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 /* 1. Main Layout Containers */
 .dashboard-container {
@@ -5152,7 +5152,7 @@ body:not(.dark-mode) .profile-details-grid {
   .warroom-title h2 { font-size: 1.5rem; }
 }
 
-/* ─────────────── AI COMMAND PALETTE (SPOTLIGHT) ─────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ AI COMMAND PALETTE (SPOTLIGHT) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .command-palette-overlay {
   position: fixed;
   inset: 0;
@@ -5284,7 +5284,7 @@ body:not(.dark-mode) .profile-details-grid {
   color: #94a3b8;
 }
 
-/* ─────────────── AI CREATIVE STUDIO (ART GENERATOR) ─────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ AI CREATIVE STUDIO (ART GENERATOR) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .creative-studio-container {
   display: flex;
   flex-direction: column;
@@ -6045,7 +6045,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
 
 /* Custom bullet for better look */
 .arena-response-content ul li::before {
-  content: 'â—‹';
+  content: 'Ã¢â€”â€¹';
   position: absolute;
   left: -1.5rem;
   color: var(--primary-light);

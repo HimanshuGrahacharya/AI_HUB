@@ -1,4 +1,4 @@
-﻿interface AITool {
+interface AITool {
   id: string;
   name: string;
   description: string;
@@ -745,8 +745,8 @@ const aiTools: AITool[] = [
   },
   {
     "id": "dalle",
-    "name": "DALLÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“E",
-    "description": "DALLÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“E is a top-tier image generation solution.",
+    "name": "DALLÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢&bull;ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“E",
+    "description": "DALLÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢&bull;ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“E is a top-tier image generation solution.",
     "category": "Image Generation",
     "link": "https://dalle.com",
     "logo": "https://www.google.com/s2/favicons?domain=dalle.com"
@@ -4601,7 +4601,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const active = darkModeToggle.checked;
       document.body.classList.toggle('dark-mode', active);
       localStorage.setItem('dark-mode', active.toString());
-      showToast(active ? 'Dark Mode On Ã°Å¸Å’â„¢' : 'Light Mode On Ã¢Ëœâ‚¬Ã¯Â¸Â', 'info');
+      showToast(active ? 'Dark Mode On 🌙' : 'Light Mode On Ã¢Ëœâ‚¬Ã¯Â¸Â', 'info');
     });
   }
 
@@ -4610,7 +4610,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (billingLink) {
     billingLink.addEventListener('click', (e) => {
       e.preventDefault();
-      showToast('This feature is coming soon! Ã°Å¸Å¡â‚¬', 'info');
+      showToast('This feature is coming soon! 🚀', 'info');
     });
   }
 
@@ -4804,7 +4804,7 @@ function renderTools() {
     return;
   }
 
-  toolsToShow.forEach(tool => {
+    toolsToShow.forEach(tool => {
     const isFavorite = favorites.includes(tool.id);
     const card = document.createElement('div');
     card.className = 'ai-card';
@@ -4815,14 +4815,14 @@ function renderTools() {
         <img src="${highResLogo}" alt="${tool.name} logo" class="ai-logo" 
              onerror="this.src='https://www.gstatic.com/lamda/images/favicon_v2_71731f242707730e84.png'">
         <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, '${tool.id}')">
-          ${isFavorite ? 'Ã¢Â­Â' : 'Ã¢Ëœâ€ '}
+          <i class="ph ${isFavorite ? 'ph-star-fill' : 'ph-star'}"></i>
         </button>
       </div>
       <h3>${tool.name}</h3>
       <p>${tool.description}</p>
       <div class="category-tag">${tool.category}</div>
       <div class="links">
-        <a href="${tool.link}" target="_blank" onclick="event.stopPropagation()" class="site-link">Official Site Ã¢â€ â€”</a>
+        <a href="${tool.link}" target="_blank" onclick="event.stopPropagation()" class="site-link">Official Site <i class="ph ph-arrow-square-out"></i></a>
       </div>
     `;
     grid.appendChild(card);
@@ -4837,7 +4837,7 @@ function renderPagination() {
   const totalPages = Math.ceil(filteredTools.length / itemsPerPage);
   if (totalPages <= 1) return;
 
-  const maxVisiblePages = window.innerWidth <= 768 ? 3 : 5;
+  const maxVisiblePages = 5;
   let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
   let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
@@ -4941,7 +4941,7 @@ async function handleSearch() {
   // Build Overlay HTML
   let html = '';
   
-  if (toolResults.length > 0) {
+    if (toolResults.length > 0) {
     html += `<div class="search-section">
       <h4><i class="ph ph-cube"></i> AI Tools</h4>
       ${toolResults.map(t => `
@@ -4964,7 +4964,7 @@ async function handleSearch() {
           <img src="${n.image}" alt="">
           <div class="search-item-info">
             <span class="search-item-title">${n.title}</span>
-            <span class="search-item-meta">${n.source} ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ ${timeAgo(n.pubDate)}</span>
+            <span class="search-item-meta">${n.source} &bull; ${timeAgo(n.pubDate)}</span>
           </div>
         </div>
       `).join('')}
@@ -5282,7 +5282,7 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
 
 (window as any).copyToClipboard = function(text: string) {
   navigator.clipboard.writeText(text);
-  showToast('Response copied! Ã°Å¸â€œâ€¹', 'info');
+  showToast('Response copied! 📋', 'info');
 };
 
 function startInactivityTimer() {
@@ -5336,7 +5336,7 @@ function resetInactivityTimer() {
     });
 
     if (res.ok) {
-      showToast('Settings saved successfully! Ã¢Å“â€¦', 'info');
+      showToast('Settings saved successfully! ✅', 'info');
       document.getElementById('settings-modal')!.style.display = 'none';
     } else {
       showToast('Failed to save settings to server.', 'error');
@@ -5346,7 +5346,6 @@ function resetInactivityTimer() {
   }
 };
 
-// AI Model Arena Functions
 (window as any).openArena = function() {
   switchView('arena-container');
 };
@@ -5568,7 +5567,7 @@ async function renderPersonasList() {
     if (!data.personas || data.personas.length === 0) {
       list.innerHTML = `
         <div style="text-align:center; padding:30px; color:var(--text-secondary);">
-          <div style="font-size:3rem; margin-bottom:10px;">Ã°Å¸Â¤â€“</div>
+          <div style="font-size:3rem; margin-bottom:10px;">🤖</div>
           <p>No personas yet! Create one to get started.</p>
           <button class="btn-primary" style="margin-top:15px;" onclick="document.getElementById('personas-panel').style.display='none'; document.getElementById('persona-modal').style.display='flex';"><i class="ph ph-plus"></i> Create My First Persona</button>
         </div>`;
@@ -5600,7 +5599,7 @@ async function renderPersonasList() {
 
 (window as any).savePersona = async function() {
   const name = (document.getElementById('persona-name') as HTMLInputElement)?.value?.trim();
-  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || 'Ã°Å¸Â¤â€“';
+  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || '🤖';
   const systemPrompt = (document.getElementById('persona-prompt') as HTMLTextAreaElement)?.value?.trim();
   if (!name || !systemPrompt) { showToast('Please fill in the name and system prompt.', 'error'); return; }
   const token = localStorage.getItem('token');
@@ -5616,7 +5615,7 @@ async function renderPersonasList() {
     document.getElementById('persona-modal')!.style.display = 'none';
     (document.getElementById('persona-name') as HTMLInputElement).value = '';
     (document.getElementById('persona-prompt') as HTMLTextAreaElement).value = '';
-    (document.getElementById('persona-emoji') as HTMLInputElement).value = 'Ã°Å¸Â¤â€“';
+    (document.getElementById('persona-emoji') as HTMLInputElement).value = '🤖';
   } catch(e) { showToast('Connection error', 'error'); }
 };
 
@@ -6192,7 +6191,7 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
   }
 
   btn.disabled = false;
-  btn.textContent = 'Launch Multi-Agent Mission Ã¢Å¡Â¡';
+  btn.textContent = 'Launch Multi-Agent Mission ⚡';
 };
 
 (window as any).copyMasterPlan = function() {
@@ -6202,7 +6201,7 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
 
 (window as any).shareWarRoomResult = function() {
   const mission = (document.getElementById('warroom-input') as HTMLTextAreaElement).value.trim();
-  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! Ã°Å¸Å¡â‚¬ #AIHUB #StrategicIntelligence`;
+  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! 🚀 #AIHUB #StrategicIntelligence`;
   const url = window.location.href;
 
   if (navigator.share) {
@@ -6767,7 +6766,7 @@ const originalAddWarLog = addWarLog;
     showToast('Forge error occurred.', 'error');
   } finally {
     forgeBtn.disabled = false;
-    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> Ã¢Å¡Â¡ Parallel Forge Ã¢â‚¬â€ 4 Styles at Once';
+    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge Ã¢â‚¬â€ 4 Styles at Once';
   }
 };
 
