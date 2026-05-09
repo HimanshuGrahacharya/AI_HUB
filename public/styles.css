@@ -2842,7 +2842,6 @@ body:not(.dark-mode) .about-stats {
   .menu-toggle:active {
     transform: scale(0.9);
   }
-
   .nav-logo-group {
     display: flex;
     align-items: center;
@@ -2903,29 +2902,29 @@ body:not(.dark-mode) .about-stats {
   }
 
   .sidebar-section h3 {
-    font-size: 0.7rem;
-    margin-bottom: 8px;
+    font-size: 0.75rem;
+    margin-bottom: 12px;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .category-list {
-    flex-direction: row;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    gap: 8px;
-    padding-bottom: 4px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .category-list::-webkit-scrollbar {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 0;
   }
 
   .category-item {
     flex-shrink: 0;
-    padding: 7px 14px;
-    font-size: 0.82rem;
-    white-space: nowrap;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
   .content-area {
@@ -3008,9 +3007,10 @@ body:not(.dark-mode) .about-stats {
   }
 
   .category-item {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-radius: 12px;
+    width: 100%;
   }
 
   /* Cards */
@@ -5072,29 +5072,6 @@ body:not(.dark-mode) .profile-details-grid {
   width: 100%;
 }
 
-/* 3. Sidebar Drawer for Mobile */
-@media (max-width: 1024px) {
-  .sidebar {
-    position: fixed;
-    left: -280px;
-    top: 0;
-    height: 100vh;
-    z-index: 2000;
-    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: #0f172a;
-    width: 280px;
-    display: flex !important; /* Force display in mobile even if display:none was set */
-  }
-
-  .sidebar.active {
-    left: 0;
-    box-shadow: 20px 0 50px rgba(0,0,0,0.5);
-  }
-
-  .main-content {
-    padding: 20px;
-  }
-}
 
 /* 4. Chat Interface Responsiveness */
 .chat-container {
