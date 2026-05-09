@@ -6494,8 +6494,15 @@ document.querySelectorAll('.style-card').forEach(card => {
     let finalPromptText: string;
 
     if (attachedStudioFile && attachedStudioFile.type.startsWith('image')) {
-      // Image attached: use Vision to describe image and blend with user prompt
-      const visionMsg = `Describe this image in 25 words. Focus on the subject, mood, setting. USER REQUEST: ${rawPrompt || ''}`;
+      // Image attached: use Vision to deeply describe the image, then apply user transformation
+      const userTransform = rawPrompt || 'Transform this into a stunning artistic masterpiece';
+      const visionMsg = `You are an expert AI Art Prompt Engineer. 
+I will give you an image. Your job:
+1. Describe the subject in the image with MAXIMUM accuracy and detail (person, object, animal, place — be specific: age, face features, clothing, colors, environment, mood).
+2. Then apply this TRANSFORMATION the user wants: "${userTransform}"
+3. Output ONLY the final art generation prompt. No explanation. 30-50 words. Include the transformation style clearly.
+
+Example output format: "A young Indian man with black beard wearing orange kurta, sitting in a garden, transformed into cyberpunk anime style with neon lights and futuristic city background, ultra detailed, cinematic lighting"`;
       const token = localStorage.getItem('token');
       try {
         const refRes = await fetch('/api/blackbox', {
@@ -6505,16 +6512,17 @@ document.querySelectorAll('.style-card').forEach(card => {
         });
         const refData = await refRes.json();
         const refinedText = refData.response;
-        if (refinedText && !refinedText.includes('Error:') && !refinedText.includes('missing')) {
-          finalPromptText = rawPrompt ? `${rawPrompt}, ${refinedText}` : refinedText;
+        if (refinedText && !refinedText.includes('Error:') && !refinedText.includes('missing') && refinedText.length > 20) {
+          finalPromptText = refinedText;
         } else {
-          finalPromptText = rawPrompt || 'cinematic portrait masterpiece';
+          // Fallback: manually combine user prompt with generic subject description
+          finalPromptText = `${userTransform}, ultra detailed, highly realistic`;
         }
       } catch {
-        finalPromptText = rawPrompt || 'cinematic portrait masterpiece';
+        finalPromptText = `${rawPrompt || 'artistic masterpiece'}, ultra detailed`;
       }
     } else {
-      // No image: skip Vision API for instant generation
+      // No image: use raw prompt directly for speed and accuracy
       finalPromptText = rawPrompt;
     }
 
