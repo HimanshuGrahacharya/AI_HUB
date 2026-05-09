@@ -5158,6 +5158,62 @@ let attachedFileType: string | null = null;
   }
 };
 
+let attachedArenaFileBase64: string | null = null;
+let attachedArenaFileName: string | null = null;
+let attachedArenaFileType: string | null = null;
+
+(window as any).removeArenaFile = function() {
+  attachedArenaFileBase64 = null;
+  attachedArenaFileName = null;
+  attachedArenaFileType = null;
+  const previewContainer = document.getElementById('arena-file-preview');
+  const uploadInput = document.getElementById('arena-file-upload') as HTMLInputElement;
+  if (previewContainer) previewContainer.style.display = 'none';
+  if (uploadInput) uploadInput.value = '';
+};
+
+(window as any).handleArenaFileSelect = function(input: HTMLInputElement) {
+  const file = input.files?.[0];
+  if (file) {
+    attachedArenaFileName = file.name;
+    attachedArenaFileType = file.type;
+    
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      attachedArenaFileBase64 = e.target?.result as string;
+      const previewContainer = document.getElementById('arena-file-preview');
+      const imgWrapper = document.getElementById('arena-img-wrapper');
+      const docWrapper = document.getElementById('arena-doc-wrapper');
+      const previewImage = document.getElementById('arena-img-preview') as HTMLImageElement;
+      const docName = document.getElementById('arena-doc-name');
+      const docIcon = document.getElementById('arena-doc-icon');
+
+      if (previewContainer) {
+        previewContainer.style.display = 'block';
+        if (isImage) {
+          if (imgWrapper) imgWrapper.style.display = 'block';
+          if (docWrapper) docWrapper.style.display = 'none';
+          if (previewImage) previewImage.src = attachedArenaFileBase64!;
+        } else {
+          if (imgWrapper) imgWrapper.style.display = 'none';
+          if (docWrapper) {
+            docWrapper.style.display = 'flex';
+            if (docName) docName.textContent = file.name;
+            if (docIcon) {
+                if (isVideo) docIcon.className = 'ph ph-video';
+                else docIcon.className = 'ph ph-file-pdf';
+            }
+          }
+        }
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
 async function sendMessage() {
   const input = document.getElementById('message-input') as HTMLInputElement;
   let message = input.value.trim();
@@ -5356,7 +5412,7 @@ function resetInactivityTimer() {
 
 async function executeArena() {
   const prompt = (document.getElementById('arena-input') as HTMLTextAreaElement).value;
-  if (!prompt) return;
+  if (!prompt && !attachedArenaFileBase64) return;
 
   const resChatGPT = document.getElementById('res-chatgpt');
   const resBlackbox = document.getElementById('res-blackbox');
@@ -5389,13 +5445,19 @@ async function executeArena() {
   const fetchModel = async (endpoint: string, element: HTMLElement | null, modelId: string) => {
     const modelStartTime = performance.now();
     try {
+      const arenaPayload = {
+        message: (document.getElementById('arena-input') as HTMLTextAreaElement).value || (attachedArenaFileType?.startsWith('image/') ? "Analyze this image." : (attachedArenaFileType?.startsWith('video/') ? "Analyze this video." : "Analyze this document.")),
+        image: attachedArenaFileType?.startsWith('image/') ? attachedArenaFileBase64 : null,
+        fileName: attachedArenaFileName
+      };
+      
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ message: (document.getElementById('arena-input') as HTMLTextAreaElement).value })
+        body: JSON.stringify(arenaPayload)
       });
       const data = await res.json();
       const endTime = performance.now();
@@ -5444,6 +5506,7 @@ async function executeArena() {
     fetchModel('/api/groq', resGroq, 'groq')
   ]);
   
+  (window as any).removeArenaFile();
   // Show export buttons after execution
   const pdfBtn = document.getElementById('export-pdf-btn');
   const mdBtn = document.getElementById('export-md-btn');

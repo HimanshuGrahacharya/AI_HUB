@@ -449,7 +449,23 @@
           </div>
         </div>
         <div class="arena-input-area glass">
-          <div class="arena-textarea-wrapper" style="position: relative; width: 100%;">
+          <div id="arena-file-preview" style="display: none; padding: 15px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="position: relative; display: flex; align-items: center; gap: 15px;">
+              <div id="arena-img-wrapper" style="display: none;">
+                <img id="arena-img-preview" src="" style="max-height: 80px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+              </div>
+              <div id="arena-doc-wrapper" style="display: none; background: rgba(99, 102, 241, 0.1); padding: 10px 15px; border-radius: 12px; border: 1px solid var(--primary-light); display: flex; align-items: center; gap: 10px;">
+                <i class="ph ph-file" id="arena-doc-icon" style="font-size: 1.5rem; color: var(--primary-light);"></i>
+                <span id="arena-doc-name" style="font-size: 0.9rem; font-weight: 500;">file.pdf</span>
+              </div>
+              <button onclick="removeArenaFile()" style="background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; position: absolute; top: -10px; right: -5px;"><i class="ph ph-x"></i></button>
+            </div>
+          </div>
+          <div class="arena-textarea-wrapper" style="position: relative; width: 100%; display: flex; gap: 10px;">
+            <input type="file" id="arena-file-upload" accept="image/*,.pdf,.doc,.docx,video/*" style="display: none;" onchange="handleArenaFileSelect(this)">
+            <button class="voice-search-btn" title="Attach Media" onclick="document.getElementById('arena-file-upload').click()" style="height: 100%; min-width: 50px;">
+              <i class="ph ph-paperclip"></i>
+            </button>
             <textarea id="arena-input" placeholder="Enter a single prompt to test all models at once..."></textarea>
             <button id="voice-arena-btn" class="voice-search-btn" title="Voice Input" style="position: absolute; right: 15px; bottom: 15px;"><i class="ph ph-microphone"></i></button>
           </div>
