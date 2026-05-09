@@ -1,6 +1,7 @@
 import axios from 'axios';
-import app from './server';
+import app, { stopDB } from './server';
 import http from 'http';
+import mongoose from 'mongoose';
 
 describe('AI Hub Server', () => {
   let server: http.Server;
@@ -16,8 +17,14 @@ describe('AI Hub Server', () => {
     });
   });
 
-  afterAll((done) => {
-    server.close(done);
+  afterAll(async () => {
+    await new Promise<void>((resolve, reject) => {
+      server.close((err) => {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
+    await stopDB();
   });
 
   it('should respond with landing page for GET /', async () => {
@@ -52,7 +59,7 @@ describe('AI Hub Server', () => {
       fail('Should have thrown 400 error');
     } catch (error: any) {
       expect(error.response.status).toBe(400);
-      expect((error.response.data as any).error).toBe('User already exists');
+      expect((error.response.data as any).error).toBe('Email already exists');
     }
   });
 });

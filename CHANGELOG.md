@@ -9,15 +9,19 @@ This document tracks all major features, technical implementations, and producti
 
 ### [1.2.0] - 2026-05-09
 ### Added
+- **Mobile Navigation Bar**: Integrated a professional native-app style bottom navigation bar with integrated Search, Arena, Studio, and News quick access.
+- **Floating Button Optimization**: Removed cluttered floating action buttons (Search FAB, Scroll-to-Top) on mobile viewports for a cleaner, unobstructed native feel.
 - **PWA Excellence**: Production-ready manifest and service worker with Stale-While-Revalidate caching.
-- **Scroll-to-Top**: Premium floating button with smooth animations and dynamic visibility.
+- **Scroll-to-Top**: Premium floating button with smooth animations and dynamic visibility on desktop.
 - **Mobile Mode Perfection**: Fully adaptive 1-column layouts for Arena, Creative Studio, and Dashboard on small screens.
 - **Sticky Chat Header**: Persistent navigation in chat mode for better accessibility on mobile and desktop.
 
 ### Fixed
+- **CSS Syntax Resolution**: Fixed orphaned CSS properties missing the `.dashboard-hero` selector which caused syntax errors and invalid rendering.
+- **Tactical AI War Room UI**: Overhauled the multi-agent input area with a sleek glassmorphism background, corrected the microphone button absolute positioning, and eliminated border overlaps.
 - **UI Navigation Overlap**: Resolved issues where the chat interface could overlap with the tools grid during back-button transitions.
 - **Scroll Persistence**: Implemented automatic `window.scrollTo(0,0)` on all view switches to ensure a seamless "fresh start" for every tool.
-- **Global Function Scoping**: Fixed sidebar category click errors by correctly exposing `showTools` to the window object.
+- **Global Function Scoping**: Fixed sidebar category click errors by correctly exposing `showTools` and toggles to the window object.
 - **Responsive Z-Index**: Optimized sidebar overlays and modal layering for complex mobile interactions.
 
 ### 🔗 SPA Architecture

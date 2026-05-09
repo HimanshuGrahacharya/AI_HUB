@@ -24,6 +24,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 // MongoDB Connection
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
+let mongoServerInstance: MongoMemoryServer | null = null;
+
 async function connectDB() {
   try {
     let mongoUri = process.env.MONGODB_URI;
@@ -31,8 +33,8 @@ async function connectDB() {
     // If no explicit URI is provided, or it's the default localhost one and fails, fallback to memory server
     if (!mongoUri || mongoUri.includes('127.0.0.1')) {
       console.log('Starting MongoDB Memory Server for local development...');
-      const mongoServer = await MongoMemoryServer.create();
-      mongoUri = mongoServer.getUri();
+      mongoServerInstance = await MongoMemoryServer.create();
+      mongoUri = mongoServerInstance.getUri();
     }
 
     await mongoose.connect(mongoUri);
@@ -40,8 +42,8 @@ async function connectDB() {
   } catch (error) {
     console.error('Initial MongoDB connection failed. Falling back to Memory Server...');
     try {
-      const mongoServer = await MongoMemoryServer.create();
-      const mongoUri = mongoServer.getUri();
+      mongoServerInstance = await MongoMemoryServer.create();
+      const mongoUri = mongoServerInstance.getUri();
       await mongoose.connect(mongoUri);
       console.log('Connected to fallback MongoDB at', mongoUri);
     } catch (fallbackError) {
@@ -51,6 +53,13 @@ async function connectDB() {
 }
 
 connectDB();
+
+export async function stopDB() {
+  await mongoose.disconnect();
+  if (mongoServerInstance) {
+    await mongoServerInstance.stop();
+  }
+}
 
 interface AuthRequest extends Request {
   user?: any;
