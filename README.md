@@ -4,6 +4,8 @@
 
 **HSG AI HUB** is a professional-grade, world-class SaaS platform designed to centralize the power of Artificial Intelligence. Access multiple LLMs, compare models side-by-side, and explore a directory of 500+ AI tools in a stunning glassmorphism interface.
 
+---
+
 ## 🌟 Premium Features
 
 ### ⚡ AI Model Arena (4-Column Comparison)
@@ -13,29 +15,56 @@ The crown jewel of HSG AI HUB. Test your prompts against four world-class models
 - **Groq AI:** Lightning-fast Llama 3.1 8B performance.
 - **Free Assistant:** Powered by Groq's massive **70B model** for guaranteed high-quality free access.
 
+### ⚔️ AI War Room & Multi-Agent Missions
+Launch complex missions using multiple AI models working in tandem. 
+- **Swarm Intelligence**: Orchestrate GPT, Gemini, and Groq to solve high-level strategic problems.
+- **Master Strategy**: Automated synthesis of multiple AI viewpoints into a single actionable plan.
+
+### 🎨 Creative Studio & Vision Forge
+The ultimate playground for AI artists and creators.
+- **Parallel Vision Forge**: Generate 4 unique variations of an image simultaneously.
+- **Vision AI Engine**: Integrated multimodal support—upload images and let AI reverse-engineer the prompts or analyze the content.
+- **Masterpiece Gallery**: Manage, remix, and publish your AI-generated art.
+
+### 🎭 Custom AI Persona Engine
+Define your own AI experts with unique personalities.
+- **Persona Customization**: Set specific emojis, names, and system instructions.
+- **Expert Mode**: Switch between your custom agents (e.g., "Senior Python Dev", "Marketing Guru") instantly.
+
+### 📱 Full PWA & Native Installability
+HSG AI HUB isn't just a website; it's an application.
+- **Install on Any Device**: Add to home screen on iOS, Android, and Windows for a native app experience.
+- **Offline Reliable**: Advanced Service Worker with **Stale-While-Revalidate** caching ensures the app is fast and works offline.
+- **Maskable Icons**: Perfectly tailored for modern mobile operating systems.
+
+### 🔗 Professional SPA Hash Routing
+- **Deep-Linking**: Navigate directly to any tool via hashes (e.g., `/#chat/chatgpt`).
+- **Persistence**: Refreshing the page restores your current chat session and UI state perfectly.
+- **Legacy Support**: Automatic conversion of old query parameters to modern hashes.
+
 ### 🎙️ World-Class Interactions
-- **AI Voice Narration:** Don't just read—listen! Every AI response features a "Speak" button to read answers aloud using natural-sounding TTS.
-- **Quick-Start Chips:** Clickable suggested prompts (e.g., Python Code, Business Ideas) to help you get started instantly.
-- **Persistent Memory:** All conversations are saved to a secure cloud database, allowing you to pick up where you left off.
+- **AI Voice Narration**: Every AI response features a "Speak" button using natural-sounding TTS.
+- **Advanced Code Highlighting**: Prism.js integration with a premium **Copy Button** and support for TypeScript, Python, SQL, Bash, and more.
+- **Suggested Prompt Chips**: A horizontally scrollable track of professional prompts to spark creativity.
 
-### 🎨 State-of-the-Art UI/UX
-- **Glassmorphism Design:** A deep, frosted-glass interface with high-blur backgrounds and glowing borders.
-- **Floating AI Cards:** Interactive tool cards that gently float and animate, providing a "living" dashboard experience.
-- **Premium Hero Banner:** A dynamic, gradient-powered search center that makes finding tools effortless.
-- **Global Preloader:** A high-end entry animation that ensures a smooth, flicker-free loading experience.
+---
 
-### 🔒 Enterprise-Grade Security
-- **3-Step OTP Auth:** Secure email verification for every user.
-- **Google & Facebook Login:** Seamless one-click authentication.
-- **JWT Protection:** State-of-the-art session management.
+## 🛡️ Enterprise-Grade Security
+- **3-Step OTP Auth**: Secure email verification for every user.
+- **Google & Facebook OAuth**: Seamless one-click authentication.
+- **JWT Protection**: Professional session management and data isolation.
+- **DB Resilience**: Automated fallback to `MongoMemoryServer` for high availability.
+
+---
 
 ## 🛠️ Technology Stack
-
-- **Frontend:** HTML5, Vanilla CSS (Custom Design System), TypeScript.
+- **Frontend:** HTML5, Vanilla CSS (Glassmorphism), TypeScript.
 - **Backend:** Node.js, Express, TypeScript.
-- **Database:** MongoDB Cloud (Atlas).
-- **AI Integration:** OpenAI, Google AI (Gemini), Groq, Hugging Face.
-- **Deployment:** Render (Production Optimized).
+- **Database:** MongoDB Cloud (Atlas) + Local Fallback.
+- **AI Integration:** OpenAI, Google Gemini, Groq, Blackbox AI.
+- **Build System:** TSC + Shx Production Pipeline.
+
+---
 
 ## 🚀 Getting Started
 
@@ -45,24 +74,29 @@ The crown jewel of HSG AI HUB. Test your prompts against four world-class models
 - API Keys for OpenAI, Gemini, and Groq.
 
 ### Installation
-1. Clone the repository:
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/HimanshuGrahacharya/AI_HUB.git
    ```
-2. Install dependencies:
+2. **Install dependencies:**
    ```bash
    npm install
    ```
-3. Create a `.env` file and add your keys (see `.env.example`).
-4. Run the development server:
+3. **Build the production bundle:**
    ```bash
-   npm run dev
+   npm run build
+   ```
+4. **Run the server:**
+   ```bash
+   npm start
    ```
 
+---
+
 ## 📈 SEO & Performance
-- **100% SEO Optimized:** Meta tags and OpenGraph integration for perfect social media sharing.
-- **Optimized Assets:** Version-controlled CSS and JS for fast load times.
-- **PWA Ready:** Designed to work flawlessly on Mobile, Tablet, and Desktop.
+- **100% SEO Optimized:** Meta tags and OpenGraph integration for perfect social sharing.
+- **Semantic HTML**: Built with accessibility and search engine crawlability in mind.
+- **Performance Optimized**: Minified assets and efficient DOM management for a "zero-lag" experience.
 
 ---
 

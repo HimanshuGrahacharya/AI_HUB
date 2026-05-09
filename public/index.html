@@ -13,6 +13,8 @@
   <meta name="twitter:title" content="HSG AI HUB">
   <meta name="twitter:description" content="Benchmark ChatGPT, Groq, Blackbox AI side-by-side. The ultimate AI model arena.">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="logos/ai-hubs-logo.svg">
+  <link rel="apple-touch-icon" href="logos/ai-hubs-logo.svg">
   <meta name="theme-color" content="#6366f1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -858,6 +860,31 @@
       </div>
     </div>
   </div>
+
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="#" class="mobile-nav-item active" onclick="showTools(); return false;">
+      <i class="ph ph-house"></i>
+      <span>Home</span>
+    </a>
+    <a href="#arena" class="mobile-nav-item" onclick="openArena(); return false;">
+      <i class="ph ph-sword"></i>
+      <span>Arena</span>
+    </a>
+    <a href="#studio" class="mobile-nav-item" onclick="openCreativeStudio(); return false;">
+      <i class="ph ph-paint-brush"></i>
+      <span>Studio</span>
+    </a>
+    <a href="#feed" class="mobile-nav-item" onclick="showFeed(); return false;">
+      <i class="ph ph-newspaper"></i>
+      <span>News</span>
+    </a>
+  </nav>
+
+  <button id="search-fab" class="search-fab" title="AI Global Search" onclick="toggleCommandPalette()">
+    <i class="ph ph-magnifying-glass"></i>
+  </button>
+
+  <button id="scroll-to-top" class="scroll-to-top" title="Scroll to Top"><i class="ph ph-arrow-up"></i></button>
 
   <script src="auth.js?v=6"></script>
   <script src="script.js?v=6"></script>

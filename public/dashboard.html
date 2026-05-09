@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Dashboard - HSG AI HUB</title>
+  <link rel="icon" type="image/svg+xml" href="logos/ai-hubs-logo.svg">
+  <link rel="apple-touch-icon" href="logos/ai-hubs-logo.svg">
+  <meta name="theme-color" content="#6366f1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -129,7 +132,7 @@
           const date = new Date(chat.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
           
           return `
-            <div class="history-card glass" onclick="window.location.href='index.html?tool=${chat.toolId}'">
+            <div class="history-card glass" onclick="window.location.href='index.html#chat/${chat.toolId}'">
               <div class="history-header">
                 <span class="history-model"><i class="ph ph-robot"></i> ${chat.toolId}</span>
                 <span class="history-date">${date}</span>

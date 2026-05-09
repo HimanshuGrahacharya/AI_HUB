@@ -745,8 +745,8 @@ const aiTools: AITool[] = [
   },
   {
     "id": "dalle",
-    "name": "DALLÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢&bull;ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“E",
-    "description": "DALLÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢&bull;ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“E is a top-tier image generation solution.",
+    "name": "DALL-E",
+    "description": "DALL-E is a top-tier image generation solution.",
     "category": "Image Generation",
     "link": "https://dalle.com",
     "logo": "https://www.google.com/s2/favicons?domain=dalle.com"
@@ -1185,8 +1185,8 @@ const aiTools: AITool[] = [
   },
   {
     "id": "letsenhance",
-    "name": "LetÃƒÆ’Ã…Â½ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“s Enhance",
-    "description": "LetÃƒÆ’Ã…Â½ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“s Enhance is a top-tier image generation solution.",
+    "name": "Let's Enhance",
+    "description": "Let's Enhance is a top-tier image generation solution.",
     "category": "Image Generation",
     "link": "https://letsenhance.com",
     "logo": "https://www.google.com/s2/favicons?domain=letsenhance.com"
@@ -3297,8 +3297,8 @@ const aiTools: AITool[] = [
   },
   {
     "id": "explainlikeim5ai",
-    "name": "Explain Like IÃƒÆ’Ã…Â½ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“m 5 AI",
-    "description": "Explain Like IÃƒÆ’Ã…Â½ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“m 5 AI is a top-tier research / study solution.",
+    "name": "Explain Like I'm 5 AI",
+    "description": "Explain Like I'm 5 AI is a top-tier research / study solution.",
     "category": "Research / Study",
     "link": "https://explainlikeim5ai.com",
     "logo": "https://www.google.com/s2/favicons?domain=explainlikeim5ai.com"
@@ -4242,6 +4242,15 @@ async function loadSubmissions() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // PWA Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered', reg))
+        .catch(err => console.log('Service Worker registration failed', err));
+    });
+  }
+
   loadSubmissions(); // Load extra tools automatically
   const token = localStorage.getItem('token');
   if (token) {
@@ -4288,11 +4297,32 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPagination();
   }
 
+  // Handle Query Parameters (e.g. ?tool=chatgpt -> #chat/chatgpt)
+  const urlParams = new URLSearchParams(window.location.search);
+  const toolFromQuery = urlParams.get('tool');
+  if (toolFromQuery) {
+    const newHash = '#chat/' + toolFromQuery;
+    history.replaceState(null, '', window.location.pathname + newHash);
+  }
+
+  // PWA Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered', reg))
+        .catch(err => console.log('Service Worker registration failed', err));
+    });
+  }
+
+  // Consolidated Event Listeners
   const searchInput = document.getElementById('search-input') as HTMLInputElement;
   if (searchInput) searchInput.addEventListener('input', handleSearch);
   
   const backBtn = document.getElementById('back-btn');
   if (backBtn) backBtn.addEventListener('click', showTools);
+
+  const arenaSendBtn = document.getElementById('arena-send-btn');
+  if (arenaSendBtn) arenaSendBtn.addEventListener('click', executeArena);
 
   const clearChatBtn = document.getElementById('clear-chat-btn');
   if (clearChatBtn) {
@@ -4312,7 +4342,6 @@ document.addEventListener('DOMContentLoaded', () => {
           const messagesDiv = document.getElementById('chat-messages');
           if (messagesDiv) {
             messagesDiv.innerHTML = '';
-            const tool = aiTools.find(t => t.id === selectedAI);
             addMessage('ai', `History cleared. How can I help you today?`);
           }
           showToast('Chat history cleared', 'info');
@@ -4331,29 +4360,36 @@ document.addEventListener('DOMContentLoaded', () => {
       if (sInput) sInput.value = '';
       const allToolsItem = document.querySelector('.category-item[data-category="All"]') as HTMLElement;
       if (allToolsItem) allToolsItem.click();
+      location.hash = ''; // Clear hash on home click
       showTools();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
+  // Restore Routing
+  if (window.location.hash && window.location.hash !== '') {
+    setTimeout(handleRouting, 150);
+  }
+
   const menuToggle = document.getElementById('menu-toggle');
   const sidebar = document.querySelector('.sidebar');
   
-  if (menuToggle && sidebar) {
-    menuToggle.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-      let overlay = document.getElementById('sidebar-overlay');
-      if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.id = 'sidebar-overlay';
-        overlay.className = 'sidebar-overlay';
-        document.body.appendChild(overlay);
-        overlay.addEventListener('click', () => {
-          sidebar.classList.remove('active');
-          overlay?.classList.remove('show');
-        });
+  if (menuToggle) {
+    menuToggle.addEventListener('click', (window as any).toggleSidebar);
+  }
+
+  // Scroll to Top Logic
+  const scrollTopBtn = document.getElementById('scroll-to-top');
+  if (scrollTopBtn) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        scrollTopBtn.classList.add('show');
+      } else {
+        scrollTopBtn.classList.remove('show');
       }
-      setTimeout(() => overlay?.classList.toggle('show'), 10);
+    });
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
@@ -4601,7 +4637,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const active = darkModeToggle.checked;
       document.body.classList.toggle('dark-mode', active);
       localStorage.setItem('dark-mode', active.toString());
-      showToast(active ? 'Dark Mode On 🌙' : 'Light Mode On Ã¢Ëœâ‚¬Ã¯Â¸Â', 'info');
+      showToast(active ? "Dark Mode On 🌙" : "Light Mode On ☀️", "info");
     });
   }
 
@@ -4731,7 +4767,7 @@ function addToRecentlyViewed(toolId: string) {
   
   if (isAdding) {
     favorites.push(toolId);
-    showToast('Added to Favorites Ã¢Â­Â', 'info');
+    showToast("Added to Favorites ⭐", "info");
   } else {
     favorites = favorites.filter(id => id !== toolId);
     showToast('Removed from Favorites', 'info');
@@ -5034,10 +5070,19 @@ function switchView(viewId: string) {
     'intelligence-feed', 'creative-studio'
   ];
   
+  // Update mobile nav active state
+  document.querySelectorAll('.mobile-nav-item').forEach(item => item.classList.remove('active'));
+  const activeNavItem = document.querySelector(`.mobile-nav-item[onclick*="${viewId}"]`);
+  if (activeNavItem) activeNavItem.classList.add('active');
+  else if (viewId === 'dashboard') document.querySelector('.mobile-nav-item[onclick*="showTools"]')?.classList.add('active');
+
   containers.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
+
+  // Reset scroll to top for a seamless transition between views
+  window.scrollTo({ top: 0, behavior: 'instant' });
 
   const hero = document.querySelector('.dashboard-hero') as HTMLElement;
   const sidebar = document.querySelector('.sidebar') as HTMLElement;
@@ -5109,6 +5154,7 @@ function selectAI(toolId: string) {
 function showTools() {
   switchView('dashboard');
 }
+(window as any).showTools = showTools;
 
 const sendBtn = document.getElementById('send-btn');
 if (sendBtn) sendBtn.addEventListener('click', sendMessage);
@@ -5741,13 +5787,19 @@ async function renderPersonasList() {
 };
 
 // Event Listeners
+
+// Preloader & Global Load
 window.addEventListener('load', () => {
   const p = document.getElementById('preloader');
-  if (p) setTimeout(() => p.classList.add('fade-out'), 1000);
-});
-document.addEventListener('DOMContentLoaded', () => {
-  const arenaSendBtn = document.getElementById('arena-send-btn');
-  if (arenaSendBtn) arenaSendBtn.addEventListener('click', executeArena);
+  if (p) {
+    setTimeout(() => {
+      p.classList.add('fade-out');
+      // Remove from DOM after transition
+      setTimeout(() => {
+        p.style.display = 'none';
+      }, 600);
+    }, 1000);
+  }
 });
 
 (window as any).setArenaPrompt = (prompt: string) => {
@@ -5940,42 +5992,42 @@ const aiVideosData = [
 ];
 
 (window as any).showFeed = function() {
-  const grid = document.getElementById('ai-grid');
-  const feed = document.getElementById('intelligence-feed');
-  const hero = document.querySelector('.dashboard-hero');
-  const pagination = document.getElementById('pagination');
-  
-  if (grid && feed && hero && pagination) {
-    grid.style.display = 'none';
-    pagination.style.display = 'none';
-    (hero as HTMLElement).style.display = 'none';
-    feed.style.display = 'block';
-    
-    // Update active sidebar state
-    document.querySelectorAll('.category-item').forEach(i => i.classList.remove('active'));
-    document.getElementById('show-feed')?.classList.add('active');
-    
-    // Initialize Feed Content
-    initializeFeed();
+  switchView('intelligence-feed');
+  initializeFeed();
+};
+
+(window as any).openArena = function() {
+  switchView('arena-container');
+};
+
+(window as any).openCreativeStudio = function() {
+  switchView('creative-studio');
+};
+
+(window as any).toggleSidebar = function() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar && overlay) {
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('show');
   }
 };
 
-(window as any).showTools = function() {
-  const grid = document.getElementById('ai-grid');
-  const feed = document.getElementById('intelligence-feed');
-  const hero = document.querySelector('.dashboard-hero');
-  const pagination = document.getElementById('pagination');
-  
-  if (grid && feed && hero && pagination) {
-    grid.style.display = 'grid';
-    pagination.style.display = 'flex';
-    (hero as HTMLElement).style.display = 'block';
-    feed.style.display = 'none';
-    
-    document.getElementById('show-feed')?.classList.remove('active');
-    document.querySelector('[data-category="All"]')?.classList.add('active');
+(window as any).toggleCommandPalette = function() {
+  const palette = document.getElementById('command-palette');
+  if (palette) {
+    const isVisible = palette.style.display === 'flex';
+    palette.style.display = isVisible ? 'none' : 'flex';
+    if (!isVisible) {
+      const input = document.getElementById('palette-input') as HTMLInputElement;
+      if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 100);
+      }
+    }
   }
 };
+
 
 async function fetchLiveAINews() {
   const apiKey = '35fbf2639a3949b2b4d72d549e1935e5';
@@ -6853,7 +6905,7 @@ const originalAddWarLog = addWarLog;
     showToast('Forge error occurred.', 'error');
   } finally {
     forgeBtn.disabled = false;
-    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge Ã¢â‚¬â€ 4 Styles at Once';
+    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge — 4 Styles at Once';
   }
 };
 
@@ -6902,8 +6954,19 @@ function handleRouting() {
   if (hash.startsWith('#chat/')) {
     const toolId = hash.replace('#chat/', '');
     if (toolId) {
+      // Ensure we are in chat view
       selectAI(toolId);
       switchView('chat-container');
+    }
+    return;
+  }
+  
+  // Handle simple #chat without ID (redirect to home or last tool)
+  if (hash === '#chat') {
+    if (selectedAI) {
+      location.hash = `#chat/${selectedAI}`;
+    } else {
+      switchView('dashboard');
     }
     return;
   }
@@ -6930,9 +6993,4 @@ function handleRouting() {
 // Listen for hash changes triggered by browser back/forward
 window.addEventListener('hashchange', handleRouting);
 
-// Restore the correct view on page load/refresh
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.location.hash && window.location.hash !== '') {
-    setTimeout(handleRouting, 150);
-  }
-});
+

@@ -38,7 +38,15 @@ async function connectDB() {
     await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB at', mongoUri);
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('Initial MongoDB connection failed. Falling back to Memory Server...');
+    try {
+      const mongoServer = await MongoMemoryServer.create();
+      const mongoUri = mongoServer.getUri();
+      await mongoose.connect(mongoUri);
+      console.log('Connected to fallback MongoDB at', mongoUri);
+    } catch (fallbackError) {
+      console.error('Critical: Failed to start fallback MongoDB:', fallbackError);
+    }
   }
 }
 
