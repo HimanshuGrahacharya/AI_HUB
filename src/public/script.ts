@@ -6516,7 +6516,15 @@ document.querySelectorAll('.style-card').forEach(card => {
     });
     
     const refData = await refRes.json();
-    const finalPromptText = refData.response + `, style: ${activeArtStyle}, high resolution, 8k, masterpiece`;
+    let refinedText = refData.response;
+    
+    // Fallback if Vision API fails or missing key
+    if (!refRes.ok || !refinedText || refinedText.includes('Error:') || refinedText.includes('missing')) {
+      refinedText = rawPrompt || 'A beautiful cinematic masterpiece matching the uploaded image';
+      console.warn('Vision processing skipped or failed. Using direct user prompt.');
+    }
+    
+    const finalPromptText = refinedText + `, style: ${activeArtStyle}, high resolution, 8k, masterpiece`;
     const finalPrompt = encodeURIComponent(finalPromptText);
 
     // 2. Generate Image (Pollinations API)
