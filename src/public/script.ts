@@ -5393,9 +5393,9 @@ async function executeArena() {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
-        body: JSON.stringify({ message: prompt })
+        body: JSON.stringify({ message: (document.getElementById('arena-input') as HTMLTextAreaElement).value })
       });
       const data = await res.json();
       const endTime = performance.now();
@@ -5407,8 +5407,9 @@ async function executeArena() {
         const col = element.closest('.arena-column');
         if (col) col.classList.remove('is-processing');
 
+        const htmlContent = (window as any).marked.parse(responseText);
         element.innerHTML = `
-          <div class="arena-response-content">${responseText}</div>
+          <div class="arena-response-content">${htmlContent}</div>
           <div class="arena-actions" style="display: flex; justify-content: flex-end; margin-top: 10px; gap: 8px;">
             <button class="voice-toggle" title="Listen" onclick="toggleVoice(this, \`${(data.response || '').replace(/`/g, '\\`').replace(/\n/g, ' ')}\`)">
               <i class="ph ph-speaker-high"></i>
@@ -5418,6 +5419,9 @@ async function executeArena() {
             </button>
           </div>
         `;
+        
+        // Highlight code blocks
+        (window as any).Prism.highlightAllUnder(element);
         
         // Update metrics
         const timeEl = document.getElementById(`time-${modelId}`);
