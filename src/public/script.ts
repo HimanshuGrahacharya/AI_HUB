@@ -6494,15 +6494,24 @@ document.querySelectorAll('.style-card').forEach(card => {
     let finalPromptText: string;
 
     if (attachedStudioFile && attachedStudioFile.type.startsWith('image')) {
-      // Image attached: use Vision to deeply describe the image, then apply user transformation
-      const userTransform = rawPrompt || 'Transform this into a stunning artistic masterpiece';
-      const visionMsg = `You are an expert AI Art Prompt Engineer. 
-I will give you an image. Your job:
-1. Describe the subject in the image with MAXIMUM accuracy and detail (person, object, animal, place — be specific: age, face features, clothing, colors, environment, mood).
-2. Then apply this TRANSFORMATION the user wants: "${userTransform}"
-3. Output ONLY the final art generation prompt. No explanation. 30-50 words. Include the transformation style clearly.
+      // Image attached: Vision AI performs hyper-detailed subject analysis
+      const userTransform = rawPrompt || 'recreate this as a stunning high-quality artwork';
+      const visionMsg = `You are an expert AI image analyst and art prompt engineer. Analyze the attached image with extreme precision.
 
-Example output format: "A young Indian man with black beard wearing orange kurta, sitting in a garden, transformed into cyberpunk anime style with neon lights and futuristic city background, ultra detailed, cinematic lighting"`;
+YOUR TASK:
+1. IDENTIFY and describe the subject with MAXIMUM physical detail:
+   - If a PERSON: exact skin tone, face shape, eye color/shape, nose structure, lip shape, hair color/length/style, facial hair, age range, body type, exact clothing (colors, patterns, fabric), accessories, pose, expression
+   - If an OBJECT/ANIMAL/PLACE: exact colors, textures, shapes, materials, environment details, lighting
+2. APPLY the user's requested transformation: "${userTransform}"
+3. OUTPUT FORMAT: Write ONLY the final image generation prompt. No explanations. 60-80 words.
+
+CRITICAL RULES:
+- Keep ALL physical features of the subject identical (same face, same skin, same hair)
+- Only change the style/setting/effects based on the transformation request
+- Be hyper-specific about physical traits (e.g. "olive skin, almond-shaped dark brown eyes, sharp jawline, short black wavy hair")
+
+Example: "Olive-skinned Indian male, approximately 45 years old, sharp jawline, dark brown almond eyes, short grey-streaked black hair, wearing a dark blue suit with red tie, confident expression, transformed into ultra-realistic oil painting style, dramatic studio lighting, masterpiece quality, 8k"`;
+
       const token = localStorage.getItem('token');
       try {
         const refRes = await fetch('/api/blackbox', {
@@ -6515,11 +6524,10 @@ Example output format: "A young Indian man with black beard wearing orange kurta
         if (refinedText && !refinedText.includes('Error:') && !refinedText.includes('missing') && refinedText.length > 20) {
           finalPromptText = refinedText;
         } else {
-          // Fallback: manually combine user prompt with generic subject description
-          finalPromptText = `${userTransform}, ultra detailed, highly realistic`;
+          finalPromptText = `${userTransform}, ultra detailed, highly realistic, 8k`;
         }
       } catch {
-        finalPromptText = `${rawPrompt || 'artistic masterpiece'}, ultra detailed`;
+        finalPromptText = `${rawPrompt || 'artistic masterpiece'}, ultra detailed, 8k`;
       }
     } else {
       // No image: use raw prompt directly for speed and accuracy
