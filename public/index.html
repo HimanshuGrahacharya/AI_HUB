@@ -229,13 +229,15 @@
       </section>
 
       <!-- NEW: AI Creative Studio -->
-      <div id="creative-studio" class="creative-studio-container" style="display: none;">
+      <div id="creative-studio" class="creative-studio-container" style="display: none; position: relative;">
+        <button class="back-tools-btn" onclick="closeCreativeStudio()" style="top: -20px; left: 0px;">
+          <i class="ph ph-arrow-left"></i> Back to Tools
+        </button>
         <div class="studio-header">
           <div class="studio-title">
             <h2><i class="ph ph-paint-brush-broad"></i> AI Creative Studio</h2>
             <p>Transform your imagination into high-end visual masterpieces.</p>
           </div>
-          <button class="btn-secondary" onclick="closeCreativeStudio()"><i class="ph ph-x"></i> Exit Studio</button>
         </div>
 
         <div class="studio-workspace">
@@ -369,6 +371,9 @@
       <div id="intelligence-feed" class="intelligence-feed" style="display: none;">
         <div class="feed-header">
           <div class="morning-brief">
+            <button class="back-tools-btn" onclick="switchView('dashboard')">
+              <i class="ph ph-arrow-left"></i> Back to Tools
+            </button>
             <div class="brief-icon"><i class="ph ph-sparkle"></i></div>
             <div class="brief-text">
               <h2>AI Intelligence Feed</h2>

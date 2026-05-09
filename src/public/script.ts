@@ -5106,7 +5106,7 @@ function switchView(viewId: string) {
   } else {
     const target = document.getElementById(viewId);
     if (target) {
-      target.style.display = (viewId === 'arena-container' || viewId === 'warroom-container' || viewId === 'chat-container') ? 'flex' : 'block';
+      target.style.display = (viewId === 'arena-container' || viewId === 'warroom-container' || viewId === 'chat-container' || viewId === 'creative-studio') ? 'flex' : 'block';
     }
     if (hero) hero.style.display = 'none';
     if (sidebar) sidebar.style.display = 'none';
