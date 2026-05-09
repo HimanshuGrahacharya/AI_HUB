@@ -5099,6 +5099,8 @@ function selectAI(toolId: string) {
   }
 
   switchView('chat-container');
+  // Update URL hash for chat persistence (enables refresh-restore)
+  history.pushState(null, '', `#chat/${toolId}`);
   
   const messagesDiv = document.getElementById('chat-messages');
   if (messagesDiv) messagesDiv.innerHTML = '';
@@ -6895,6 +6897,17 @@ const originalAddWarLog = addWarLog;
 // ============================================================
 function handleRouting() {
   const hash = window.location.hash;
+
+  // Handle #chat/toolId routes (e.g., #chat/chatgpt)
+  if (hash.startsWith('#chat/')) {
+    const toolId = hash.replace('#chat/', '');
+    if (toolId) {
+      selectAI(toolId);
+      switchView('chat-container');
+    }
+    return;
+  }
+
   switch (hash) {
     case '#arena':
       (window as any).openArena();
