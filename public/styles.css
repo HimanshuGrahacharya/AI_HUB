@@ -6024,6 +6024,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
 .arena-response-content h3 {
   background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-top: 2rem !important;
   margin-bottom: 1rem !important;
