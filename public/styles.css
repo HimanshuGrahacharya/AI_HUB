@@ -6038,6 +6038,39 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   padding-left: 2rem !important;
 }
 
+/* Custom styling for Prism Code Copy Button */
+div.code-toolbar {
+  position: relative;
+}
+div.code-toolbar > .toolbar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+div.code-toolbar:hover > .toolbar {
+  opacity: 1;
+}
+div.code-toolbar > .toolbar .toolbar-item button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  backdrop-filter: blur(5px) !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+div.code-toolbar > .toolbar .toolbar-item button:hover {
+  background: rgba(99, 102, 241, 0.8) !important;
+  border-color: rgba(99, 102, 241, 1) !important;
+}
+
 .arena-response-content li {
   margin-bottom: 0.8rem !important;
   position: relative;
@@ -6045,7 +6078,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
 
 /* Custom bullet for better look */
 .arena-response-content ul li::before {
-  content: '\\2022';
+  content: '\2022';
   position: absolute;
   left: -1.5rem;
   color: var(--primary-light);
