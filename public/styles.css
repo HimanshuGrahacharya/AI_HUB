@@ -5913,3 +5913,27 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     font-size: 1.1rem !important;
   }
 }
+
+@media (max-width: 768px) {
+  /* Search UI Improvements */
+  .search-results-overlay {
+    background: rgba(15, 23, 42, 0.98) !important;
+    border-radius: 0 0 20px 20px !important;
+    max-height: 70vh !important;
+    border: 1px solid rgba(99, 102, 241, 0.3) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .search-section h4 {
+    background: rgba(99, 102, 241, 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 5px 10px;
+  }
+
+  .search-item {
+    margin: 0 10px;
+    padding: 12px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}

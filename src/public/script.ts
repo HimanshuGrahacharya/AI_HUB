@@ -1,4 +1,4 @@
-interface AITool {
+﻿interface AITool {
   id: string;
   name: string;
   description: string;
@@ -745,8 +745,8 @@ const aiTools: AITool[] = [
   },
   {
     "id": "dalle",
-    "name": "DALLÃ¢â€Â¬Ã¢â€¢â€“E",
-    "description": "DALLÃ¢â€Â¬Ã¢â€¢â€“E is a top-tier image generation solution.",
+    "name": "DALLÃƒÂ¢Ã¢â‚¬ÂÃ‚Â¬ÃƒÂ¢Ã¢â‚¬Â¢Ã¢â‚¬â€œE",
+    "description": "DALLÃƒÂ¢Ã¢â‚¬ÂÃ‚Â¬ÃƒÂ¢Ã¢â‚¬Â¢Ã¢â‚¬â€œE is a top-tier image generation solution.",
     "category": "Image Generation",
     "link": "https://dalle.com",
     "logo": "https://www.google.com/s2/favicons?domain=dalle.com"
@@ -1185,8 +1185,8 @@ const aiTools: AITool[] = [
   },
   {
     "id": "letsenhance",
-    "name": "LetÃŽâ€œÃƒâ€¡Ãƒâ€“s Enhance",
-    "description": "LetÃŽâ€œÃƒâ€¡Ãƒâ€“s Enhance is a top-tier image generation solution.",
+    "name": "LetÃƒÅ½Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã¢â‚¬â€œs Enhance",
+    "description": "LetÃƒÅ½Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã¢â‚¬â€œs Enhance is a top-tier image generation solution.",
     "category": "Image Generation",
     "link": "https://letsenhance.com",
     "logo": "https://www.google.com/s2/favicons?domain=letsenhance.com"
@@ -3297,8 +3297,8 @@ const aiTools: AITool[] = [
   },
   {
     "id": "explainlikeim5ai",
-    "name": "Explain Like IÃŽâ€œÃƒâ€¡Ãƒâ€“m 5 AI",
-    "description": "Explain Like IÃŽâ€œÃƒâ€¡Ãƒâ€“m 5 AI is a top-tier research / study solution.",
+    "name": "Explain Like IÃƒÅ½Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã¢â‚¬â€œm 5 AI",
+    "description": "Explain Like IÃƒÅ½Ã¢â‚¬Å“ÃƒÆ’Ã¢â‚¬Â¡ÃƒÆ’Ã¢â‚¬â€œm 5 AI is a top-tier research / study solution.",
     "category": "Research / Study",
     "link": "https://explainlikeim5ai.com",
     "logo": "https://www.google.com/s2/favicons?domain=explainlikeim5ai.com"
@@ -4601,7 +4601,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const active = darkModeToggle.checked;
       document.body.classList.toggle('dark-mode', active);
       localStorage.setItem('dark-mode', active.toString());
-      showToast(active ? 'Dark Mode On 🌙' : 'Light Mode On ☀️', 'info');
+      showToast(active ? 'Dark Mode On ðŸŒ™' : 'Light Mode On â˜€ï¸', 'info');
     });
   }
 
@@ -4610,7 +4610,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (billingLink) {
     billingLink.addEventListener('click', (e) => {
       e.preventDefault();
-      showToast('This feature is coming soon! 🚀', 'info');
+      showToast('This feature is coming soon! ðŸš€', 'info');
     });
   }
 
@@ -4676,7 +4676,7 @@ function showFavorites() {
   renderPagination();
   if (filteredTools.length === 0) {
     const grid = document.getElementById('ai-grid');
-    if (grid) grid.innerHTML = '<div class="no-results">No favorites saved yet. Click the Ã¢Â­Â on any tool!</div>';
+    if (grid) grid.innerHTML = '<div class="no-results">No favorites saved yet. Click the ÃƒÂ¢Ã‚Â­Ã‚Â on any tool!</div>';
   }
 }
 
@@ -4731,7 +4731,7 @@ function addToRecentlyViewed(toolId: string) {
   
   if (isAdding) {
     favorites.push(toolId);
-    showToast('Added to Favorites ⭐', 'info');
+    showToast('Added to Favorites â­', 'info');
   } else {
     favorites = favorites.filter(id => id !== toolId);
     showToast('Removed from Favorites', 'info');
@@ -4815,14 +4815,14 @@ function renderTools() {
         <img src="${highResLogo}" alt="${tool.name} logo" class="ai-logo" 
              onerror="this.src='https://www.gstatic.com/lamda/images/favicon_v2_71731f242707730e84.png'">
         <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, '${tool.id}')">
-          ${isFavorite ? '⭐' : '☆'}
+          ${isFavorite ? 'â­' : 'â˜†'}
         </button>
       </div>
       <h3>${tool.name}</h3>
       <p>${tool.description}</p>
       <div class="category-tag">${tool.category}</div>
       <div class="links">
-        <a href="${tool.link}" target="_blank" onclick="event.stopPropagation()" class="site-link">Official Site ↗</a>
+        <a href="${tool.link}" target="_blank" onclick="event.stopPropagation()" class="site-link">Official Site â†—</a>
       </div>
     `;
     grid.appendChild(card);
@@ -4964,7 +4964,7 @@ async function handleSearch() {
           <img src="${n.image}" alt="">
           <div class="search-item-info">
             <span class="search-item-title">${n.title}</span>
-            <span class="search-item-meta">${n.source} â€¢ ${timeAgo(n.pubDate)}</span>
+            <span class="search-item-meta">${n.source} Ã¢â‚¬Â¢ ${timeAgo(n.pubDate)}</span>
           </div>
         </div>
       `).join('')}
@@ -5052,6 +5052,9 @@ function selectAI(toolId: string) {
   const sidebar = document.querySelector('.sidebar') as HTMLElement;
   if (sidebar) sidebar.style.display = 'none';
   
+  const hero = document.querySelector('.dashboard-hero') as HTMLElement;
+  if (hero) hero.style.display = 'none';
+
   const chatContainer = document.getElementById('chat-container');
   if (chatContainer) chatContainer.style.display = 'flex';
   
@@ -5081,6 +5084,9 @@ function selectAI(toolId: string) {
 }
 
 function showTools() {
+  const hero = document.querySelector('.dashboard-hero') as HTMLElement;
+  if (hero) hero.style.display = 'block';
+
   const grid = document.getElementById('ai-grid');
   if (grid) grid.style.display = 'grid';
   
@@ -5286,7 +5292,7 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
 
 (window as any).copyToClipboard = function(text: string) {
   navigator.clipboard.writeText(text);
-  showToast('Response copied! 📋', 'info');
+  showToast('Response copied! ðŸ“‹', 'info');
 };
 
 function startInactivityTimer() {
@@ -5340,7 +5346,7 @@ function resetInactivityTimer() {
     });
 
     if (res.ok) {
-      showToast('Settings saved successfully! ✅', 'info');
+      showToast('Settings saved successfully! âœ…', 'info');
       document.getElementById('settings-modal')!.style.display = 'none';
     } else {
       showToast('Failed to save settings to server.', 'error');
@@ -5598,7 +5604,7 @@ async function renderPersonasList() {
     if (!data.personas || data.personas.length === 0) {
       list.innerHTML = `
         <div style="text-align:center; padding:30px; color:var(--text-secondary);">
-          <div style="font-size:3rem; margin-bottom:10px;">🤖</div>
+          <div style="font-size:3rem; margin-bottom:10px;">ðŸ¤–</div>
           <p>No personas yet! Create one to get started.</p>
           <button class="btn-primary" style="margin-top:15px;" onclick="document.getElementById('personas-panel').style.display='none'; document.getElementById('persona-modal').style.display='flex';"><i class="ph ph-plus"></i> Create My First Persona</button>
         </div>`;
@@ -5630,7 +5636,7 @@ async function renderPersonasList() {
 
 (window as any).savePersona = async function() {
   const name = (document.getElementById('persona-name') as HTMLInputElement)?.value?.trim();
-  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || '🤖';
+  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || 'ðŸ¤–';
   const systemPrompt = (document.getElementById('persona-prompt') as HTMLTextAreaElement)?.value?.trim();
   if (!name || !systemPrompt) { showToast('Please fill in the name and system prompt.', 'error'); return; }
   const token = localStorage.getItem('token');
@@ -5646,7 +5652,7 @@ async function renderPersonasList() {
     document.getElementById('persona-modal')!.style.display = 'none';
     (document.getElementById('persona-name') as HTMLInputElement).value = '';
     (document.getElementById('persona-prompt') as HTMLTextAreaElement).value = '';
-    (document.getElementById('persona-emoji') as HTMLInputElement).value = '🤖';
+    (document.getElementById('persona-emoji') as HTMLInputElement).value = 'ðŸ¤–';
   } catch(e) { showToast('Connection error', 'error'); }
 };
 
@@ -6232,7 +6238,7 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
   }
 
   btn.disabled = false;
-  btn.textContent = 'Launch Multi-Agent Mission ⚡';
+  btn.textContent = 'Launch Multi-Agent Mission âš¡';
 };
 
 (window as any).copyMasterPlan = function() {
@@ -6242,7 +6248,7 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
 
 (window as any).shareWarRoomResult = function() {
   const mission = (document.getElementById('warroom-input') as HTMLTextAreaElement).value.trim();
-  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! 🚀 #AIHUB #StrategicIntelligence`;
+  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! ðŸš€ #AIHUB #StrategicIntelligence`;
   const url = window.location.href;
 
   if (navigator.share) {
@@ -6829,7 +6835,7 @@ const originalAddWarLog = addWarLog;
     showToast('Forge error occurred.', 'error');
   } finally {
     forgeBtn.disabled = false;
-    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge — 4 Styles at Once';
+    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> âš¡ Parallel Forge â€” 4 Styles at Once';
   }
 };
 
@@ -6858,3 +6864,4 @@ const originalAddWarLog = addWarLog;
   // Smooth scroll to canvas
   document.getElementById('art-canvas')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
+
