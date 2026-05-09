@@ -240,6 +240,9 @@
               <button class="btn-primary w-full" id="art-generate-btn" onclick="generateAIArt()" style="margin-top: 15px;">
                 <i class="ph ph-magic-wand"></i> Brew Masterpiece
               </button>
+              <button class="btn-forge w-full" id="parallel-forge-btn" onclick="parallelForge()" style="margin-top: 10px;">
+                <i class="ph ph-lightning"></i> ⚡ Parallel Forge — 4 Styles at Once
+              </button>
             </div>
 
             <div class="control-section">
@@ -294,6 +297,40 @@
               <button class="btn-primary" onclick="publishToGallery()" style="background: var(--bg-gradient);">
                 <i class="ph ph-globe"></i> Publish to Gallery
               </button>
+            </div>
+
+            <!-- PARALLEL VISION FORGE GRID -->
+            <div id="parallel-forge-section" style="display: none; margin-top: 30px;">
+              <div class="forge-header">
+                <h3><i class="ph ph-lightning"></i> Parallel Vision Forge</h3>
+                <p>Your prompt — 4 styles generated simultaneously. Click any to select as your masterpiece.</p>
+              </div>
+              <div class="forge-grid" id="forge-grid">
+                <div class="forge-cell" id="forge-cell-0" onclick="selectForgeImage(0)">
+                  <div class="forge-label">🎬 Cinematic</div>
+                  <div class="forge-loading"><div class="forge-spinner"></div><span>Forging...</span></div>
+                  <img class="forge-img" id="forge-img-0" style="display:none;">
+                  <div class="forge-select-btn"><i class="ph ph-check-circle"></i> Select</div>
+                </div>
+                <div class="forge-cell" id="forge-cell-1" onclick="selectForgeImage(1)">
+                  <div class="forge-label">⚡ Cyberpunk</div>
+                  <div class="forge-loading"><div class="forge-spinner"></div><span>Forging...</span></div>
+                  <img class="forge-img" id="forge-img-1" style="display:none;">
+                  <div class="forge-select-btn"><i class="ph ph-check-circle"></i> Select</div>
+                </div>
+                <div class="forge-cell" id="forge-cell-2" onclick="selectForgeImage(2)">
+                  <div class="forge-label">🎨 Oil Painting</div>
+                  <div class="forge-loading"><div class="forge-spinner"></div><span>Forging...</span></div>
+                  <img class="forge-img" id="forge-img-2" style="display:none;">
+                  <div class="forge-select-btn"><i class="ph ph-check-circle"></i> Select</div>
+                </div>
+                <div class="forge-cell" id="forge-cell-3" onclick="selectForgeImage(3)">
+                  <div class="forge-label">🌸 Anime</div>
+                  <div class="forge-loading"><div class="forge-spinner"></div><span>Forging...</span></div>
+                  <img class="forge-img" id="forge-img-3" style="display:none;">
+                  <div class="forge-select-btn"><i class="ph ph-check-circle"></i> Select</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

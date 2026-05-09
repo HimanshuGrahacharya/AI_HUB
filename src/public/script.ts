@@ -6741,3 +6741,120 @@ const originalAddWarLog = addWarLog;
   tacticalBeep.play().catch(() => {}); // Play tactical beep
   return originalAddWarLog(text, type);
 };
+
+// ==========================================
+// PARALLEL VISION FORGE LOGIC
+// ==========================================
+(window as any).parallelForge = async function() {
+  const promptInput = document.getElementById('studio-prompt') as HTMLTextAreaElement;
+  const rawPrompt = promptInput.value.trim();
+  
+  if (!rawPrompt && !attachedStudioFile) {
+    showToast('Please enter a prompt or attach an image first.', 'info');
+    return;
+  }
+
+  const forgeBtn = document.getElementById('parallel-forge-btn') as HTMLButtonElement;
+  const forgeSection = document.getElementById('parallel-forge-section');
+  
+  forgeBtn.disabled = true;
+  forgeBtn.innerHTML = '<i class="ph ph-lightning ph-pulse"></i> Forging Styles...';
+  forgeSection!.style.display = 'block';
+  forgeSection!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  
+  // Reset grid state
+  for(let i=0; i<4; i++) {
+    const cell = document.getElementById(`forge-cell-${i}`);
+    const loading = cell?.querySelector('.forge-loading') as HTMLElement;
+    const img = document.getElementById(`forge-img-${i}`) as HTMLImageElement;
+    const selectBtn = cell?.querySelector('.forge-select-btn') as HTMLElement;
+    
+    cell?.classList.remove('selected');
+    loading.style.display = 'flex';
+    loading.innerHTML = '<div class="forge-spinner"></div><span>Forging...</span>';
+    img.style.display = 'none';
+    selectBtn.style.opacity = '0';
+  }
+
+  try {
+    let basePrompt: string;
+
+    if (attachedStudioFile && attachedStudioFile.type.startsWith('image')) {
+      const visionMsg = `Describe the subject of this image in extreme detail for AI art generation. Focus on physical traits, clothing, and environment. Write ONLY the description. 50 words.`;
+      const token = localStorage.getItem('token');
+      const refRes = await fetch('/api/blackbox', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ message: visionMsg, image: attachedStudioFile.data })
+      });
+      const refData = await refRes.json();
+      basePrompt = refData.response || rawPrompt || 'artistic masterpiece';
+    } else {
+      basePrompt = rawPrompt;
+    }
+
+    const styles = [
+      'cinematic, hyper-realistic, 8k, dramatic lighting, movie still',
+      'cyberpunk style, neon glow, futuristic city, sharp edges, synthwave',
+      'classical oil painting, thick brushstrokes, museum masterpiece, rich textures',
+      'modern anime style, vibrant colors, clean lines, studio ghibli aesthetic'
+    ];
+
+    const promises = styles.map(async (style, i) => {
+      const finalPrompt = encodeURIComponent(`${basePrompt}, ${style}`);
+      const seed = Math.floor(Math.random() * 1000000);
+      const url = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+      
+      return new Promise((resolve) => {
+        const img = document.getElementById(`forge-img-${i}`) as HTMLImageElement;
+        const cell = document.getElementById(`forge-cell-${i}`);
+        const loading = cell?.querySelector('.forge-loading') as HTMLElement;
+        
+        img.src = url;
+        img.onload = () => {
+          loading.style.display = 'none';
+          img.style.display = 'block';
+          resolve(true);
+        };
+        img.onerror = () => {
+          loading.innerHTML = '<span>Forge Failed</span>';
+          resolve(false);
+        };
+      });
+    });
+
+    await Promise.all(promises);
+    showToast('Parallel Forge Complete! Pick your favorite style.', 'success');
+  } catch (err) {
+    showToast('Forge error occurred.', 'error');
+  } finally {
+    forgeBtn.disabled = false;
+    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge — 4 Styles at Once';
+  }
+};
+
+(window as any).selectForgeImage = function(index: number) {
+  const forgeImg = document.getElementById(`forge-img-${index}`) as HTMLImageElement;
+  const mainImg = document.getElementById('generated-art') as HTMLImageElement;
+  const canvasEmpty = document.querySelector('.canvas-empty-state') as HTMLElement;
+  const loader = document.getElementById('art-loading');
+  const actions = document.getElementById('art-actions');
+  
+  if (!forgeImg.src) return;
+  
+  mainImg.src = forgeImg.src;
+  mainImg.style.display = 'block';
+  canvasEmpty.style.display = 'none';
+  loader!.style.display = 'none';
+  actions!.style.display = 'flex';
+  
+  // Highlight selected
+  for(let i=0; i<4; i++) {
+    document.getElementById(`forge-cell-${i}`)?.classList.toggle('selected', i === index);
+  }
+  
+  showToast('Masterpiece selected for the canvas!', 'success');
+  
+  // Smooth scroll to canvas
+  document.getElementById('art-canvas')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
