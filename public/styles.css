@@ -6045,7 +6045,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
 
 /* Custom bullet for better look */
 .arena-response-content ul li::before {
-  content: 'Ã¢â€”â€¹';
+  content: '\\2022';
   position: absolute;
   left: -1.5rem;
   color: var(--primary-light);
