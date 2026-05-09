@@ -6491,49 +6491,51 @@ document.querySelectorAll('.style-card').forEach(card => {
   actions!.style.display = 'none';
 
   try {
-    // 1. Refine Prompt (Magic Alchemist with Multimodal Support)
-    let refinementPrompt = `You are an AI Art Prompt Engineer. Expand this idea into a high-end, detailed, cinematic art prompt for ${activeArtStyle} style. Include lighting, mood, and texture. Keep it to 100 words max.`;
-    
-    if (attachedStudioFile) {
-      if (attachedStudioFile.type.startsWith('image')) {
-        refinementPrompt += `\nREVERSE ENGINEER THIS IMAGE: [IMAGE ATTACHED] - Describe the person/subject perfectly. Maintain their face and features. Ensure the output is a high-end PHOTOREALISTIC PORTRAIT.`;
-      } else {
-        refinementPrompt += `\nEXTRACT ARTISTIC ESSENCE FROM THIS DOC CONTENT: ${attachedStudioFile.data.substring(0, 500)}`;
-      }
-    }
-    
-    refinementPrompt += `\nUSER CONCEPT: ${rawPrompt || 'A masterpiece matching the attachment'}`;
+    let finalPromptText: string;
 
-    const token = localStorage.getItem('token');
-    // Using Blackbox Vision/LLM for refinement
-    const refRes = await fetch('/api/blackbox', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify({ 
-        message: refinementPrompt,
-        image: attachedStudioFile?.type.startsWith('image') ? attachedStudioFile.data : undefined
-      })
-    });
-    
-    const refData = await refRes.json();
-    let refinedText = refData.response;
-    
-    // Fallback if Vision API fails or missing key
-    if (!refRes.ok || !refinedText || refinedText.includes('Error:') || refinedText.includes('missing')) {
-      refinedText = rawPrompt || 'A beautiful cinematic masterpiece matching the uploaded image';
-      console.warn('Vision processing skipped or failed. Using direct user prompt.');
+    if (attachedStudioFile && attachedStudioFile.type.startsWith('image')) {
+      // Image attached: use Vision to describe image and blend with user prompt
+      const visionMsg = `Describe this image in 25 words. Focus on the subject, mood, setting. USER REQUEST: ${rawPrompt || ''}`;
+      const token = localStorage.getItem('token');
+      try {
+        const refRes = await fetch('/api/blackbox', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ message: visionMsg, image: attachedStudioFile.data })
+        });
+        const refData = await refRes.json();
+        const refinedText = refData.response;
+        if (refinedText && !refinedText.includes('Error:') && !refinedText.includes('missing')) {
+          finalPromptText = rawPrompt ? `${rawPrompt}, ${refinedText}` : refinedText;
+        } else {
+          finalPromptText = rawPrompt || 'cinematic portrait masterpiece';
+        }
+      } catch {
+        finalPromptText = rawPrompt || 'cinematic portrait masterpiece';
+      }
+    } else {
+      // No image: skip Vision API for instant generation
+      finalPromptText = rawPrompt;
     }
-    
-    const finalPromptText = refinedText + `, style: ${activeArtStyle}, high resolution, 8k, masterpiece`;
+
+    finalPromptText += `, ${activeArtStyle} style, ultra detailed, 8k, masterpiece`;
     const finalPrompt = encodeURIComponent(finalPromptText);
 
-    // 2. Generate Image (Pollinations API)
+    // Generate Image via Pollinations AI
     const seed = Math.floor(Math.random() * 1000000);
     const imageUrl = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
 
-    // Wait for image to load
     const tempImg = new Image();
     tempImg.src = imageUrl;
+
+    tempImg.onerror = () => {
+      showToast('Image generation failed. Try a different or simpler prompt.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="ph ph-magic-wand"></i> Brew Masterpiece';
+      loader!.style.display = 'none';
+      empty.style.display = 'block';
+    };
+
     tempImg.onload = () => {
       img.src = imageUrl;
       img.style.display = 'block';
