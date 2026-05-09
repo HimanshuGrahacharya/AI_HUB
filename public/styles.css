@@ -5937,3 +5937,68 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 }
+
+/* ==========================================================================
+   AI RESPONSE TYPOGRAPHY (WORLD-CLASS)
+   ========================================================================== */
+.arena-response-content, .message-content {
+  line-height: 1.7;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: 'Inter', sans-serif;
+}
+
+.arena-response-content p, .message-content p {
+  margin-bottom: 1.2rem;
+}
+
+.arena-response-content h1, .arena-response-content h2, .arena-response-content h3,
+.message-content h1, .message-content h2, .message-content h3 {
+  color: var(--primary-light);
+  margin: 1.5rem 0 1rem;
+  font-weight: 700;
+}
+
+.arena-response-content ul, .arena-response-content ol,
+.message-content ul, .message-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.arena-response-content li, .message-content li {
+  margin-bottom: 0.6rem;
+}
+
+.arena-response-content code, .message-content code {
+  background: rgba(99, 102, 241, 0.15);
+  color: #c7d2fe;
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.85em;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.arena-response-content pre, .message-content pre {
+  margin: 1.5rem 0;
+  border-radius: 16px !important;
+  background: #0f172a !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 1.5rem !important;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.arena-response-content blockquote, .message-content blockquote {
+  border-left: 4px solid var(--primary);
+  background: rgba(99, 102, 241, 0.05);
+  padding: 1.2rem 1.8rem;
+  margin: 1.5rem 0;
+  border-radius: 0 16px 16px 0;
+  font-style: italic;
+  color: #cbd5e1;
+}
+
+.arena-response-content strong, .message-content strong {
+  color: #fff;
+  font-weight: 700;
+}

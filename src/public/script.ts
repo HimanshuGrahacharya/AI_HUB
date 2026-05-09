@@ -1,4 +1,4 @@
-﻿interface AITool {
+interface AITool {
   id: string;
   name: string;
   description: string;
