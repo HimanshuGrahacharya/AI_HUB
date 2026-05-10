@@ -7299,6 +7299,7 @@ body:not(.dark-mode) .profile-details-grid {
   margin-bottom: 8px;
   background-size: cover;
   background-position: center;
+  background-color: rgba(255, 255, 255, 0.05); /* Professional placeholder */
   transition: transform 0.5s;
 }
 
