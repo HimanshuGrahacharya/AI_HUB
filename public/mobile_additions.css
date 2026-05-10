@@ -44,7 +44,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     top: 0;
     left: 0;
     bottom: 0;
-    width: 240px; /* Compact professional width - matches red border */
+    width: 260px; /* Slightly wider to fit all text */
     transform: translateX(-100%);
     z-index: 6000; /* Above navbar and mobile nav */
     display: block !important;
@@ -56,7 +56,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    padding: 20px 16px 100px !important;
+    padding: 20px 16px 100px 16px !important;
     box-shadow: none;
     /* Smooth scrolling */
     scroll-behavior: smooth;
@@ -418,9 +418,10 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     gap: 10px !important;
     transition: background 0.2s ease, color 0.2s ease !important;
     border: none !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    /* Allow text to show fully */
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow: visible !important;
   }
 
   /* Icons inside items - compact */
