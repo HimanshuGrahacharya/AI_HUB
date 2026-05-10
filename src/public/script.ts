@@ -6652,42 +6652,28 @@ Example: "Olive-skinned Indian male, approximately 45 years old, sharp jawline, 
         finalPromptText = `${rawPrompt || 'artistic masterpiece'}, ultra detailed, 8k`;
       }
     } else {
-      // No image: use raw prompt directly for speed and accuracy
       finalPromptText = rawPrompt;
     }
 
     finalPromptText += `, ${activeArtStyle} style, ultra detailed, 8k, masterpiece`;
-    const finalPrompt = encodeURIComponent(finalPromptText);
+    const safePrompt = finalPromptText.substring(0, 800); // URL safety truncation
+    const finalPrompt = encodeURIComponent(safePrompt);
 
     // Generate Image via Pollinations AI
     const seed = Math.floor(Math.random() * 1000000);
     const imageUrl = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
-
-    const tempImg = new Image();
-    tempImg.src = imageUrl;
-
-    tempImg.onerror = () => {
-      showToast('Image generation failed. Try a different or simpler prompt.', 'error');
+    
+    img.src = imageUrl;
+    img.onload = () => {
       btn.disabled = false;
       btn.innerHTML = '<i class="ph ph-magic-wand"></i> Brew Masterpiece';
       loader!.style.display = 'none';
-      empty.style.display = 'block';
-    };
-
-    tempImg.onload = () => {
-      img.src = imageUrl;
       img.style.display = 'block';
-      loader!.style.display = 'none';
       actions!.style.display = 'flex';
-      btn.disabled = false;
-      btn.innerHTML = '<i class="ph ph-magic-wand"></i> Brew Masterpiece';
-      
-      // Clear attachment after use
-      attachedStudioFile = null;
-      document.getElementById('studio-attachments')!.innerHTML = '';
-      (document.getElementById('studio-file-input') as HTMLInputElement).value = '';
-      
-      showToast('Masterpiece Materialised!', 'success');
+      showToast('Masterpiece Materialized!', 'success');
+    };
+    img.onerror = () => {
+      throw new Error('Image generation failed');
     };
   } catch (e) {
     showToast('Failed to materialize. System disturbance detected.', 'error');
@@ -6991,9 +6977,11 @@ const originalAddWarLog = addWarLog;
   const promptInput = document.getElementById('studio-prompt') as HTMLTextAreaElement;
   const rawPrompt = promptInput.value.trim();
 
-  loading.style.display = 'flex';
-  loading.innerHTML = '<div class="forge-spinner"></div><span>Retrying...</span>';
-  img.style.display = 'none';
+  if (loading) {
+    loading.style.display = 'flex';
+    loading.innerHTML = '<div class="forge-spinner"></div><span>Retrying...</span>';
+  }
+  if (img) img.style.display = 'none';
 
   const allStyles = [
     'cinematic, hyper-realistic, 8k, dramatic lighting, movie still',
@@ -7008,7 +6996,21 @@ const originalAddWarLog = addWarLog;
 
   const finalPrompt = encodeURIComponent(`${rawPrompt || 'artistic masterpiece'}, ${allStyles[i]}`);
   const seed = Math.floor(Math.random() * 1000000);
-  img.src = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+  const url = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+  
+  if (img) {
+    img.src = url;
+    img.onload = () => {
+      if (loading) loading.style.display = 'none';
+      img.style.display = 'block';
+      showToast(`Style ${i+1} recovered!`, 'success');
+    };
+    img.onerror = () => {
+      if (loading) {
+        loading.innerHTML = '<span class="error-text">Forge Failed</span><button class="btn-retry-mini" onclick="retryForgeCell(' + i + ')"><i class="ph ph-arrows-counter-clockwise"></i> Retry</button>';
+      }
+    };
+  }
 };
 
 (window as any).selectForgeImage = function(index: number) {
@@ -7027,7 +7029,7 @@ const originalAddWarLog = addWarLog;
   actions!.style.display = 'flex';
   
   // Highlight selected
-  for(let i=0; i<4; i++) {
+  for(let i=0; i<8; i++) {
     document.getElementById(`forge-cell-${i}`)?.classList.toggle('selected', i === index);
   }
   
