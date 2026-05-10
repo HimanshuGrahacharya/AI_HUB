@@ -6002,11 +6002,11 @@ body:not(.dark-mode) .profile-details-grid {
 }
 
 .news-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-card);
   backdrop-filter: blur(10px);
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   display: flex;
@@ -6016,8 +6016,8 @@ body:not(.dark-mode) .profile-details-grid {
 .news-card:hover {
   transform: translateY(-10px);
   border-color: var(--primary);
-  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
-  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  background: var(--bg-card-hover);
 }
 
 .news-img {
@@ -6057,12 +6057,12 @@ body:not(.dark-mode) .profile-details-grid {
   font-weight: 700;
   margin-bottom: 12px;
   line-height: 1.4;
-  color: white;
+  color: var(--text-main);
 }
 
 .news-card p {
   font-size: 0.95rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 0;
 }
