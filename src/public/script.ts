@@ -6934,30 +6934,43 @@ const originalAddWarLog = addWarLog;
     ];
 
     const activeStyles = allStyles.slice(0, activeForgeCount);
+    const safeBasePrompt = basePrompt.substring(0, 500); // Truncate for URL safety
 
     const promises = activeStyles.map(async (style, i) => {
-      // Staggered delay to prevent API rate limiting
-      await new Promise(r => setTimeout(r, i * 400));
+      // Increased staggered delay to prevent API rate limiting (0ms, 600ms, 1200ms, etc.)
+      await new Promise(r => setTimeout(r, i * 600));
       
-      const finalPrompt = encodeURIComponent(`${basePrompt}, ${style}`);
+      const finalPrompt = encodeURIComponent(`${safeBasePrompt}, ${style}`);
       const seed = Math.floor(Math.random() * 1000000);
-      const url = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+      const primaryUrl = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+      const fallbackUrl = `https://pollinations.ai/p/${finalPrompt}?seed=${seed}&width=1024&height=1024&model=flux`;
       
       return new Promise((resolve) => {
         const img = document.getElementById(`forge-img-${i}`) as HTMLImageElement;
         const cell = document.getElementById(`forge-cell-${i}`);
         const loading = cell?.querySelector('.forge-loading') as HTMLElement;
         
-        img.src = url;
-        img.onload = () => {
-          loading.style.display = 'none';
-          img.style.display = 'block';
-          resolve(true);
+        let attempts = 0;
+        const tryLoad = (url: string) => {
+          img.src = url;
+          img.onload = () => {
+            loading.style.display = 'none';
+            img.style.display = 'block';
+            resolve(true);
+          };
+          img.onerror = () => {
+            if (attempts === 0) {
+              attempts++;
+              console.log(`Forge ${i} primary failed, trying fallback...`);
+              tryLoad(fallbackUrl);
+            } else {
+              loading.innerHTML = '<span class="error-text">Forge Failed</span><button class="btn-retry-mini" onclick="retryForgeCell(' + i + ')"><i class="ph ph-arrows-counter-clockwise"></i> Retry</button>';
+              resolve(false);
+            }
+          };
         };
-        img.onerror = () => {
-          loading.innerHTML = '<span class="error-text">Forge Failed</span><button class="btn-retry-mini" onclick="retryForgeCell(' + i + ')"><i class="ph ph-arrows-counter-clockwise"></i> Retry</button>';
-          resolve(false);
-        };
+
+        tryLoad(primaryUrl);
       });
     });
 
