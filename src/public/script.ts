@@ -4401,7 +4401,11 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebar?.classList.remove('active');
         document.getElementById('sidebar-overlay')?.classList.remove('show');
       }
+    });
+  });
 
+  // Sidebar Overlay Close
+  document.getElementById('sidebar-overlay')?.addEventListener('click', (window as any).toggleSidebar);
       const h1 = document.querySelector('.dashboard-hero h1');
       const cat = (item as HTMLElement).dataset.category;
       if (h1) {
