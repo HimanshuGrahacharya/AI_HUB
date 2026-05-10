@@ -14,14 +14,40 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
+    /* ── Theme Variables ── */
+    :root {
+      --bg-body: #f8faff;
+      --bg-auth: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+      --border: rgba(99, 102, 241, 0.1);
+      --input-bg: #f1f5f9;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --auth-gradient: radial-gradient(ellipse 80% 70% at 50% 30%, rgba(99,102,241,0.08) 0%, transparent 70%);
+    }
+
+    body.dark-mode {
+      --bg-body: #050510;
+      --bg-auth: #0d0d20;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --border: rgba(255, 255, 255, 0.07);
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --auth-gradient: radial-gradient(ellipse 80% 70% at 50% 30%, rgba(99,102,241,0.35) 0%, transparent 70%);
+    }
+
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
     body {
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
       display: flex;
-      background: #0a0a1a;
-      color: #e2e8f0;
+      background: var(--bg-body);
+      color: var(--text-main);
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* ── Left panel ── */
@@ -32,29 +58,27 @@
       justify-content: center;
       align-items: center;
       padding: 60px 5%;
-      background: radial-gradient(ellipse 80% 70% at 50% 30%, rgba(99,102,241,0.35) 0%, transparent 70%),
-                  radial-gradient(ellipse 60% 50% at 80% 80%, rgba(168,85,247,0.2) 0%, transparent 60%),
-                  #0a0a1a;
+      background: var(--auth-gradient), var(--bg-body);
       position: relative;
       overflow: hidden;
     }
     .auth-left::before {
       content: '';
       position: absolute; inset: 0;
-      background-image: radial-gradient(circle at 1px 1px, rgba(99,102,241,0.12) 1px, transparent 0);
+      background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
       background-size: 36px 36px;
     }
     .auth-left-content { position: relative; z-index: 1; text-align: center; max-width: 420px; }
     .auth-left-logo { display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:48px; }
     .auth-left-logo img { width:44px; height:44px; }
-    .auth-left-logo span { font-family:'Outfit',sans-serif; font-weight:800; font-size:1.6rem; color:#fff; }
-    .auth-left h2 { font-family:'Outfit',sans-serif; font-weight:800; font-size:clamp(1.8rem,3vw,2.4rem); color:#fff; line-height:1.15; margin-bottom:16px; }
+    .auth-left-logo span { font-family:'Outfit',sans-serif; font-weight:800; font-size:1.6rem; color:var(--text-main); }
+    .auth-left h2 { font-family:'Outfit',sans-serif; font-weight:800; font-size:clamp(1.8rem,3vw,2.4rem); color:var(--text-main); line-height:1.15; margin-bottom:16px; }
     .auth-left h2 span { background:linear-gradient(135deg,#818cf8,#c084fc); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .auth-left p { color:rgba(226,232,240,0.65); font-size:1rem; line-height:1.7; margin-bottom:40px; }
+    .auth-left p { color:var(--text-muted); font-size:1rem; line-height:1.7; margin-bottom:40px; }
     .auth-perks { display:flex; flex-direction:column; gap:14px; text-align:left; }
     .perk { display:flex; align-items:center; gap:12px; }
-    .perk .perk-icon { width:36px; height:36px; border-radius:10px; background:rgba(99,102,241,0.2); display:flex; align-items:center; justify-content:center; color:#818cf8; font-size:1rem; flex-shrink:0; }
-    .perk span { color:rgba(226,232,240,0.75); font-size:.92rem; }
+    .perk .perk-icon { width:36px; height:36px; border-radius:10px; background:rgba(99,102,241,0.1); display:flex; align-items:center; justify-content:center; color:#818cf8; font-size:1rem; flex-shrink:0; }
+    .perk span { color:var(--text-muted); font-size:.92rem; }
 
     /* ── Right panel (form) ── */
     .auth-right {
@@ -65,59 +89,48 @@
       justify-content: center;
       align-items: center;
       padding: 60px 40px;
-      background: #0d0d20;
-      border-left: 1px solid rgba(255,255,255,0.07);
+      background: var(--bg-auth);
+      border-left: 1px solid var(--border);
     }
     .auth-form-wrap { width: 100%; max-width: 380px; }
-    .auth-form-wrap h1 { font-family:'Outfit',sans-serif; font-weight:800; font-size:1.9rem; color:#fff; margin-bottom:6px; }
-    .auth-form-wrap .auth-sub { color:rgba(226,232,240,0.55); font-size:.9rem; margin-bottom:32px; }
-    .auth-form-wrap .auth-sub a { color:#818cf8; text-decoration:none; font-weight:600; }
+    .auth-form-wrap h1 { font-family:'Outfit',sans-serif; font-weight:800; font-size:1.9rem; color:var(--text-main); margin-bottom:6px; }
+    .auth-form-wrap .auth-sub { color:var(--text-subtle); font-size:.9rem; margin-bottom:32px; }
+    .auth-form-wrap .auth-sub a { color:var(--primary); text-decoration:none; font-weight:600; }
     .auth-form-wrap .auth-sub a:hover { text-decoration:underline; }
 
     .form-group { margin-bottom:18px; }
-    .form-group label { display:block; font-size:.82rem; font-weight:600; color:rgba(226,232,240,0.7); margin-bottom:7px; letter-spacing:.03em; text-transform:uppercase; }
+    .form-group label { display:block; font-size:.82rem; font-weight:600; color:var(--text-subtle); margin-bottom:7px; letter-spacing:.03em; text-transform:uppercase; }
     .input-wrap { position:relative; display:flex; align-items:center; }
-    .input-wrap .input-icon { position:absolute; left:14px; color:rgba(255,255,255,0.3); font-size:1.1rem; pointer-events:none; z-index:1; }
+    .input-wrap .input-icon { position:absolute; left:14px; color:var(--text-subtle); font-size:1.1rem; pointer-events:none; z-index:1; }
     .input-wrap input {
       width:100%; padding:13px 14px 13px 42px;
-      background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-      border-radius:12px; color:#fff; font-size:.95rem; font-family:'Inter',sans-serif;
+      background:var(--input-bg); border:1px solid var(--border);
+      border-radius:12px; color:var(--text-main); font-size:.95rem; font-family:'Inter',sans-serif;
       outline:none; transition:all .25s;
     }
-    .input-wrap input::placeholder { color:rgba(255,255,255,0.25); }
-    .input-wrap input:focus { border-color:rgba(99,102,241,0.6); background:rgba(99,102,241,0.06); box-shadow:0 0 0 3px rgba(99,102,241,0.12); }
-    .input-wrap input:-webkit-autofill,
-    .input-wrap input:-webkit-autofill:hover, 
-    .input-wrap input:-webkit-autofill:focus, 
-    .input-wrap input:-webkit-autofill:active{
-      -webkit-box-shadow: 0 0 0 30px #0d0d20 inset !important;
-      -webkit-text-fill-color: white !important;
-      transition: background-color 5000s ease-in-out 0s;
-    }
-    .input-wrap .toggle-pw { position:absolute; right:14px; color:rgba(255,255,255,0.3); cursor:pointer; font-size:1.1rem; transition:color .2s; }
-    .input-wrap .toggle-pw:hover { color:rgba(255,255,255,0.6); }
-
+    .input-wrap input::placeholder { color:var(--text-subtle); opacity: 0.5; }
+    .input-wrap input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(99,102,241,0.12); }
+    
     .form-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
     .checkbox-label { display:flex; align-items:center; gap:8px; cursor:pointer; }
-    .checkbox-label input[type="checkbox"] { width:16px; height:16px; accent-color:#6366f1; cursor:pointer; }
-    .checkbox-label span { font-size:.85rem; color:rgba(226,232,240,0.65); }
-    .forgot-link { font-size:.85rem; color:#818cf8; text-decoration:none; font-weight:500; }
+    .checkbox-label input[type="checkbox"] { width:16px; height:16px; accent-color:var(--primary); cursor:pointer; }
+    .checkbox-label span { font-size:.85rem; color:var(--text-muted); }
+    .forgot-link { font-size:.85rem; color:var(--primary); text-decoration:none; font-weight:500; }
     .forgot-link:hover { text-decoration:underline; }
 
     .btn-submit {
       width:100%; padding:14px;
-      background:linear-gradient(135deg,#6366f1,#8b5cf6);
+      background:linear-gradient(135deg, var(--primary), #8b5cf6);
       color:#fff; border:none; border-radius:12px;
       font-family:'Outfit',sans-serif; font-weight:700; font-size:1rem;
       cursor:pointer; transition:all .3s; letter-spacing:.02em;
-      box-shadow:0 6px 24px rgba(99,102,241,0.35);
+      box-shadow:0 6px 24px rgba(99,102,241,0.25);
     }
-    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(99,102,241,0.5); }
-    .btn-submit:active { transform:translateY(0); }
+    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(99,102,241,0.4); }
 
     .divider { display:flex; align-items:center; gap:14px; margin:24px 0; }
-    .divider::before, .divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.1); }
-    .divider span { color:rgba(226,232,240,0.4); font-size:.82rem; white-space:nowrap; }
+    .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--border); }
+    .divider span { color:var(--text-subtle); font-size:.82rem; white-space:nowrap; }
 
     .btn-facebook {
       width:100%; padding:13px;
@@ -126,25 +139,13 @@
       cursor:pointer; transition:all .3s; display:flex; align-items:center; justify-content:center; gap:8px;
       margin-bottom:12px;
     }
-    .btn-facebook:hover { background:#1464d8; transform:translateY(-1px); }
 
-    #google-signin-btn { 
-      width: 100%; 
-      display: flex; 
-      justify-content: center; 
-      margin-top: 10px;
-    }
-    #google-signin-btn > div { 
-      width: 100% !important; 
-      display: flex !important;
-      justify-content: center !important;
-    }
+    #google-signin-btn { width: 100%; display: flex; justify-content: center; margin-top: 10px; }
 
-    .auth-switch { margin-top:28px; text-align:center; font-size:.9rem; color:rgba(226,232,240,0.5); }
-    .auth-switch a { color:#818cf8; font-weight:600; text-decoration:none; }
+    .auth-switch { margin-top:28px; text-align:center; font-size:.9rem; color:var(--text-subtle); }
+    .auth-switch a { color:var(--primary); font-weight:600; text-decoration:none; }
     .auth-switch a:hover { text-decoration:underline; }
 
-    /* ── Responsive ── */
     @media (max-width: 900px) {
       .auth-left { display:none; }
       .auth-right { width:100%; border-left:none; padding:40px 24px; }
@@ -155,9 +156,15 @@
       .form-row { flex-direction:column; align-items:flex-start; gap:10px; }
     }
   </style>
+  <script>
+    // Immediate Theme Detection
+    (function() {
+      const isDark = localStorage.getItem('dark-mode') === 'true';
+      if (isDark) document.body.classList.add('dark-mode');
+    })();
+  </script>
 </head>
 <body>
-
   <!-- Left decorative panel -->
   <div class="auth-left">
     <div class="auth-left-content">
@@ -165,13 +172,12 @@
         <img src="logos/ai-hubs-logo.svg" alt="HSG AI HUB">
         <span>HSG AI HUB</span>
       </div>
-      <h2>Welcome Back to<br><span>HSG AI HUB</span></h2>
-      <p>Your personal hub for discovering and interacting with 500+ of the world's best AI tools.</p>
+      <h2>Welcome Back to the<br><span>AI Revolution</span></h2>
+      <p>Log in to your dashboard to access your saved tools, personalized arena, and history.</p>
       <div class="auth-perks">
-        <div class="perk"><div class="perk-icon"><i class="ph ph-squares-four"></i></div><span>Access 500+ curated AI tools</span></div>
-        <div class="perk"><div class="perk-icon"><i class="ph ph-star"></i></div><span>Save favourites & build your toolkit</span></div>
-        <div class="perk"><div class="perk-icon"><i class="ph ph-chat-circle-dots"></i></div><span>Chat with AI models in real-time</span></div>
-        <div class="perk"><div class="perk-icon"><i class="ph ph-lightning"></i></div><span>Instant access — no delays</span></div>
+        <div class="perk"><div class="perk-icon"><i class="ph ph-lightning"></i></div><span>Access 500+ AI models instantly</span></div>
+        <div class="perk"><div class="perk-icon"><i class="ph ph-star"></i></div><span>Continue where you left off</span></div>
+        <div class="perk"><div class="perk-icon"><i class="ph ph-shield-check"></i></div><span>Enterprise-grade security</span></div>
       </div>
     </div>
   </div>
@@ -179,48 +185,51 @@
   <!-- Right form panel -->
   <div class="auth-right">
     <div class="auth-form-wrap">
-      <h1>Sign In</h1>
-      <p class="auth-sub">Don't have an account? <a href="signup.html">Sign up free</a></p>
+      <h1>Welcome Back</h1>
+      <p class="auth-sub">New to HSG AI HUB? <a href="signup.html">Create an account</a></p>
 
-      <form id="login-form" autocomplete="on">
+      <form id="login-form">
         <div class="form-group">
-          <label for="identifier">Email Address or Mobile Number</label>
+          <label for="email">Email Address</label>
           <div class="input-wrap">
-            <i class="ph ph-user input-icon"></i>
-            <input type="text" id="identifier" name="identifier" placeholder="Email or Mobile Number" required autocomplete="username" inputmode="email">
+            <i class="ph ph-envelope input-icon"></i>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
           </div>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
           <div class="input-wrap">
             <i class="ph ph-lock input-icon"></i>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
-            <i class="ph ph-eye toggle-pw" id="toggle-pw" onclick="togglePassword('password','toggle-pw')"></i>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
+            <i class="ph ph-eye toggle-pw" id="toggle-pw" onclick="togglePassword()"></i>
           </div>
         </div>
+
         <div class="form-row">
           <label class="checkbox-label">
-            <input type="checkbox" id="remember" name="remember">
+            <input type="checkbox" name="remember">
             <span>Remember me</span>
           </label>
-          <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+          <a href="#" class="forgot-link">Forgot password?</a>
         </div>
-        <button type="submit" class="btn-submit">Sign In to HSG AI HUB</button>
+
+        <button type="submit" class="btn-submit">Sign In</button>
       </form>
 
       <div class="divider"><span>or continue with</span></div>
 
+      <button class="btn-facebook"><i class="ph-fill ph-facebook-logo"></i> Facebook</button>
       <div id="google-signin-btn"></div>
 
-      <p class="auth-switch">New to HSG AI HUB? <a href="signup.html">Create a free account</a></p>
+      <p class="auth-switch">Don't have an account? <a href="signup.html">Join for free</a></p>
     </div>
   </div>
 
   <script src="auth.js?v=5"></script>
   <script>
-    function togglePassword(inputId, iconId) {
-      const input = document.getElementById(inputId);
-      const icon = document.getElementById(iconId);
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const icon = document.getElementById('toggle-pw');
       if (input.type === 'password') {
         input.type = 'text';
         icon.className = 'ph ph-eye-slash toggle-pw';
@@ -229,7 +238,6 @@
         icon.className = 'ph ph-eye toggle-pw';
       }
     }
-    
   </script>
 </body>
 </html>

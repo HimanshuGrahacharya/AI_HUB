@@ -6162,7 +6162,7 @@ body:not(.dark-mode) .profile-details-grid {
 .search-item-title {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--text-main);
   display: block;
 }
 
