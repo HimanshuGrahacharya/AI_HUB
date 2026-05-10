@@ -8175,6 +8175,10 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   font-weight: 700;
 }
 
+.arena-response-content h1, .message-content h1 { font-size: 1.6rem !important; line-height: 1.3 !important; }
+.arena-response-content h2, .message-content h2 { font-size: 1.3rem !important; line-height: 1.4 !important; }
+.arena-response-content h3, .message-content h3 { font-size: 1.1rem !important; line-height: 1.5 !important; }
+
 .arena-response-content ul, .arena-response-content ol,
 .message-content ul, .message-content ol {
   margin-bottom: 1.25rem;
