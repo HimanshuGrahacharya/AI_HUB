@@ -6053,16 +6053,9 @@ let activeForgeCount = 4;
     
     // Prevent body scroll when sidebar is open - PROFESSIONAL BEHAVIOR
     if (isOpening) {
-      // Save current scroll position
-      const scrollY = window.scrollY;
-      document.body.style.top = `-${scrollY}px`;
       document.body.classList.add('sidebar-open');
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
       document.body.classList.remove('sidebar-open');
-      document.body.style.top = '';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
   }
 };

@@ -149,34 +149,41 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   /* Prevent background scroll when sidebar is open - PROFESSIONAL BEHAVIOR */
   body.sidebar-open {
     overflow: hidden !important;
-    position: fixed !important;
-    width: 100% !important;
-    height: 100% !important;
+    /* Don't use position: fixed - it breaks sidebar scroll */
     touch-action: none !important; /* Prevent touch scrolling */
   }
 
   body.sidebar-open .dashboard-main {
     overflow: hidden !important;
     touch-action: none !important;
+    pointer-events: none !important; /* Disable all interactions */
   }
 
   body.sidebar-open .content-area {
     overflow: hidden !important;
     touch-action: none !important;
+    pointer-events: none !important;
   }
 
   body.sidebar-open .navbar {
     touch-action: none !important;
+    pointer-events: none !important;
   }
 
   body.sidebar-open .mobile-nav {
     touch-action: none !important;
+    pointer-events: none !important;
   }
 
   /* Ensure sidebar can still scroll when open */
   body.sidebar-open .sidebar {
     overflow-y: scroll !important;
     touch-action: pan-y !important; /* Allow vertical scrolling only in sidebar */
+    pointer-events: auto !important; /* Re-enable interactions in sidebar */
+  }
+
+  body.sidebar-open .sidebar * {
+    pointer-events: auto !important; /* Re-enable interactions for sidebar children */
   }
 
   .sidebar-overlay {
