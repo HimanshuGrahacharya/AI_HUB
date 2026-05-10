@@ -302,6 +302,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     max-height: 90vh !important; 
     padding: 24px 20px !important; 
   }
+  .preloader-name { font-size: 1.6rem !important; }
   .toast-container { bottom: 90px !important; left: 10px !important; right: 10px !important; width: 100% !important; }
   .arena-textarea-wrapper textarea { height: 80px; }
 

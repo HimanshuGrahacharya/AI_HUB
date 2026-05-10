@@ -6284,6 +6284,23 @@ body:not(.dark-mode) .profile-details-grid {
   gap: 15px;
 }
 
+.preloader-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  text-shadow: 0 0 30px var(--glow-primary);
+  animation: glowText 2s ease-in-out infinite alternate;
+}
+
+@keyframes glowText {
+  from { text-shadow: 0 0 20px var(--glow-primary); }
+  to { text-shadow: 0 0 40px var(--glow-primary), 0 0 10px white; }
+}
+
 .boot-text {
   font-family: 'Outfit', sans-serif;
   font-size: 0.85rem;
