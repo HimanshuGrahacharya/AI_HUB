@@ -3011,11 +3011,14 @@ body:not(.dark-mode) .about-stats {
     gap: 0;
   }
 
+  /* Hide sidebar from flex layout — it's a fixed overlay on mobile */
   .sidebar {
+    display: none;
     position: fixed;
-    left: -300px;
+    left: 0;
     top: 0;
     bottom: 0;
+    width: 280px;
     height: 100vh;
     z-index: 2000;
     background: #0f172a;
@@ -3024,13 +3027,20 @@ body:not(.dark-mode) .about-stats {
     box-shadow: 4px 0 40px rgba(0, 0, 0, 0.8);
     border-right: 1px solid rgba(99, 102, 241, 0.2);
     padding-top: 80px;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* When hamburger opens it — show as overlay */
   .sidebar.active {
-    left: 0;
+    display: block;
+    transform: translateX(0);
   }
 
+  /* Content fills full width on mobile */
   .content-area {
+    width: 100%;
     padding: 20px 10px 100px;
   }
 
@@ -3321,16 +3331,7 @@ body:not(.dark-mode) .about-stats {
 }
 
 /* Sidebar Overlay and Mobile Fixes */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 6, 23, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 1500;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.6); z-index: 1500; opacity: 0; transition: opacity 0.3s ease; }
 
 .sidebar-overlay.show {
   display: block;
@@ -3343,23 +3344,7 @@ body:not(.dark-mode) .about-stats {
     gap: 0;
   }
 
-  .sidebar {
-    position: fixed;
-    left: -300px;
-    top: 80px;
-    bottom: 0;
-    z-index: 2000;
-    background: rgba(15, 23, 42, 0.98);
-    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
-  }
-
-  .sidebar.active {
-    left: 0;
-  }
-
-  .content-area {
-    padding: 20px 10px 100px;
-  }
+  .sidebar { display: none; position: fixed; left: 0; top: 0; height: 100vh; width: 280px; z-index: 2000; background: #0f172a; backdrop-filter: none; box-shadow: 4px 0 40px rgba(0,0,0,0.8); border-right: 1px solid rgba(99,102,241,0.2); padding-top: 80px; overflow-y: auto; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }\n  .sidebar.active { display: block; transform: translateX(0); }\n  .content-area { width: 100%; padding: 20px 10px 100px; }
 
   .dashboard-hero {
     padding: 40px 20px;
@@ -3648,16 +3633,7 @@ body:not(.dark-mode) .about-stats {
 }
 
 /* Sidebar Overlay and Mobile Fixes */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 6, 23, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 1500;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.6); z-index: 1500; opacity: 0; transition: opacity 0.3s ease; }
 
 .sidebar-overlay.show {
   display: block;
@@ -3670,23 +3646,7 @@ body:not(.dark-mode) .about-stats {
     gap: 0;
   }
 
-  .sidebar {
-    position: fixed;
-    left: -300px;
-    top: 80px;
-    bottom: 0;
-    z-index: 2000;
-    background: rgba(15, 23, 42, 0.98);
-    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
-  }
-
-  .sidebar.active {
-    left: 0;
-  }
-
-  .content-area {
-    padding: 20px 10px 100px;
-  }
+  .sidebar { display: none; position: fixed; left: 0; top: 0; height: 100vh; width: 280px; z-index: 2000; background: #0f172a; backdrop-filter: none; box-shadow: 4px 0 40px rgba(0,0,0,0.8); border-right: 1px solid rgba(99,102,241,0.2); padding-top: 80px; overflow-y: auto; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }\n  .sidebar.active { display: block; transform: translateX(0); }\n  .content-area { width: 100%; padding: 20px 10px 100px; }
 
   .dashboard-hero {
     padding: 40px 20px;
@@ -3975,16 +3935,7 @@ body:not(.dark-mode) .about-stats {
 }
 
 /* Sidebar Overlay and Mobile Fixes */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 6, 23, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 1500;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.6); z-index: 1500; opacity: 0; transition: opacity 0.3s ease; }
 
 .sidebar-overlay.show {
   display: block;
@@ -3997,23 +3948,7 @@ body:not(.dark-mode) .about-stats {
     gap: 0;
   }
 
-  .sidebar {
-    position: fixed;
-    left: -300px;
-    top: 80px;
-    bottom: 0;
-    z-index: 2000;
-    background: rgba(15, 23, 42, 0.98);
-    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
-  }
-
-  .sidebar.active {
-    left: 0;
-  }
-
-  .content-area {
-    padding: 20px 10px 100px;
-  }
+  .sidebar { display: none; position: fixed; left: 0; top: 0; height: 100vh; width: 280px; z-index: 2000; background: #0f172a; backdrop-filter: none; box-shadow: 4px 0 40px rgba(0,0,0,0.8); border-right: 1px solid rgba(99,102,241,0.2); padding-top: 80px; overflow-y: auto; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }\n  .sidebar.active { display: block; transform: translateX(0); }\n  .content-area { width: 100%; padding: 20px 10px 100px; }
 
   .dashboard-hero {
     padding: 40px 20px;
@@ -4302,16 +4237,7 @@ body:not(.dark-mode) .about-stats {
 }
 
 /* Sidebar Overlay and Mobile Fixes */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 6, 23, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 1500;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.6); z-index: 1500; opacity: 0; transition: opacity 0.3s ease; }
 
 .sidebar-overlay.show {
   display: block;
@@ -4324,23 +4250,7 @@ body:not(.dark-mode) .about-stats {
     gap: 0;
   }
 
-  .sidebar {
-    position: fixed;
-    left: -300px;
-    top: 80px;
-    bottom: 0;
-    z-index: 2000;
-    background: rgba(15, 23, 42, 0.98);
-    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
-  }
-
-  .sidebar.active {
-    left: 0;
-  }
-
-  .content-area {
-    padding: 20px 10px 100px;
-  }
+  .sidebar { display: none; position: fixed; left: 0; top: 0; height: 100vh; width: 280px; z-index: 2000; background: #0f172a; backdrop-filter: none; box-shadow: 4px 0 40px rgba(0,0,0,0.8); border-right: 1px solid rgba(99,102,241,0.2); padding-top: 80px; overflow-y: auto; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }\n  .sidebar.active { display: block; transform: translateX(0); }\n  .content-area { width: 100%; padding: 20px 10px 100px; }
 
   .dashboard-hero {
     padding: 40px 20px;
@@ -8722,3 +8632,5 @@ div.code-toolbar > .toolbar .toolbar-item button:hover {
   border-color: transparent;
   box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
 }
+
+
