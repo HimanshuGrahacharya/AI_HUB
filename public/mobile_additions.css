@@ -45,6 +45,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     left: 0;
     bottom: 0;
     width: 260px; /* Slightly wider to fit all text */
+    height: 100vh; /* Full viewport height */
     transform: translateX(-100%);
     z-index: 6000; /* Above navbar and mobile nav */
     display: block !important;
@@ -54,9 +55,9 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     -webkit-backdrop-filter: none !important;
     border-right: 1px solid rgba(99, 102, 241, 0.25) !important;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto !important;
+    overflow-y: scroll !important; /* Force scrollbar to always show */
     overflow-x: hidden !important;
-    padding: 20px 16px 100px 16px !important;
+    padding: 20px 16px 120px 16px !important; /* Extra bottom padding for mobile nav */
     box-shadow: none;
     /* Smooth scrolling */
     scroll-behavior: smooth;
@@ -69,22 +70,33 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     border-right: 1px solid rgba(99, 102, 241, 0.15) !important;
   }
 
-  /* Sidebar scrollbar styling */
+  /* Sidebar scrollbar styling - more visible */
   .sidebar::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
 
   .sidebar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .sidebar::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.05);
     border-radius: 10px;
   }
 
+  .sidebar::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.4);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
   .sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(99, 102, 241, 0.5);
+    background: rgba(99, 102, 241, 0.6);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* For Firefox */
+  .sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99, 102, 241, 0.4) rgba(99, 102, 241, 0.05);
   }
 
   /* Ensure sidebar sections have proper spacing - compact */
