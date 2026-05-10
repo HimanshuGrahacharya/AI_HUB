@@ -6113,10 +6113,18 @@ async function fetchLiveAINews() {
 }
 
 async function fetchFallbackRSS() {
+  // Comprehensive Worldwide AI Feeds (News, YouTube, Podcasts)
   const feeds = [
-    'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml',
+    // 1. Current Worldwide News (Google News AI Aggregation)
+    'https://news.google.com/rss/search?q=Artificial+Intelligence+OR+Machine+Learning+when:7d&hl=en-US&gl=US&ceid=US:en',
+    // 2. High-Quality Tech News
     'https://techcrunch.com/category/artificial-intelligence/feed/',
-    'https://wired.com/feed/category/ai/latest/rss'
+    // 3. YouTube: Matt Wolfe (AI News & Tutorials)
+    'https://www.youtube.com/feeds/videos.xml?channel_id=UCmXT3e0c0Zz93o43l5xZ_Jw',
+    // 4. YouTube: Two Minute Papers (AI Research)
+    'https://www.youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg',
+    // 5. Podcast: Lex Fridman (AI & Science)
+    'https://lexfridman.com/feed/podcast/'
   ];
   
   const allNews: any[] = [];
@@ -6127,11 +6135,26 @@ async function fetchFallbackRSS() {
       const data = await res.json();
       if (data.status === 'ok') {
         data.items.forEach((item: any) => {
+          // Identify source from URL or feed title
+          let sourceName = data.feed.title.split(' - ')[0] || 'AI News';
+          let itemType = 'article';
+          
+          if (item.link.includes('youtube.com')) {
+            sourceName = 'YouTube: ' + data.feed.title;
+            itemType = 'video';
+          } else if (item.link.includes('podcast') || feed.includes('podcast')) {
+            sourceName = 'Podcast: ' + data.feed.title;
+            itemType = 'audio';
+          } else if (feed.includes('google.com')) {
+            sourceName = item.source || 'Global AI News';
+          }
+
           allNews.push({
             title: item.title,
             link: item.link,
             pubDate: item.pubDate,
-            source: data.feed.title.split(' - ')[0] || 'AI News',
+            source: sourceName,
+            type: itemType, // Store type to potentially style differently later
             excerpt: item.description.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...',
             image: item.thumbnail || item.enclosure?.link || extractImageFromContent(item.content) || getRandomAIImage()
           });
@@ -6140,9 +6163,11 @@ async function fetchFallbackRSS() {
     } catch (e) {}
   }
   
+  // Sort by newest first
   const sorted = allNews.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
   globalNewsStore = sorted;
-  return sorted.slice(0, 15);
+  // Return more items since we have more feeds
+  return sorted.slice(0, 24);
 }
 
 async function initializeFeed() {
