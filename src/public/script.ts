@@ -5088,6 +5088,17 @@ function switchView(viewId: string) {
   const sidebar = document.querySelector('.sidebar') as HTMLElement;
   const navCenter = document.querySelector('.nav-center') as HTMLElement;
 
+  // Dynamic page title map — professional SaaS-grade naming
+  const titleMap: Record<string, string> = {
+    'dashboard':       'HSG AI HUB | The World\'s Most Powerful AI Dashboard',
+    'arena-container': '⚔️ AI Model Arena | HSG AI HUB',
+    'warroom-container': '🎯 Tactical AI War Room | HSG AI HUB',
+    'creative-studio': '🎨 AI Creative Studio | HSG AI HUB',
+    'intelligence-feed': '📡 AI Intelligence Feed | HSG AI HUB',
+    'chat-container':  '💬 AI Chat | HSG AI HUB',
+  };
+  document.title = titleMap[viewId] || 'HSG AI HUB';
+
   if (viewId === 'dashboard') {
     const grid = document.getElementById('ai-grid');
     const pagination = document.getElementById('pagination');

@@ -1291,7 +1291,7 @@ h1 {
 .theme-toggle {
   position: relative;
   background: white;
-  border: 2px solid var(--primary);
+  border: 2px solid #818cf8;
   border-radius: 50%;
   width: 44px;
   height: 44px;
@@ -1299,23 +1299,50 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: var(--transition);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   margin-left: 1rem;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-  color: var(--primary);
-  font-size: 1.2rem;
+  color: #818cf8;
+  font-size: 1.3rem;
+  z-index: 1;
+}
+
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border: 1.5px solid #818cf8;
+  border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(129, 140, 248, 0.4);
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
 }
 
 .dark-mode .theme-toggle {
   background: #1e293b;
-  border-color: #818cf8;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  color: #818cf8;
+  border-color: #a855f7;
+  color: #a855f7;
+}
+
+.dark-mode .theme-toggle::before {
+  border-color: #a855f7;
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.4);
 }
 
 .theme-toggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  transform: scale(1.1) rotate(15deg);
+}
+
+.theme-toggle:hover::before {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(129, 140, 248, 0.6);
+}
+
+.dark-mode .theme-toggle:hover::before {
+  box-shadow: 0 12px 30px rgba(168, 85, 247, 0.6);
 }
 
 /* User Profile Menu */
@@ -1482,6 +1509,11 @@ h1 {
 
 .dark-mode .category-item:not(.active) {
   color: #94a3b8;
+}
+
+.dark-mode .warroom-title h2,
+.dark-mode .studio-title h2 {
+  color: white;
 }
 
 .dark-mode .category-item:hover:not(.active) {
@@ -6516,7 +6548,7 @@ body:not(.dark-mode) .profile-details-grid {
 .warroom-title h2 {
   font-size: 2.2rem;
   font-weight: 800;
-  color: white;
+  color: var(--text-main);
   margin-bottom: 5px;
   display: flex;
   align-items: center;
@@ -6524,7 +6556,7 @@ body:not(.dark-mode) .profile-details-grid {
 }
 
 .warroom-title p {
-  color: var(--text-secondary);
+  color: var(--text-muted);
   font-size: 1.1rem;
 }
 
@@ -7010,8 +7042,8 @@ body:not(.dark-mode) .profile-details-grid {
   padding-bottom: 25px;
 }
 
-.studio-title h2 { font-size: 2.2rem; font-weight: 800; color: white; display: flex; align-items: center; gap: 15px; }
-.studio-title p { color: var(--text-secondary); font-size: 1.1rem; }
+.studio-title h2 { font-size: 2.2rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 15px; }
+.studio-title p { color: var(--text-muted); font-size: 1.1rem; }
 
 .studio-workspace {
   display: grid;
@@ -8335,10 +8367,10 @@ div.code-toolbar > .toolbar .toolbar-item button:hover {
   position: absolute;
   top: 24px;
   left: 24px;
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.05) !important;
   backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: var(--text-main) !important;
   padding: 10px 20px !important;
   border-radius: 12px !important;
   font-weight: 700 !important;
@@ -8353,9 +8385,21 @@ div.code-toolbar > .toolbar .toolbar-item button:hover {
 }
 
 .back-tools-btn:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  transform: translateX(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.dark-mode .back-tools-btn {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+.dark-mode .back-tools-btn:hover {
   background: rgba(255, 255, 255, 0.2) !important;
   border-color: white !important;
-  transform: translateX(-5px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 

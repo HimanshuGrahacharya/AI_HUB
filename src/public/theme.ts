@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!themeToggle) return;
 
   // Load saved preference (default: light)
-  const saved = localStorage.getItem('theme') || 'light';
-  if (saved === 'dark') {
+  const saved = localStorage.getItem('dark-mode') || 'false';
+  if (saved === 'true') {
     body.classList.add('dark-mode');
     setIcon(themeToggle, true);
   } else {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Toggle on click
   themeToggle.addEventListener('click', function () {
     const isDark = body.classList.toggle('dark-mode');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    localStorage.setItem('dark-mode', isDark.toString());
     setIcon(themeToggle, isDark);
   });
 
