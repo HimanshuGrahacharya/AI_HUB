@@ -44,8 +44,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     top: 0;
     left: 0;
     bottom: 0;
-    width: 75%; /* Wider sidebar - fits content better */
-    max-width: 320px; /* Cap at 320px for very large phones */
+    width: 240px; /* Compact professional width - matches red border */
     transform: translateX(-100%);
     z-index: 6000; /* Above navbar and mobile nav */
     display: block !important;
@@ -57,7 +56,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    padding: 30px 20px 100px !important;
+    padding: 20px 16px 100px !important;
     box-shadow: none;
     /* Smooth scrolling */
     scroll-behavior: smooth;
@@ -88,15 +87,15 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     background: rgba(99, 102, 241, 0.5);
   }
 
-  /* Ensure sidebar sections have proper spacing */
+  /* Ensure sidebar sections have proper spacing - compact */
   .sidebar .sidebar-section {
-    margin-bottom: 24px;
+    margin-bottom: 18px;
   }
 
   .sidebar .category-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -105,17 +104,17 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   .sidebar-close {
     display: flex !important;
     position: absolute;
-    top: 15px;
-    right: 15px;
-    width: 40px;
-    height: 40px;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: rgba(99, 102, 241, 0.15);
     border: 1px solid rgba(99, 102, 241, 0.25);
     color: var(--text-main);
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     cursor: pointer;
     z-index: 100;
     transition: all 0.2s ease;
@@ -388,16 +387,16 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   
   .profile-dropdown { right: -10px !important; width: 240px !important; }
   
-  /* ── Sidebar typography: match laptop look exactly ── */
+  /* ── Sidebar typography: compact professional style ── */
 
   /* Section headings: "Categories", "AI Agentic Tools", "My Hub" */
   .sidebar .sidebar-section h3 {
-    font-size: 1.1rem !important;
+    font-size: 0.95rem !important;
     font-weight: 800 !important;
     color: #ffffff !important;
     text-transform: none !important;
     letter-spacing: -0.01em !important;
-    margin: 24px 0 10px !important;
+    margin: 20px 0 8px !important;
     padding: 0 4px !important;
     opacity: 1 !important;
   }
@@ -407,23 +406,26 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     margin-top: 8px !important;
   }
 
-  /* Category list items */
+  /* Category list items - compact */
   .sidebar .category-item {
-    padding: 11px 14px !important;
-    font-size: 0.95rem !important;
+    padding: 9px 12px !important;
+    font-size: 0.88rem !important;
     font-weight: 500 !important;
     color: rgba(226, 232, 240, 0.85) !important;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    gap: 10px !important;
     transition: background 0.2s ease, color 0.2s ease !important;
     border: none !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
-  /* Icons inside items */
+  /* Icons inside items - compact */
   .sidebar .category-item i {
-    font-size: 1.1rem !important;
+    font-size: 1rem !important;
     opacity: 0.8;
     flex-shrink: 0;
   }
@@ -447,11 +449,11 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     opacity: 1 !important;
   }
 
-  /* Badges (NEW, WAR, ART) */
+  /* Badges (NEW, WAR, ART) - compact */
   .sidebar .badge-new,
   .sidebar .badge-premium {
-    font-size: 0.65rem !important;
-    padding: 2px 7px !important;
+    font-size: 0.6rem !important;
+    padding: 2px 6px !important;
     border-radius: 20px !important;
     font-weight: 700 !important;
     margin-left: auto !important;
@@ -545,19 +547,4 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   }
 }
 
-
-/* Small phones: slightly narrower sidebar */
-@media (max-width: 375px) {
-  .sidebar {
-    width: 85% !important;
-    max-width: 280px !important;
-  }
-}
-
-/* Very small phones: full width sidebar */
-@media (max-width: 320px) {
-  .sidebar {
-    width: 90% !important;
-    max-width: none !important;
-  }
-}
+/* Compact professional sidebar - fixed width for consistency */
