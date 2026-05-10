@@ -135,16 +135,21 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
    MODULES: STACKING & SPACING
    ========================================================================== */
 @media (max-width: 992px) {
-  .studio-workspace, .warroom-workspace { flex-direction: column !important; }
+  .studio-workspace, .warroom-workspace { 
+    display: flex !important; 
+    flex-direction: column !important; 
+    gap: 20px !important;
+    height: auto !important;
+  }
   .studio-controls, .warroom-agents { 
     width: 100% !important; 
     min-width: 100% !important; 
     border-right: none; 
     border-bottom: 1px solid var(--border); 
-    padding-bottom: 20px !important;
+    padding: 15px !important;
   }
   .style-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
-  .art-canvas { min-height: 260px !important; }
+  .art-canvas { min-height: 350px !important; width: 100% !important; }
 }
 
 @media (max-width: 768px) {
@@ -272,7 +277,28 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     max-height: 90vh !important; 
     padding: 24px 20px !important; 
   }
-  .toast-container { bottom: 90px !important; left: 10px !important; right: 10px !important; width: auto !important; }
+  .toast-container { bottom: 90px !important; left: 10px !important; right: 10px !important; width: 100% !important; }
+  .arena-textarea-wrapper textarea { height: 80px; }
+
+  /* Creative Studio & War Room Polish */
+  .creative-studio-container, .warroom-container { 
+    padding: 60px 15px 100px !important; 
+    gap: 20px !important; 
+    max-width: 100% !important;
+  }
+  .studio-header, .warroom-header { 
+    flex-direction: column !important; 
+    align-items: flex-start !important; 
+    gap: 15px !important; 
+    padding-bottom: 15px !important; 
+  }
+  .studio-title h2, .warroom-title h2 { font-size: 1.4rem !important; }
+  .studio-title p, .warroom-title p { font-size: 0.85rem !important; }
+  .back-tools-btn { position: static !important; margin-bottom: 10px !important; width: fit-content !important; }
+  
+  .style-thumb { height: 60px !important; }
+  .art-output-grid { grid-template-columns: 1fr !important; }
+  
   .profile-dropdown { right: -10px !important; width: 240px !important; }
   
   /* Sidebar typography polish */
