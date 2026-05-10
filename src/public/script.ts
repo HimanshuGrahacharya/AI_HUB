@@ -6898,6 +6898,9 @@ const originalAddWarLog = addWarLog;
     ];
 
     const promises = styles.map(async (style, i) => {
+      // Staggered delay to prevent API rate limiting (0ms, 400ms, 800ms, 1200ms)
+      await new Promise(r => setTimeout(r, i * 400));
+      
       const finalPrompt = encodeURIComponent(`${basePrompt}, ${style}`);
       const seed = Math.floor(Math.random() * 1000000);
       const url = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
@@ -6914,7 +6917,7 @@ const originalAddWarLog = addWarLog;
           resolve(true);
         };
         img.onerror = () => {
-          loading.innerHTML = '<span>Forge Failed</span>';
+          loading.innerHTML = '<span class="error-text">Forge Failed</span><button class="btn-retry-mini" onclick="retryForgeCell(' + i + ')"><i class="ph ph-arrows-counter-clockwise"></i> Retry</button>';
           resolve(false);
         };
       });
@@ -6928,6 +6931,29 @@ const originalAddWarLog = addWarLog;
     forgeBtn.disabled = false;
     forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge — 4 Styles at Once';
   }
+};
+
+(window as any).retryForgeCell = async function(i: number) {
+  const cell = document.getElementById(`forge-cell-${i}`);
+  const loading = cell?.querySelector('.forge-loading') as HTMLElement;
+  const img = document.getElementById(`forge-img-${i}`) as HTMLImageElement;
+  const promptInput = document.getElementById('studio-prompt') as HTMLTextAreaElement;
+  const rawPrompt = promptInput.value.trim();
+
+  loading.style.display = 'flex';
+  loading.innerHTML = '<div class="forge-spinner"></div><span>Retrying...</span>';
+  img.style.display = 'none';
+
+  const styles = [
+    'cinematic, hyper-realistic, 8k, dramatic lighting, movie still',
+    'cyberpunk style, neon glow, futuristic city, sharp edges, synthwave',
+    'classical oil painting, thick brushstrokes, museum masterpiece, rich textures',
+    'modern anime style, vibrant colors, clean lines, studio ghibli aesthetic'
+  ];
+
+  const finalPrompt = encodeURIComponent(`${rawPrompt || 'artistic masterpiece'}, ${styles[i]}`);
+  const seed = Math.floor(Math.random() * 1000000);
+  img.src = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
 };
 
 (window as any).selectForgeImage = function(index: number) {
