@@ -144,11 +144,8 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5) !important;
   }
 
-  /* Simple approach: just prevent body scroll, sidebar will work independently */
-  body.sidebar-open {
-    overflow: hidden !important;
-    height: 100vh !important;
-  }
+  /* Don't lock body - just make overlay cover everything */
+  /* The overlay will prevent interaction with background */
 
   .sidebar-overlay {
     position: fixed;

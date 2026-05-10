@@ -6047,16 +6047,8 @@ let activeForgeCount = 4;
   const sidebar = document.querySelector('.sidebar');
   const overlay = document.getElementById('sidebar-overlay');
   if (sidebar && overlay) {
-    const isOpening = !sidebar.classList.contains('active');
     sidebar.classList.toggle('active');
     overlay.classList.toggle('show');
-    
-    // Prevent body scroll when sidebar is open - PROFESSIONAL BEHAVIOR
-    if (isOpening) {
-      document.body.classList.add('sidebar-open');
-    } else {
-      document.body.classList.remove('sidebar-open');
-    }
   }
 };
 
