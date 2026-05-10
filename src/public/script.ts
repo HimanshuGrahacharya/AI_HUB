@@ -6042,6 +6042,13 @@ const aiVideosData = [
   }
 };
 
+// Global Command Palette Overlay Close
+document.getElementById('command-palette')?.addEventListener('click', (e) => {
+  if (e.target === document.getElementById('command-palette')) {
+    (window as any).toggleCommandPalette();
+  }
+});
+
 
 async function fetchLiveAINews() {
   const apiKey = '35fbf2639a3949b2b4d72d549e1935e5';

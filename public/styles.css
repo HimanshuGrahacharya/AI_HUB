@@ -7050,6 +7050,10 @@ body:not(.dark-mode) .profile-details-grid {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.palette-mobile-close {
+  display: none;
+}
+
 .palette-results {
   max-height: 450px;
   overflow-y: auto;

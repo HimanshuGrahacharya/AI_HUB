@@ -131,6 +131,31 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   }
 }
 
+@media (max-width: 768px) {
+  /* Command Palette Polish */
+  .command-palette-modal { 
+    width: 95% !important; 
+    margin: 10px auto !important; 
+  }
+  .palette-header { padding: 15px !important; }
+  .palette-esc { display: none !important; } /* No ESC key on mobile */
+  
+  .palette-mobile-close {
+    display: flex !important;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+  #palette-input { font-size: 1rem !important; }
+}
+
 /* ==========================================================================
    MODULES: STACKING & SPACING
    ========================================================================== */
