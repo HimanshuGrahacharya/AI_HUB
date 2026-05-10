@@ -6923,8 +6923,8 @@ const originalAddWarLog = addWarLog;
     const safeBasePrompt = basePrompt.substring(0, 500); // Truncate for URL safety
 
     const promises = activeStyles.map(async (style, i) => {
-      // Increased staggered delay significantly to prevent API rate limiting
-      await new Promise(r => setTimeout(r, i * 2000));
+      // Faster stagger (800ms) but relies on robust retry logic if rate-limited
+      await new Promise(r => setTimeout(r, i * 800));
       
       const finalPrompt = encodeURIComponent(`${safeBasePrompt}, ${style}`);
       const seed = Math.floor(Math.random() * 1000000);
@@ -6937,18 +6937,24 @@ const originalAddWarLog = addWarLog;
         const loading = cell?.querySelector('.forge-loading') as HTMLElement;
         
         let attempts = 0;
-        const tryLoad = (url: string) => {
+        const tryLoad = (baseLoadUrl: string) => {
+          // Add cache buster to force fresh request and bypass cached 429 errors
+          const url = baseLoadUrl + `&t=${Date.now()}`;
           img.src = url;
+          
           img.onload = () => {
             loading.style.display = 'none';
             img.style.display = 'block';
             resolve(true);
           };
+          
           img.onerror = () => {
-            if (attempts < 2) {
+            if (attempts < 3) {
               attempts++;
-              console.log(`Forge ${i} failed, attempt ${attempts}, retrying in 2.5s...`);
-              setTimeout(() => tryLoad(attempts === 1 ? fallbackUrl : primaryUrl + '&retry=1'), 2500);
+              console.log(`Forge ${i} failed, attempt ${attempts}, retrying...`);
+              setTimeout(() => {
+                tryLoad(attempts % 2 !== 0 ? fallbackUrl : primaryUrl);
+              }, 2000 * attempts); // Exponential backoff
             } else {
               loading.innerHTML = '<span class="error-text">Forge Failed</span><button class="btn-retry-mini" onclick="retryForgeCell(' + i + ')"><i class="ph ph-arrows-counter-clockwise"></i> Retry</button>';
               resolve(false);
@@ -6996,7 +7002,8 @@ const originalAddWarLog = addWarLog;
 
   const finalPrompt = encodeURIComponent(`${rawPrompt || 'artistic masterpiece'}, ${allStyles[i]}`);
   const seed = Math.floor(Math.random() * 1000000);
-  const url = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
+  // Cache buster ensures manual retry bypasses browser failure cache
+  const url = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true&t=${Date.now()}`;
   
   if (img) {
     img.src = url;
