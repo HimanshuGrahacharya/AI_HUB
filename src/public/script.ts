@@ -6923,8 +6923,8 @@ const originalAddWarLog = addWarLog;
     const safeBasePrompt = basePrompt.substring(0, 500); // Truncate for URL safety
 
     const promises = activeStyles.map(async (style, i) => {
-      // Increased staggered delay to prevent API rate limiting (0ms, 600ms, 1200ms, etc.)
-      await new Promise(r => setTimeout(r, i * 600));
+      // Increased staggered delay significantly to prevent API rate limiting
+      await new Promise(r => setTimeout(r, i * 2000));
       
       const finalPrompt = encodeURIComponent(`${safeBasePrompt}, ${style}`);
       const seed = Math.floor(Math.random() * 1000000);
@@ -6945,10 +6945,10 @@ const originalAddWarLog = addWarLog;
             resolve(true);
           };
           img.onerror = () => {
-            if (attempts === 0) {
+            if (attempts < 2) {
               attempts++;
-              console.log(`Forge ${i} primary failed, trying fallback...`);
-              tryLoad(fallbackUrl);
+              console.log(`Forge ${i} failed, attempt ${attempts}, retrying in 2.5s...`);
+              setTimeout(() => tryLoad(attempts === 1 ? fallbackUrl : primaryUrl + '&retry=1'), 2500);
             } else {
               loading.innerHTML = '<span class="error-text">Forge Failed</span><button class="btn-retry-mini" onclick="retryForgeCell(' + i + ')"><i class="ph ph-arrows-counter-clockwise"></i> Retry</button>';
               resolve(false);
