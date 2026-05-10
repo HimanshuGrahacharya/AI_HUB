@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // Themes: 'light', 'dark'
   const themes = ['light', 'dark'];
   
-  // Load saved preference (default: light)
-  let currentTheme = localStorage.getItem('active-theme') || 'light';
+  // Load saved preference (default: dark)
+  let currentTheme = localStorage.getItem('active-theme') || 'dark';
   
   // Initial Apply
   applyTheme(currentTheme);
