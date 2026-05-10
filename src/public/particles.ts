@@ -23,12 +23,9 @@ class Particle {
   }
 
   updateColor() {
-    const theme = document.body.classList.contains('cyber-mode') ? 'cyber' : 
-                  document.body.classList.contains('dark-mode') ? 'dark' : 'light';
-    
-    if (theme === 'cyber') {
-      this.color = `rgba(0, 255, 65, ${Math.random() * 0.5 + 0.3})`;
-    } else if (theme === 'dark') {
+    const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+
+    if (theme === 'dark') {
       this.color = Math.random() > 0.5 ? 'rgba(139, 92, 246, 0.6)' : 'rgba(6, 182, 212, 0.6)';
     } else {
       this.color = 'rgba(99, 102, 241, 0.4)';
@@ -92,16 +89,13 @@ class ParticleSystem {
 
   drawLines(p1: Particle, p2: Particle, dist: number) {
     const alpha = 1 - dist / this.maxDist;
-    const theme = document.body.classList.contains('cyber-mode') ? 'cyber' : 
-                  document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
     
     this.ctx.beginPath();
     this.ctx.moveTo(p1.x, p1.y);
     this.ctx.lineTo(p2.x, p2.y);
     
-    if (theme === 'cyber') {
-      this.ctx.strokeStyle = `rgba(0, 255, 65, ${alpha * 0.4})`;
-    } else if (theme === 'dark') {
+    if (theme === 'dark') {
       const grad = this.ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
       grad.addColorStop(0, `rgba(139, 92, 246, ${alpha * 0.5})`);
       grad.addColorStop(1, `rgba(6, 182, 212, ${alpha * 0.5})`);
@@ -118,10 +112,9 @@ class ParticleSystem {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // Draw grid
-    const theme = document.body.classList.contains('cyber-mode') ? 'cyber' : 
-                  document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
     
-    this.ctx.strokeStyle = theme === 'cyber' ? 'rgba(0, 255, 65, 0.05)' : 'rgba(255, 255, 255, 0.02)';
+    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
     this.ctx.lineWidth = 0.5;
     const gridSize = 60;
     for(let x=0; x<this.canvas.width; x+=gridSize) {
@@ -158,7 +151,7 @@ class ParticleSystem {
           this.ctx.beginPath();
           this.ctx.moveTo(p.x, p.y);
           this.ctx.lineTo(this.mouse.x, this.mouse.y);
-          this.ctx.strokeStyle = theme === 'cyber' ? `rgba(0, 255, 65, ${alpha * 0.6})` : `rgba(6, 182, 212, ${alpha * 0.5})`;
+          this.ctx.strokeStyle = `rgba(6, 182, 212, ${alpha * 0.5})`;
           this.ctx.lineWidth = alpha * 1.5;
           this.ctx.stroke();
         }

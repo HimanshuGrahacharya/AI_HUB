@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (!themeToggle) return;
 
-  // Themes: 'light', 'dark', 'cyber'
-  const themes = ['light', 'dark', 'cyber'];
+  // Themes: 'light', 'dark'
+  const themes = ['light', 'dark'];
   
   // Load saved preference (default: light)
   let currentTheme = localStorage.getItem('active-theme') || 'light';
@@ -16,9 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Toggle on click
   themeToggle.addEventListener('click', function () {
-    const currentIndex = themes.indexOf(currentTheme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    currentTheme = themes[nextIndex] as string;
+    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
     
     localStorage.setItem('active-theme', currentTheme);
     applyTheme(currentTheme);
@@ -28,12 +26,11 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function applyTheme(theme: string): void {
-    // Remove all theme classes
-    body.classList.remove('dark-mode', 'cyber-mode');
-    
-    if (theme === 'dark') body.classList.add('dark-mode');
-    if (theme === 'cyber') body.classList.add('cyber-mode');
-    
+    if (theme === 'dark') {
+      body.classList.add('dark-mode');
+    } else {
+      body.classList.remove('dark-mode');
+    }
     updateIcon(theme);
   }
 
@@ -42,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!icon) return;
     
     if (theme === 'light') icon.className = 'ph ph-sun';
-    else if (theme === 'dark') icon.className = 'ph ph-moon';
-    else icon.className = 'ph ph-lightning'; // Cyber icon
+    else icon.className = 'ph ph-moon';
   }
 });
