@@ -1,34 +1,48 @@
-// Theme Toggle Functionality
+// Theme Management (3-State Cycle: Light -> Dark -> Cyber)
 document.addEventListener('DOMContentLoaded', function () {
   const themeToggle = document.getElementById('theme-toggle');
   const body = document.body;
 
   if (!themeToggle) return;
 
+  // Themes: 'light', 'dark', 'cyber'
+  const themes = ['light', 'dark', 'cyber'];
+  
   // Load saved preference (default: light)
-  const saved = localStorage.getItem('dark-mode') || 'false';
-  if (saved === 'true') {
-    body.classList.add('dark-mode');
-    setIcon(themeToggle, true);
-  } else {
-    setIcon(themeToggle, false);
-  }
+  let currentTheme = localStorage.getItem('active-theme') || 'light';
+  
+  // Initial Apply
+  applyTheme(currentTheme);
 
   // Toggle on click
   themeToggle.addEventListener('click', function () {
-    const isDark = body.classList.toggle('dark-mode');
-    localStorage.setItem('dark-mode', isDark.toString());
-    setIcon(themeToggle, isDark);
+    const currentIndex = themes.indexOf(currentTheme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    currentTheme = themes[nextIndex] as string;
+    
+    localStorage.setItem('active-theme', currentTheme);
+    applyTheme(currentTheme);
+    
+    // Dispatch event for particles to update
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: currentTheme } }));
   });
 
-  function setIcon(btn: HTMLElement, isDark: boolean): void {
-    // Find existing <i> or create one
-    let icon = btn.querySelector('i') as HTMLElement | null;
-    if (!icon) {
-      icon = document.createElement('i');
-      btn.appendChild(icon);
-    }
-    // Swap Phosphor icon class — no innerHTML so the library isn't confused
-    icon.className = isDark ? 'ph ph-sun' : 'ph ph-moon';
+  function applyTheme(theme: string): void {
+    // Remove all theme classes
+    body.classList.remove('dark-mode', 'cyber-mode');
+    
+    if (theme === 'dark') body.classList.add('dark-mode');
+    if (theme === 'cyber') body.classList.add('cyber-mode');
+    
+    updateIcon(theme);
+  }
+
+  function updateIcon(theme: string): void {
+    let icon = themeToggle!.querySelector('i');
+    if (!icon) return;
+    
+    if (theme === 'light') icon.className = 'ph ph-sun';
+    else if (theme === 'dark') icon.className = 'ph ph-moon';
+    else icon.className = 'ph ph-lightning'; // Cyber icon
   }
 });

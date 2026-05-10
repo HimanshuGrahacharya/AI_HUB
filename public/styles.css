@@ -168,6 +168,83 @@ body {
   --radius-input: 14px;
 }
 
+/* ── MIDNIGHT NEBULA: Dark Mode Variables ── */
+.dark-mode {
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --primary-light: #a78bfa;
+  --secondary: #06b6d4;
+  
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+  
+  --bg-body: #05050d;
+  --bg-card: rgba(15, 23, 42, 0.8);
+  --bg-card-hover: rgba(30, 41, 59, 0.9);
+  --bg-glass: rgba(15, 23, 42, 0.7);
+  --bg-input: rgba(15, 23, 42, 0.9);
+  
+  --glass-border: rgba(139, 92, 246, 0.2);
+  --border: rgba(139, 92, 246, 0.15);
+  --border-strong: rgba(139, 92, 246, 0.3);
+  
+  --nav-bg: rgba(5, 5, 13, 0.85);
+  --nav-border: rgba(139, 92, 246, 0.2);
+  --nav-text: #f1f5f9;
+  
+  --bg-gradient: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+  --glow-primary: rgba(139, 92, 246, 0.4);
+}
+
+/* ── CYBER MATRIX: Neon Mode Variables ── */
+.cyber-mode {
+  --primary: #00ff41;
+  --primary-hover: #00ce35;
+  --primary-light: #4cff7c;
+  --secondary: #008f11;
+  
+  --text-main: #00ff41;
+  --text-muted: #008f11;
+  --text-subtle: #003b07;
+  
+  --bg-body: #000000;
+  --bg-card: rgba(0, 15, 0, 0.9);
+  --bg-card-hover: rgba(0, 30, 0, 1);
+  --bg-glass: rgba(0, 10, 0, 0.85);
+  --bg-input: rgba(0, 15, 0, 0.95);
+  
+  --glass-border: rgba(0, 255, 65, 0.3);
+  --border: rgba(0, 255, 65, 0.2);
+  --border-strong: rgba(0, 255, 65, 0.4);
+  
+  --nav-bg: rgba(0, 0, 0, 0.95);
+  --nav-border: rgba(0, 255, 65, 0.3);
+  --nav-text: #00ff41;
+  
+  --bg-gradient: linear-gradient(180deg, #003b07 0%, #000000 100%);
+  --glow-primary: rgba(0, 255, 65, 0.5);
+  
+  --card-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+}
+
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--bg-body);
+}
+
+/* Ensure all sections sit above the canvas */
+.navbar, .dashboard-main, .preloader, .modal {
+  position: relative;
+  z-index: 10;
+}
+
 /* Login Page Styles */
 .login-page {
   display: flex;
