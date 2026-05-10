@@ -48,14 +48,21 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     transform: translateX(-100%);
     z-index: 6000; /* Above navbar and mobile nav */
     display: block !important;
-    background: var(--bg-card) !important;
-    backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px) !important;
-    border-right: 1px solid var(--border) !important;
+    /* Solid background — no blur so sidebar content stays sharp */
+    background: #0d1526 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-right: 1px solid rgba(99, 102, 241, 0.25) !important;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto !important;
     padding: 30px 20px 100px !important;
     box-shadow: none;
+  }
+
+  /* Light mode: solid white sidebar */
+  body:not(.dark-mode) .sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid rgba(99, 102, 241, 0.15) !important;
   }
 
   .sidebar-close {
@@ -67,7 +74,7 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     height: 36px;
     border-radius: 50%;
     background: rgba(99, 102, 241, 0.1);
-    border: 1px solid var(--border);
+    border: 1px solid rgba(99, 102, 241, 0.2);
     color: var(--text-main);
     align-items: center;
     justify-content: center;
@@ -78,14 +85,16 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
 
   .sidebar.active {
     transform: translateX(0);
-    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5) !important;
   }
 
   .sidebar-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    /* No backdrop-filter blur — it was making the sidebar content blurry */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     z-index: 5900;
     display: none;
     opacity: 0;
@@ -327,15 +336,90 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   
   .profile-dropdown { right: -10px !important; width: 240px !important; }
   
-  /* Sidebar typography polish */
-  .sidebar h3 {
-    font-size: 0.9rem !important;
-    margin: 20px 0 12px !important;
-    opacity: 0.8;
+  /* ── Sidebar typography: match laptop look exactly ── */
+
+  /* Section headings: "Categories", "AI Agentic Tools", "My Hub" */
+  .sidebar .sidebar-section h3 {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    text-transform: none !important;
+    letter-spacing: -0.01em !important;
+    margin: 24px 0 10px !important;
+    padding: 0 4px !important;
+    opacity: 1 !important;
   }
-  .category-item {
-    padding: 10px 14px !important;
+
+  /* First section heading — no top margin */
+  .sidebar .sidebar-section:first-child h3 {
+    margin-top: 8px !important;
+  }
+
+  /* Category list items */
+  .sidebar .category-item {
+    padding: 11px 14px !important;
     font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    color: rgba(226, 232, 240, 0.85) !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    transition: background 0.2s ease, color 0.2s ease !important;
+    border: none !important;
+  }
+
+  /* Icons inside items */
+  .sidebar .category-item i {
+    font-size: 1.1rem !important;
+    opacity: 0.8;
+    flex-shrink: 0;
+  }
+
+  /* Hover state */
+  .sidebar .category-item:hover {
+    background: rgba(99, 102, 241, 0.15) !important;
+    color: #ffffff !important;
+    transform: none !important;
+  }
+
+  /* Active / selected item — purple filled like laptop */
+  .sidebar .category-item.active {
+    background: #6366f1 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35) !important;
+  }
+
+  .sidebar .category-item.active i {
+    opacity: 1 !important;
+  }
+
+  /* Badges (NEW, WAR, ART) */
+  .sidebar .badge-new,
+  .sidebar .badge-premium {
+    font-size: 0.65rem !important;
+    padding: 2px 7px !important;
+    border-radius: 20px !important;
+    font-weight: 700 !important;
+    margin-left: auto !important;
+    flex-shrink: 0;
+  }
+
+  /* Light mode overrides */
+  body:not(.dark-mode) .sidebar .sidebar-section h3 {
+    color: #0f172a !important;
+  }
+  body:not(.dark-mode) .sidebar .category-item {
+    color: #334155 !important;
+  }
+  body:not(.dark-mode) .sidebar .category-item:hover {
+    background: rgba(99, 102, 241, 0.08) !important;
+    color: var(--primary) !important;
+  }
+  body:not(.dark-mode) .sidebar .category-item.active {
+    background: #6366f1 !important;
+    color: #ffffff !important;
   }
 }
 
@@ -363,4 +447,48 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   position: relative; border-radius: 16px; overflow: hidden;
   background: var(--bg-card); border: 2px solid var(--glass-border);
   aspect-ratio: 1 / 1; transition: all 0.3s ease;
+}
+
+/* ==========================================================================
+   SIDEBAR BLUR FIX — Final override (must stay at bottom)
+   Ensures the sidebar panel is always crisp/solid on mobile,
+   regardless of any backdrop-filter rules earlier in the cascade.
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .sidebar,
+  .sidebar.active,
+  .dark-mode .sidebar,
+  .dark-mode .sidebar.active {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    /* Dark mode: solid dark navy */
+    background: #0d1526 !important;
+  }
+
+  /* Light mode override */
+  body:not(.dark-mode) .sidebar,
+  body:not(.dark-mode) .sidebar.active {
+    background: #ffffff !important;
+  }
+
+  /* Overlay: dim but never blur — blur leaks into the sidebar layer */
+  .sidebar-overlay,
+  .sidebar-overlay.show {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Section headings match laptop: bold white on dark, dark on light */
+  .sidebar .sidebar-section h3 {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    text-transform: none !important;
+    letter-spacing: -0.01em !important;
+    opacity: 1 !important;
+  }
+
+  body:not(.dark-mode) .sidebar .sidebar-section h3 {
+    color: #0f172a !important;
+  }
 }
