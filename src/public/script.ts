@@ -6018,6 +6018,31 @@ const aiVideosData = [
   switchView('creative-studio');
 };
 
+let activeForgeCount = 4;
+(window as any).setForgeCount = function(count: number) {
+  activeForgeCount = count;
+  
+  // Update UI
+  const btns = document.querySelectorAll('.count-btn');
+  btns.forEach(btn => {
+    if (btn.textContent === count.toString()) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  // Show/Hide cells
+  for(let i=0; i<8; i++) {
+    const cell = document.getElementById(`forge-cell-${i}`);
+    if (cell) {
+      cell.style.display = i < count ? 'flex' : 'none';
+    }
+  }
+
+  showToast(`Vision Swarm size set to ${count} styles`, 'info');
+};
+
 (window as any).toggleSidebar = function() {
   const sidebar = document.querySelector('.sidebar');
   const overlay = document.getElementById('sidebar-overlay');
@@ -6855,22 +6880,29 @@ const originalAddWarLog = addWarLog;
   const forgeSection = document.getElementById('parallel-forge-section');
   
   forgeBtn.disabled = true;
-  forgeBtn.innerHTML = '<i class="ph ph-lightning ph-pulse"></i> Forging Styles...';
+  forgeBtn.innerHTML = `<i class="ph ph-lightning ph-pulse"></i> Swarming ${activeForgeCount} Styles...`;
   forgeSection!.style.display = 'block';
   forgeSection!.scrollIntoView({ behavior: 'smooth', block: 'start' });
   
-  // Reset grid state
-  for(let i=0; i<4; i++) {
+  // Reset grid state based on activeForgeCount
+  for(let i=0; i<8; i++) {
     const cell = document.getElementById(`forge-cell-${i}`);
-    const loading = cell?.querySelector('.forge-loading') as HTMLElement;
-    const img = document.getElementById(`forge-img-${i}`) as HTMLImageElement;
-    const selectBtn = cell?.querySelector('.forge-select-btn') as HTMLElement;
-    
-    cell?.classList.remove('selected');
-    loading.style.display = 'flex';
-    loading.innerHTML = '<div class="forge-spinner"></div><span>Forging...</span>';
-    img.style.display = 'none';
-    selectBtn.style.opacity = '0';
+    if (!cell) continue;
+
+    if (i < activeForgeCount) {
+      cell.style.display = 'flex';
+      const loading = cell.querySelector('.forge-loading') as HTMLElement;
+      const img = document.getElementById(`forge-img-${i}`) as HTMLImageElement;
+      const selectBtn = cell.querySelector('.forge-select-btn') as HTMLElement;
+      
+      cell.classList.remove('selected');
+      loading.style.display = 'flex';
+      loading.innerHTML = '<div class="forge-spinner"></div><span>Forging...</span>';
+      img.style.display = 'none';
+      selectBtn.style.opacity = '0';
+    } else {
+      cell.style.display = 'none';
+    }
   }
 
   try {
@@ -6890,15 +6922,21 @@ const originalAddWarLog = addWarLog;
       basePrompt = rawPrompt;
     }
 
-    const styles = [
+    const allStyles = [
       'cinematic, hyper-realistic, 8k, dramatic lighting, movie still',
       'cyberpunk style, neon glow, futuristic city, sharp edges, synthwave',
       'classical oil painting, thick brushstrokes, museum masterpiece, rich textures',
-      'modern anime style, vibrant colors, clean lines, studio ghibli aesthetic'
+      'modern anime style, vibrant colors, clean lines, studio ghibli aesthetic',
+      '3d isometric render, blender, high detail, soft lighting, octane render',
+      'surrealism, dream-like, salvador dali style, melting reality, abstract',
+      'professional watercolor, hand-painted, wet-on-wet, delicate textures',
+      'pixel art, 16-bit, retro gaming, clean sprites, vibrant colors'
     ];
 
-    const promises = styles.map(async (style, i) => {
-      // Staggered delay to prevent API rate limiting (0ms, 400ms, 800ms, 1200ms)
+    const activeStyles = allStyles.slice(0, activeForgeCount);
+
+    const promises = activeStyles.map(async (style, i) => {
+      // Staggered delay to prevent API rate limiting
       await new Promise(r => setTimeout(r, i * 400));
       
       const finalPrompt = encodeURIComponent(`${basePrompt}, ${style}`);
@@ -6924,12 +6962,12 @@ const originalAddWarLog = addWarLog;
     });
 
     await Promise.all(promises);
-    showToast('Parallel Forge Complete! Pick your favorite style.', 'success');
+    showToast(`Swarm complete! ${activeForgeCount} styles generated.`, 'success');
   } catch (err) {
-    showToast('Forge error occurred.', 'error');
+    showToast('Forge swarm error occurred.', 'error');
   } finally {
     forgeBtn.disabled = false;
-    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge — 4 Styles at Once';
+    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge — Swarm Multiple Styles';
   }
 };
 
@@ -6944,14 +6982,18 @@ const originalAddWarLog = addWarLog;
   loading.innerHTML = '<div class="forge-spinner"></div><span>Retrying...</span>';
   img.style.display = 'none';
 
-  const styles = [
+  const allStyles = [
     'cinematic, hyper-realistic, 8k, dramatic lighting, movie still',
     'cyberpunk style, neon glow, futuristic city, sharp edges, synthwave',
     'classical oil painting, thick brushstrokes, museum masterpiece, rich textures',
-    'modern anime style, vibrant colors, clean lines, studio ghibli aesthetic'
+    'modern anime style, vibrant colors, clean lines, studio ghibli aesthetic',
+    '3d isometric render, blender, high detail, soft lighting, octane render',
+    'surrealism, dream-like, salvador dali style, melting reality, abstract',
+    'professional watercolor, hand-painted, wet-on-wet, delicate textures',
+    'pixel art, 16-bit, retro gaming, clean sprites, vibrant colors'
   ];
 
-  const finalPrompt = encodeURIComponent(`${rawPrompt || 'artistic masterpiece'}, ${styles[i]}`);
+  const finalPrompt = encodeURIComponent(`${rawPrompt || 'artistic masterpiece'}, ${allStyles[i]}`);
   const seed = Math.floor(Math.random() * 1000000);
   img.src = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
 };
