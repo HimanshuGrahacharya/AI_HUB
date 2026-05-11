@@ -1,5 +1,5 @@
 "use strict";
-// AI-HUBS Particle Constellation Engine
+// AI-HUBS Particle Constellation Engine v2.0
 class Particle {
     constructor(canvas) {
         this.x = 0;
