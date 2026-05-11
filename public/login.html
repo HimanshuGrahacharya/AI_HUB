@@ -148,15 +148,15 @@
       .form-row { flex-direction:column; align-items:flex-start; gap:10px; }
     }
   </style>
+</head>
+<body>
   <script>
-    // Immediate Theme Detection
+    // Immediate Theme Detection - runs as soon as body is available
     (function() {
       const isDark = localStorage.getItem('dark-mode') === 'true';
       if (isDark) document.body.classList.add('dark-mode');
     })();
   </script>
-</head>
-<body>
   <!-- Left decorative panel -->
   <div class="auth-left">
     <div class="auth-left-content">
