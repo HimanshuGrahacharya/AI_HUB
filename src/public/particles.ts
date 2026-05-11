@@ -164,5 +164,16 @@ class ParticleSystem {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
-  new ParticleSystem('bg-canvas');
+  const canvas = document.getElementById('bg-canvas');
+  if (canvas) {
+    console.log('✅ Canvas found, initializing particles...');
+    try {
+      new ParticleSystem('bg-canvas');
+      console.log('✅ Particle system initialized successfully!');
+    } catch (error) {
+      console.error('❌ Error initializing particle system:', error);
+    }
+  } else {
+    console.error('❌ Canvas element #bg-canvas not found!');
+  }
 });
