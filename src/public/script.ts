@@ -6044,13 +6044,63 @@ let activeForgeCount = 4;
 };
 
 (window as any).toggleSidebar = function() {
-  const sidebar = document.querySelector('.sidebar');
+  const sidebar = document.querySelector('.sidebar') as HTMLElement;
   const overlay = document.getElementById('sidebar-overlay');
   if (sidebar && overlay) {
+    const isOpening = !sidebar.classList.contains('active');
+    
+    if (isOpening) {
+      // Save scroll position and lock body
+      const scrollY = window.scrollY;
+      document.body.style.top = `-${scrollY}px`;
+      document.body.classList.add('sidebar-open');
+      
+      // Prevent touch events from propagating to body - CRITICAL for mobile scroll isolation
+      sidebar.addEventListener('touchmove', preventBodyScroll, { passive: false });
+    } else {
+      // Restore scroll position and unlock body
+      const scrollY = document.body.style.top;
+      document.body.classList.remove('sidebar-open');
+      document.body.style.top = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      
+      // Remove touch event listener
+      sidebar.removeEventListener('touchmove', preventBodyScroll);
+    }
+    
     sidebar.classList.toggle('active');
     overlay.classList.toggle('show');
   }
 };
+
+// Helper function to prevent body scroll while allowing sidebar scroll
+function preventBodyScroll(e: TouchEvent) {
+  const target = e.currentTarget as HTMLElement;
+  if (!target) return;
+  
+  const scrollTop = target.scrollTop;
+  const scrollHeight = target.scrollHeight;
+  const height = target.clientHeight;
+  
+  // Check if touches exist
+  if (!e.touches || e.touches.length === 0) return;
+  
+  const touch = e.touches[0];
+  if (!touch) return;
+  
+  const deltaY = touch.clientY;
+  
+  // Allow sidebar to scroll, but prevent body scroll
+  if (scrollTop === 0 && deltaY > 0) {
+    // At top of sidebar, trying to scroll up - prevent
+    e.preventDefault();
+  } else if (scrollTop + height >= scrollHeight && deltaY < 0) {
+    // At bottom of sidebar, trying to scroll down - prevent
+    e.preventDefault();
+  }
+  // Otherwise allow the sidebar to scroll normally
+  e.stopPropagation();
+}
 
 (window as any).toggleCommandPalette = function() {
   const palette = document.getElementById('command-palette');
