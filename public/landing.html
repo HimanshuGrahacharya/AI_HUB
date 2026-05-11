@@ -45,10 +45,27 @@
     }
 
     /* ── Landing-page-only overrides ── */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
     body { 
       background: var(--landing-bg); 
       color: var(--landing-text); 
       transition: background 0.3s ease, color 0.3s ease;
+      position: relative;
+    }
+
+    /* Ensure content is above canvas */
+    .landing-nav, .hero, .features, .models-ticker-section, .tactical-suite, .how-it-works, .newsletter, .landing-footer {
+      position: relative;
+      z-index: 1;
     }
 
     /* ─────────────── NAVBAR ─────────────── */
@@ -276,8 +293,23 @@
       .suite-visual { margin: 0 auto; }
     }
   </style>
+  <script>
+    // CRITICAL: Apply theme IMMEDIATELY in HEAD - prevents any flash
+    (function() {
+      const isDark = localStorage.getItem('dark-mode') === 'true';
+      if (isDark) {
+        document.documentElement.classList.add('dark-mode');
+      }
+    })();
+  </script>
 </head>
 <body>
+  <script>
+    // Apply to body as well when it's available
+    if (localStorage.getItem('dark-mode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
   <canvas id="bg-canvas"></canvas>
 
   <!-- NAVBAR -->

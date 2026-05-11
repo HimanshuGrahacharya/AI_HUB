@@ -6054,32 +6054,18 @@ let activeForgeCount = 4;
       const scrollY = window.scrollY;
       document.body.style.top = `-${scrollY}px`;
       document.body.classList.add('sidebar-open');
-      
-      // Stop propagation of touch events to prevent background scroll
-      sidebar.addEventListener('touchmove', stopTouchPropagation, { passive: false });
-      sidebar.addEventListener('touchstart', stopTouchPropagation, { passive: false });
     } else {
       // Restore scroll position and unlock body
       const scrollY = document.body.style.top;
       document.body.classList.remove('sidebar-open');
       document.body.style.top = '';
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
-      
-      // Remove touch event listeners
-      sidebar.removeEventListener('touchmove', stopTouchPropagation);
-      sidebar.removeEventListener('touchstart', stopTouchPropagation);
     }
     
     sidebar.classList.toggle('active');
     overlay.classList.toggle('show');
   }
 };
-
-// Simple function to stop touch event propagation - allows sidebar to scroll freely
-function stopTouchPropagation(e: TouchEvent) {
-  // Stop the event from reaching the body, but allow sidebar to scroll
-  e.stopPropagation();
-}
 
 (window as any).toggleCommandPalette = function() {
   const palette = document.getElementById('command-palette');

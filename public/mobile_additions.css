@@ -153,10 +153,13 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     height: 100% !important;
   }
 
-  /* Ensure sidebar scrolls independently */
+  /* Ensure sidebar scrolls independently - CRITICAL FIX */
   .sidebar.active {
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    /* Isolate touch events to sidebar only */
+    touch-action: pan-y !important;
   }
 
   .sidebar-overlay {
