@@ -296,20 +296,15 @@
   <script>
     // CRITICAL: Apply theme IMMEDIATELY in HEAD - prevents any flash
     (function() {
-      const isDark = localStorage.getItem('dark-mode') === 'true';
-      if (isDark) {
+      const theme = localStorage.getItem('active-theme') || 'dark';
+      if (theme === 'dark') {
         document.documentElement.classList.add('dark-mode');
+        document.body.classList.add('dark-mode');
       }
     })();
   </script>
 </head>
 <body>
-  <script>
-    // Apply to body as well when it's available
-    if (localStorage.getItem('dark-mode') === 'true') {
-      document.body.classList.add('dark-mode');
-    }
-  </script>
   <canvas id="bg-canvas"></canvas>
 
   <!-- NAVBAR -->
