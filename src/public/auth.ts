@@ -257,9 +257,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const identifier = (document.getElementById('identifier') as HTMLInputElement).value;
+      // Support both 'email' and 'identifier' field names
+      const emailInput = document.getElementById('email') as HTMLInputElement;
+      const identifierInput = document.getElementById('identifier') as HTMLInputElement;
+      const identifier = emailInput?.value || identifierInput?.value;
       const password = (document.getElementById('password') as HTMLInputElement).value;
-      login(identifier, password);
+      if (identifier && password) {
+        login(identifier, password);
+      } else {
+        showToast('Please enter email and password', 'error');
+      }
     });
   }
 
