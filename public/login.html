@@ -148,14 +148,22 @@
       .form-row { flex-direction:column; align-items:flex-start; gap:10px; }
     }
   </style>
+  <script>
+    // CRITICAL: Apply theme IMMEDIATELY in HEAD - prevents any flash
+    (function() {
+      const isDark = localStorage.getItem('dark-mode') === 'true';
+      if (isDark) {
+        document.documentElement.classList.add('dark-mode');
+      }
+    })();
+  </script>
 </head>
 <body>
   <script>
-    // Immediate Theme Detection - runs as soon as body is available
-    (function() {
-      const isDark = localStorage.getItem('dark-mode') === 'true';
-      if (isDark) document.body.classList.add('dark-mode');
-    })();
+    // Apply to body as well when it's available
+    if (localStorage.getItem('dark-mode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
   </script>
   <!-- Left decorative panel -->
   <div class="auth-left">
