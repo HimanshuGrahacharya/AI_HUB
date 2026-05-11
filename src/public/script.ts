@@ -6055,8 +6055,9 @@ let activeForgeCount = 4;
       document.body.style.top = `-${scrollY}px`;
       document.body.classList.add('sidebar-open');
       
-      // Prevent touch events from propagating to body - CRITICAL for mobile scroll isolation
-      sidebar.addEventListener('touchmove', preventBodyScroll, { passive: false });
+      // Stop propagation of touch events to prevent background scroll
+      sidebar.addEventListener('touchmove', stopTouchPropagation, { passive: false });
+      sidebar.addEventListener('touchstart', stopTouchPropagation, { passive: false });
     } else {
       // Restore scroll position and unlock body
       const scrollY = document.body.style.top;
@@ -6064,8 +6065,9 @@ let activeForgeCount = 4;
       document.body.style.top = '';
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
       
-      // Remove touch event listener
-      sidebar.removeEventListener('touchmove', preventBodyScroll);
+      // Remove touch event listeners
+      sidebar.removeEventListener('touchmove', stopTouchPropagation);
+      sidebar.removeEventListener('touchstart', stopTouchPropagation);
     }
     
     sidebar.classList.toggle('active');
@@ -6073,32 +6075,9 @@ let activeForgeCount = 4;
   }
 };
 
-// Helper function to prevent body scroll while allowing sidebar scroll
-function preventBodyScroll(e: TouchEvent) {
-  const target = e.currentTarget as HTMLElement;
-  if (!target) return;
-  
-  const scrollTop = target.scrollTop;
-  const scrollHeight = target.scrollHeight;
-  const height = target.clientHeight;
-  
-  // Check if touches exist
-  if (!e.touches || e.touches.length === 0) return;
-  
-  const touch = e.touches[0];
-  if (!touch) return;
-  
-  const deltaY = touch.clientY;
-  
-  // Allow sidebar to scroll, but prevent body scroll
-  if (scrollTop === 0 && deltaY > 0) {
-    // At top of sidebar, trying to scroll up - prevent
-    e.preventDefault();
-  } else if (scrollTop + height >= scrollHeight && deltaY < 0) {
-    // At bottom of sidebar, trying to scroll down - prevent
-    e.preventDefault();
-  }
-  // Otherwise allow the sidebar to scroll normally
+// Simple function to stop touch event propagation - allows sidebar to scroll freely
+function stopTouchPropagation(e: TouchEvent) {
+  // Stop the event from reaching the body, but allow sidebar to scroll
   e.stopPropagation();
 }
 

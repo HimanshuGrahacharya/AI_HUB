@@ -61,9 +61,6 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     overscroll-behavior: contain !important;
     padding: 20px 16px 120px 16px !important;
     box-shadow: none;
-    /* Touch handling - prevent background scroll */
-    touch-action: pan-y !important;
-    will-change: transform !important;
   }
 
   /* Light mode: solid white sidebar */
