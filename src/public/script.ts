@@ -7629,55 +7629,55 @@ const SWARM_PRESETS: Record<string, any> = {
   dev: {
     task: 'Write a secure Node.js JWT authentication handler and perform rigorous automated test validation.',
     agents: [
-      { icon: '🤖’»', name: 'Lead Architect', model: 'Claude-3.5-Sonnet', color: '#60a5fa' },
+      { icon: '💻', name: 'Lead Architect', model: 'Claude-3.5-Sonnet', color: '#60a5fa' },
       { icon: '⚡', name: 'Senior Coder', model: 'Llama-3.1-70B', color: '#c084fc' },
-      { icon: '🤖›¡ï¸', name: 'Security QA Auditor', model: 'GPT-4o-Intelligence', color: '#22c55e' },
+      { icon: '🛡️', name: 'Security QA Auditor', model: 'GPT-4o-Intelligence', color: '#22c55e' },
     ],
     steps: [
-      { agent: 0, msg: '🤖“ Analyzing requirements... decomposing task into modular architecture blocks.' },
-      { agent: 0, msg: 'âœ… Architecture blueprint finalized. Handoff â†’ Senior Coder.' },
+      { agent: 0, msg: '🔍 Analyzing requirements... decomposing task into modular architecture blocks.' },
+      { agent: 0, msg: '✅ Architecture blueprint finalized. Handoff → Senior Coder.' },
       { agent: 1, msg: '⚡ Generating secure JWT handler with bcrypt + refresh token rotation...' },
       { agent: 1, msg: '```typescript\nconst token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn:"7d"});\n```' },
-      { agent: 1, msg: 'âœ… Code generation complete. Handoff â†’ Security QA Auditor.' },
-      { agent: 2, msg: '🤖›¡ï¸ Running automated security audit â€” scanning for OWASP Top 10 vulnerabilities...' },
-      { agent: 2, msg: '🤖” JWT expiry: âœ… | Password hashing: âœ… | SQL Injection shield: âœ… | CSRF token: âœ…' },
-      { agent: 2, msg: '🤖† MISSION COMPLETE: Zero vulnerabilities found. Code is production-ready!' },
+      { agent: 1, msg: '✅ Code generation complete. Handoff → Security QA Auditor.' },
+      { agent: 2, msg: '🛡️ Running automated security audit — scanning for OWASP Top 10 vulnerabilities...' },
+      { agent: 2, msg: '🔐 JWT expiry: ✅ | Password hashing: ✅ | SQL Injection shield: ✅ | CSRF token: ✅' },
+      { agent: 2, msg: '🏆 MISSION COMPLETE: Zero vulnerabilities found. Code is production-ready!' },
     ]
   },
   marketing: {
     task: 'Create a full brand launch plan with tagline, social strategy, and influencer outreach campaign.',
     agents: [
-      { icon: '🤖Ž¯', name: 'Brand Strategist', model: 'Claude-3.5-Sonnet', color: '#f59e0b' },
-      { icon: '🤖“¢', name: 'Content Creator', model: 'Llama-3.1-70B', color: '#ec4899' },
-      { icon: '🤖“Š', name: 'Analytics Optimizer', model: 'GPT-4o-Intelligence', color: '#22c55e' },
+      { icon: '🎯', name: 'Brand Strategist', model: 'Claude-3.5-Sonnet', color: '#f59e0b' },
+      { icon: '📢', name: 'Content Creator', model: 'Llama-3.1-70B', color: '#ec4899' },
+      { icon: '📊', name: 'Analytics Optimizer', model: 'GPT-4o-Intelligence', color: '#22c55e' },
     ],
     steps: [
-      { agent: 0, msg: '🤖Ž¯ Analyzing brand positioning... Identifying unique value proposition and target personas.' },
-      { agent: 0, msg: 'âœ… Brand blueprint: "Democratize AI for Everyone." Tone: Bold, accessible, futuristic.' },
-      { agent: 1, msg: '🤖“¢ Generating launch assets: Twitter thread, LinkedIn article, Instagram carousel...' },
-      { agent: 1, msg: '🤖’¡ Hook: "The future of AI doesn\'t belong to corporations. It belongs to YOU. 🤖š€ #HSGAIHub"' },
-      { agent: 1, msg: 'âœ… 3-week content calendar generated. 42 posts across 4 platforms. Handoff â†’ Analytics.' },
-      { agent: 2, msg: '🤖“Š Running campaign ROI simulation... Projected reach: 2.4M impressions in Week 1.' },
-      { agent: 2, msg: '🤖“ˆ Optimal post times computed. Peak engagement: Tue/Thu 7-9 AM & 8-10 PM (IST).' },
-      { agent: 2, msg: '🤖† MISSION COMPLETE: Full launch playbook delivered. Expected 340% organic growth.' },
+      { agent: 0, msg: '🎯 Analyzing brand positioning... Identifying unique value proposition and target personas.' },
+      { agent: 0, msg: '✅ Brand blueprint: "Democratize AI for Everyone." Tone: Bold, accessible, futuristic.' },
+      { agent: 1, msg: '📢 Generating launch assets: Twitter thread, LinkedIn article, Instagram carousel...' },
+      { agent: 1, msg: '💡 Hook: "The future of AI doesn\'t belong to corporations. It belongs to YOU. 🚀 #HSGAIHub"' },
+      { agent: 1, msg: '✅ 3-week content calendar generated. 42 posts across 4 platforms. Handoff → Analytics.' },
+      { agent: 2, msg: '📊 Running campaign ROI simulation... Projected reach: 2.4M impressions in Week 1.' },
+      { agent: 2, msg: '📈 Optimal post times computed. Peak engagement: Tue/Thu 7-9 AM & 8-10 PM (IST).' },
+      { agent: 2, msg: '🏆 MISSION COMPLETE: Full launch playbook delivered. Expected 340% organic growth.' },
     ]
   },
   analyst: {
     task: 'Deep analysis of AI agents market landscape, key players, investment trends, and future outlook.',
     agents: [
-      { icon: '🤖”', name: 'Market Researcher', model: 'Claude-3.5-Sonnet', color: '#38bdf8' },
-      { icon: '🤖“ˆ', name: 'Data Analyst', model: 'Llama-3.1-70B', color: '#a78bfa' },
-      { icon: '🤖§ ', name: 'Intelligence Synthesizer', model: 'GPT-4o-Intelligence', color: '#f97316' },
+      { icon: '🔍', name: 'Market Researcher', model: 'Claude-3.5-Sonnet', color: '#38bdf8' },
+      { icon: '📈', name: 'Data Analyst', model: 'Llama-3.1-70B', color: '#a78bfa' },
+      { icon: '🧠', name: 'Intelligence Synthesizer', model: 'GPT-4o-Intelligence', color: '#f97316' },
     ],
     steps: [
-      { agent: 0, msg: '🤖” Scanning market data... Indexing 500+ AI agent platforms worldwide.' },
-      { agent: 0, msg: '🤖“Œ Key Players Identified: AutoGPT, LangChain, CrewAI, Microsoft Copilot Studio, AgentGPT.' },
-      { agent: 1, msg: '🤖“ˆ Running investment trend analysis across 2022â€“2025 YoY data...' },
-      { agent: 1, msg: '🤖’° AI Agent market: $2.8B (2024) â†’ projected $47B by 2029. CAGR: 76.4%' },
-      { agent: 1, msg: 'âœ… Statistical models finalized. Handoff â†’ Intelligence Synthesizer.' },
-      { agent: 2, msg: '🤖§  Synthesizing findings into actionable strategic intelligence report...' },
-      { agent: 2, msg: '🤖Ž¯ Key Insight: "Autonomous vertical agents (Coding, Marketing, Legal) will dominate 2025-2027."' },
-      { agent: 2, msg: '🤖† MISSION COMPLETE: Intelligence briefing delivered. Board-ready executive summary generated!' },
+      { agent: 0, msg: '🔍 Scanning market data... Indexing 500+ AI agent platforms worldwide.' },
+      { agent: 0, msg: '📌 Key Players Identified: AutoGPT, LangChain, CrewAI, Microsoft Copilot Studio, AgentGPT.' },
+      { agent: 1, msg: '📈 Running investment trend analysis across 2022–2025 YoY data...' },
+      { agent: 1, msg: '💰 AI Agent market: $2.8B (2024) → projected $47B by 2029. CAGR: 76.4%' },
+      { agent: 1, msg: '✅ Statistical models finalized. Handoff → Intelligence Synthesizer.' },
+      { agent: 2, msg: '🧠 Synthesizing findings into actionable strategic intelligence report...' },
+      { agent: 2, msg: '🎯 Key Insight: "Autonomous vertical agents (Coding, Marketing, Legal) will dominate 2025-2027."' },
+      { agent: 2, msg: '🏆 MISSION COMPLETE: Intelligence briefing delivered. Board-ready executive summary generated!' },
     ]
   }
 };
@@ -7785,7 +7785,7 @@ function loadSwarmPresetByKey(key: string) {
 
   function runNextStep() {
     if (stepIndex >= preset.steps.length) {
-      // Done — reset bubbles
+      // Done - reset bubbles
       for (let i = 1; i <= 3; i++) {
         const b = document.querySelector(`#bubble-${i} .bubble-icon-container`) as HTMLElement;
         if (b) { b.style.transform = 'scale(1)'; }
