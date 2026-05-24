@@ -7229,3 +7229,189 @@ function handleRouting() {
 window.addEventListener('hashchange', handleRouting);
 
 
+// ==========================================
+// HSG AGENTIC FORGE — MULTI-AGENT SWARM
+// ==========================================
+
+const SWARM_PRESETS: Record<string, any> = {
+  dev: {
+    task: 'Write a secure Node.js JWT authentication handler and perform rigorous automated test validation.',
+    agents: [
+      { icon: '💻', name: 'Lead Architect', model: 'Claude-3.5-Sonnet', color: '#60a5fa' },
+      { icon: '⚡', name: 'Senior Coder', model: 'Llama-3.1-70B', color: '#c084fc' },
+      { icon: '🛡️', name: 'Security QA Auditor', model: 'GPT-4o-Intelligence', color: '#22c55e' },
+    ],
+    steps: [
+      { agent: 0, msg: '📐 Analyzing requirements... decomposing task into modular architecture blocks.' },
+      { agent: 0, msg: '✅ Architecture blueprint finalized. Handoff → Senior Coder.' },
+      { agent: 1, msg: '⚡ Generating secure JWT handler with bcrypt + refresh token rotation...' },
+      { agent: 1, msg: '```typescript\nconst token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn:"7d"});\n```' },
+      { agent: 1, msg: '✅ Code generation complete. Handoff → Security QA Auditor.' },
+      { agent: 2, msg: '🛡️ Running automated security audit — scanning for OWASP Top 10 vulnerabilities...' },
+      { agent: 2, msg: '🔍 JWT expiry: ✅ | Password hashing: ✅ | SQL Injection shield: ✅ | CSRF token: ✅' },
+      { agent: 2, msg: '🏆 MISSION COMPLETE: Zero vulnerabilities found. Code is production-ready!' },
+    ]
+  },
+  marketing: {
+    task: 'Create a full brand launch plan with tagline, social strategy, and influencer outreach campaign.',
+    agents: [
+      { icon: '🎯', name: 'Brand Strategist', model: 'Claude-3.5-Sonnet', color: '#f59e0b' },
+      { icon: '📢', name: 'Content Creator', model: 'Llama-3.1-70B', color: '#ec4899' },
+      { icon: '📊', name: 'Analytics Optimizer', model: 'GPT-4o-Intelligence', color: '#22c55e' },
+    ],
+    steps: [
+      { agent: 0, msg: '🎯 Analyzing brand positioning... Identifying unique value proposition and target personas.' },
+      { agent: 0, msg: '✅ Brand blueprint: "Democratize AI for Everyone." Tone: Bold, accessible, futuristic.' },
+      { agent: 1, msg: '📢 Generating launch assets: Twitter thread, LinkedIn article, Instagram carousel...' },
+      { agent: 1, msg: '💡 Hook: "The future of AI doesn\'t belong to corporations. It belongs to YOU. 🚀 #HSGAIHub"' },
+      { agent: 1, msg: '✅ 3-week content calendar generated. 42 posts across 4 platforms. Handoff → Analytics.' },
+      { agent: 2, msg: '📊 Running campaign ROI simulation... Projected reach: 2.4M impressions in Week 1.' },
+      { agent: 2, msg: '📈 Optimal post times computed. Peak engagement: Tue/Thu 7-9 AM & 8-10 PM (IST).' },
+      { agent: 2, msg: '🏆 MISSION COMPLETE: Full launch playbook delivered. Expected 340% organic growth.' },
+    ]
+  },
+  analyst: {
+    task: 'Deep analysis of AI agents market landscape, key players, investment trends, and future outlook.',
+    agents: [
+      { icon: '🔍', name: 'Market Researcher', model: 'Claude-3.5-Sonnet', color: '#38bdf8' },
+      { icon: '📈', name: 'Data Analyst', model: 'Llama-3.1-70B', color: '#a78bfa' },
+      { icon: '🧠', name: 'Intelligence Synthesizer', model: 'GPT-4o-Intelligence', color: '#f97316' },
+    ],
+    steps: [
+      { agent: 0, msg: '🔍 Scanning market data... Indexing 500+ AI agent platforms worldwide.' },
+      { agent: 0, msg: '📌 Key Players Identified: AutoGPT, LangChain, CrewAI, Microsoft Copilot Studio, AgentGPT.' },
+      { agent: 1, msg: '📈 Running investment trend analysis across 2022–2025 YoY data...' },
+      { agent: 1, msg: '💰 AI Agent market: $2.8B (2024) → projected $47B by 2029. CAGR: 76.4%' },
+      { agent: 1, msg: '✅ Statistical models finalized. Handoff → Intelligence Synthesizer.' },
+      { agent: 2, msg: '🧠 Synthesizing findings into actionable strategic intelligence report...' },
+      { agent: 2, msg: '🎯 Key Insight: "Autonomous vertical agents (Coding, Marketing, Legal) will dominate 2025-2027."' },
+      { agent: 2, msg: '🏆 MISSION COMPLETE: Intelligence briefing delivered. Board-ready executive summary generated!' },
+    ]
+  }
+};
+
+(window as any).openAgentForge = function() {
+  const modal = document.getElementById('agent-forge-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    loadSwarmPresetByKey('dev');
+  }
+};
+
+(window as any).closeAgentForge = function() {
+  const modal = document.getElementById('agent-forge-modal');
+  if (modal) modal.style.display = 'none';
+};
+
+function loadSwarmPresetByKey(key: string) {
+  const preset = SWARM_PRESETS[key];
+  if (!preset) return;
+
+  // Update task
+  const taskEl = document.getElementById('swarm-task') as HTMLTextAreaElement;
+  if (taskEl) taskEl.value = preset.task;
+
+  // Update agent cards & bubbles
+  preset.agents.forEach((agent: any, i: number) => {
+    const idx = i + 1;
+    const iconEl = document.getElementById(`agent-${idx}-icon`);
+    const nameEl = document.getElementById(`agent-${idx}-name`);
+    const modelEl = document.getElementById(`agent-${idx}-model`);
+    const bubbleTitle = document.getElementById(`bubble-${idx}-title`);
+    const bubbleContainer = document.querySelector(`#bubble-${idx} .bubble-icon-container`) as HTMLElement;
+
+    if (iconEl) iconEl.textContent = agent.icon;
+    if (nameEl) nameEl.textContent = agent.name;
+    if (modelEl) { modelEl.textContent = agent.model; modelEl.style.color = agent.color; }
+    if (bubbleTitle) bubbleTitle.textContent = agent.name.split(' ')[0];
+    if (bubbleContainer) {
+      const bubbleEmoji = bubbleContainer.querySelector('span') || bubbleContainer;
+      bubbleContainer.textContent = agent.icon;
+      bubbleContainer.style.borderColor = 'rgba(255,255,255,0.12)';
+      bubbleContainer.style.boxShadow = 'none';
+    }
+  });
+
+  // Reset console
+  const consoleEl = document.getElementById('swarm-console');
+  if (consoleEl) consoleEl.innerHTML = '<div style="color:#64748b;">// Agent swarm ready. Click "Execute Swarm Mission" to start orchestration.</div>';
+
+  // Reset paths
+  const line1 = document.getElementById('path-line-1') as HTMLElement;
+  const line2 = document.getElementById('path-line-2') as HTMLElement;
+  if (line1) line1.style.background = 'rgba(255,255,255,0.08)';
+  if (line2) line2.style.background = 'rgba(255,255,255,0.08)';
+}
+
+(window as any).loadSwarmPreset = function() {
+  const select = document.getElementById('swarm-preset') as HTMLSelectElement;
+  if (select) loadSwarmPresetByKey(select.value);
+};
+
+(window as any).startSwarmSimulation = function() {
+  const select = document.getElementById('swarm-preset') as HTMLSelectElement;
+  const key = select?.value || 'dev';
+  const preset = SWARM_PRESETS[key];
+  if (!preset) return;
+
+  const consoleEl = document.getElementById('swarm-console');
+  if (!consoleEl) return;
+
+  consoleEl.innerHTML = '<div style="color:#64748b;">// 🚀 Mission INITIATED — Orchestration pipeline starting...<br>// ─────────────────────────────────────────────────</div>';
+
+  const agentColors = preset.agents.map((a: any) => a.color);
+  const agentNames = preset.agents.map((a: any) => a.name);
+
+  let stepIndex = 0;
+
+  function activateBubble(agentIdx: number) {
+    for (let i = 1; i <= 3; i++) {
+      const b = document.querySelector(`#bubble-${i} .bubble-icon-container`) as HTMLElement;
+      if (b) {
+        b.style.borderColor = i === agentIdx + 1 ? agentColors[agentIdx] : 'rgba(255,255,255,0.12)';
+        b.style.boxShadow = i === agentIdx + 1 ? `0 0 20px ${agentColors[agentIdx]}60` : 'none';
+        b.style.transform = i === agentIdx + 1 ? 'scale(1.12)' : 'scale(1)';
+      }
+    }
+    const line1 = document.getElementById('path-line-1') as HTMLElement;
+    const line2 = document.getElementById('path-line-2') as HTMLElement;
+    if (agentIdx >= 1 && line1) line1.style.background = `linear-gradient(90deg, ${agentColors[0]}, ${agentColors[1]})`;
+    if (agentIdx >= 2 && line2) line2.style.background = `linear-gradient(90deg, ${agentColors[1]}, ${agentColors[2]})`;
+  }
+
+  function appendLog(agentIdx: number, msg: string) {
+    const color = agentColors[agentIdx];
+    const name = agentNames[agentIdx];
+    const isCode = msg.startsWith('```');
+    const cleanMsg = isCode ? msg.replace(/```\w*\n?/g, '').replace(/```/g, '') : msg;
+    const lineHtml = isCode
+      ? `<div style="margin:6px 0; background:rgba(255,255,255,0.04); border-left:3px solid ${color}; padding:8px 12px; border-radius:4px; color:#e2e8f0; white-space:pre-wrap;">${cleanMsg}</div>`
+      : `<div style="margin:4px 0;"><span style="color:${color}; font-weight:700;">[${name}]</span> <span style="color:#cbd5e1;">${msg}</span></div>`;
+    consoleEl!.innerHTML += lineHtml;
+    consoleEl!.scrollTop = consoleEl!.scrollHeight;
+  }
+
+  function runNextStep() {
+    if (stepIndex >= preset.steps.length) {
+      // Done — reset bubbles
+      for (let i = 1; i <= 3; i++) {
+        const b = document.querySelector(`#bubble-${i} .bubble-icon-container`) as HTMLElement;
+        if (b) { b.style.transform = 'scale(1)'; }
+      }
+      consoleEl!.innerHTML += `<div style="margin-top:12px; color:#22c55e; font-weight:700;">// ═══════════════════════════════<br>// ✅ SWARM MISSION COMPLETE — All agents signed off.<br>// ═══════════════════════════════</div>`;
+      consoleEl!.scrollTop = consoleEl!.scrollHeight;
+      return;
+    }
+    const step = preset.steps[stepIndex];
+    activateBubble(step.agent);
+    // Typing delay effect
+    const delay = 600 + Math.random() * 800;
+    setTimeout(() => {
+      appendLog(step.agent, step.msg);
+      stepIndex++;
+      runNextStep();
+    }, delay);
+  }
+
+  runNextStep();
+};
