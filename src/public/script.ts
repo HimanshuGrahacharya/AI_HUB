@@ -4251,6 +4251,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Global UX Polish: Auto-resizing Textareas
+  const textareas = document.querySelectorAll('textarea');
+  textareas.forEach(textarea => {
+    textarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
+    });
+    // Trigger once to set initial size
+    textarea.style.height = 'auto';
+    textarea.style.height = (textarea.scrollHeight) + 'px';
+  });
+
   loadSubmissions(); // Load extra tools automatically
   const token = localStorage.getItem('token');
   if (token) {
@@ -4470,10 +4482,29 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.onclick = (event) => {
+    // Close standard modals
     allModals.forEach(modal => {
       if (event.target == modal) (modal as HTMLElement).style.display = 'none';
     });
+    
+    // Close specific non-standard modals
+    const customModals = ['prompt-library-modal', 'agent-forge-modal', 'persona-modal'];
+    customModals.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && event.target == el) el.style.display = 'none';
+    });
   };
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAllModals();
+      const customModals = ['prompt-library-modal', 'agent-forge-modal', 'persona-modal'];
+      customModals.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+    }
+  });
 
   const submitBtn = document.getElementById('submit-tools-btn');
   const aboutBtn = document.getElementById('about-btn');

@@ -113,7 +113,7 @@
         </div>
       </div>
 
-      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" data-tooltip="Toggle Dark Mode">
         <i class="ph ph-moon"></i>
       </button>
     </div>
@@ -340,7 +340,7 @@
                   <!-- File chips will appear here -->
                 </div>
                 <div class="prompt-actions-bar">
-                  <button class="btn-attach" onclick="document.getElementById('studio-file-input').click()" title="Attach Image or Document">
+                  <button class="btn-attach" onclick="document.getElementById('studio-file-input').click()" data-tooltip="Attach Image or Document">
                     <i class="ph ph-paperclip"></i>
                   </button>
                   <input type="file" id="studio-file-input" style="display: none;" accept="image/*,.pdf,.doc,.docx,.txt" onchange="handleStudioFileUpload(this)">
@@ -1062,7 +1062,7 @@
     </a>
   </nav>
 
-  <button id="scroll-to-top" class="scroll-to-top" title="Scroll to Top"><i class="ph ph-arrow-up"></i></button>
+  <button id="scroll-to-top" class="scroll-to-top" data-tooltip="Scroll to Top"><i class="ph ph-arrow-up"></i></button>
 
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- AGENTIC SWARM FORGE MODAL                           -->
