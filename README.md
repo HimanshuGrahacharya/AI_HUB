@@ -46,6 +46,8 @@ HSG AI HUB isn't just a website; it's an application.
 - **AI Voice Narration**: Every AI response features a "Speak" button using natural-sounding TTS.
 - **Advanced Code Highlighting**: Prism.js integration with a premium **Copy Button** and support for TypeScript, Python, SQL, Bash, and more.
 - **Suggested Prompt Chips**: A horizontally scrollable track of professional prompts to spark creativity.
+- **🔥 Trending Prompt Library**: A premium popup center holding 20+ expert-curated prompts across 5 key categories (Coding, Business, Creative, Writing, Research). Users can click any prompt to automatically inject it into the active workspace.
+- **🌌 3D Interactive Constellation**: A gorgeous, fluid orbital galaxy system displaying active AI nodes (OpenAI, Claude, Gemini, Flux) orbiting the core with inertia physics and hover glowing micro-interactions.
 
 ---
 
