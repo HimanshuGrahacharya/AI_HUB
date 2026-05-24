@@ -1,4 +1,4 @@
-﻿interface AITool {
+interface AITool {
   id: string;
   name: string;
   description: string;
@@ -7439,13 +7439,18 @@ const originalAddWarLog = addWarLog;
     const safeBasePrompt = basePrompt.substring(0, 500); // Truncate for URL safety
 
     const promises = activeStyles.map(async (style, i) => {
-      // Faster stagger (800ms) but relies on robust retry logic if rate-limited
-      await new Promise(r => setTimeout(r, i * 800));
+      // PRO-OPTIMIZATION: Increased stagger (1200ms) to ensure Pollinations capacity handles all 8 styles
+      await new Promise(r => setTimeout(r, i * 1200));
       
       const finalPrompt = encodeURIComponent(`${safeBasePrompt}, ${style}`);
       const seed = Math.floor(Math.random() * 1000000);
-      const primaryUrl = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`;
-      const fallbackUrl = `https://pollinations.ai/p/${finalPrompt}?seed=${seed}&width=1024&height=1024&model=flux`;
+      
+      // LOAD BALANCING: Alternate between different Pollinations endpoints to bypass CDN rate limits
+      const primaryUrl = i % 2 === 0 
+        ? `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed}&width=1024&height=1024&nologo=true`
+        : `https://pollinations.ai/p/${finalPrompt}?seed=${seed}&width=1024&height=1024&model=flux&nologo=true`;
+      
+      const fallbackUrl = `https://image.pollinations.ai/prompt/${finalPrompt}?seed=${seed + 1}&width=1024&height=1024&nologo=true&enhance=true`;
       
       return new Promise((resolve) => {
         const img = document.getElementById(`forge-img-${i}`) as HTMLImageElement;
@@ -7454,25 +7459,29 @@ const originalAddWarLog = addWarLog;
         
         let attempts = 0;
         const tryLoad = (baseLoadUrl: string) => {
-          // Add cache buster to force fresh request and bypass cached 429 errors
-          const url = baseLoadUrl + `&t=${Date.now()}`;
+          // Cache buster + unique seed per retry
+          const currentSeed = seed + attempts;
+          const url = baseLoadUrl.replace(/seed=\d+/, `seed=${currentSeed}`) + `&v=${Date.now()}`;
+          
           img.src = url;
           
           img.onload = () => {
-            loading.style.display = 'none';
+            if (loading) loading.style.display = 'none';
             img.style.display = 'block';
+            const selectBtn = cell?.querySelector('.forge-select-btn') as HTMLElement;
+            if (selectBtn) selectBtn.style.opacity = '1';
             resolve(true);
           };
           
           img.onerror = () => {
-            if (attempts < 3) {
+            if (attempts < 2) {
               attempts++;
-              console.log(`Forge ${i} failed, attempt ${attempts}, retrying...`);
-              setTimeout(() => {
-                tryLoad(attempts % 2 !== 0 ? fallbackUrl : primaryUrl);
-              }, 2000 * attempts); // Exponential backoff
+              console.warn(`Forge ${i} retry ${attempts}...`);
+              setTimeout(() => tryLoad(attempts === 1 ? fallbackUrl : primaryUrl), 2000);
             } else {
-              loading.innerHTML = '<span class="error-text">Forge Failed</span><button class="btn-retry-mini" onclick="retryForgeCell(' + i + ')"><i class="ph ph-arrows-counter-clockwise"></i> Retry</button>';
+              if (loading) {
+                loading.innerHTML = '<span class="error-text">Forge Failed</span><button class="btn-retry-mini" onclick="retryForgeCell(' + i + ')"><i class="ph ph-arrows-counter-clockwise"></i> Retry</button>';
+              }
               resolve(false);
             }
           };
@@ -7483,12 +7492,12 @@ const originalAddWarLog = addWarLog;
     });
 
     await Promise.all(promises);
-    showToast(`Swarm complete! ${activeForgeCount} styles generated.`, 'success');
+    showToast(`Vision Swarm fully materialized! ${activeStyles.length} styles ready.`, 'success');
   } catch (err) {
     showToast('Forge swarm error occurred.', 'error');
   } finally {
     forgeBtn.disabled = false;
-    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge â€” Swarm Multiple Styles';
+    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge — Swarm Multiple Styles';
   }
 };
 

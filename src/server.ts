@@ -114,6 +114,34 @@ async function saveChatMessage(userId: string, toolId: string, sender: 'user' | 
 }
 
 // Specific AI API Routes
+app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const { message, image } = req.body;
+    let payload: any = {
+      messages: [{ role: 'user', content: message }],
+      model: 'deepseek-v3', // High intelligence model for art analysis
+      max_tokens: 500
+    };
+
+    if (image) {
+      payload.messages[0].content = [
+        { type: 'text', text: message },
+        { type: 'image_url', image_url: { url: image } }
+      ];
+    }
+
+    const response = await axios.post('https://api.blackbox.ai/api/chat', payload, {
+      headers: { 'Content-Type': 'application/json' },
+      timeout: 15000
+    });
+
+    res.json({ response: response.data.choices[0].message.content });
+  } catch (error: any) {
+    console.error('Blackbox API error:', error.message);
+    res.status(500).json({ error: 'Vision analysis failed. Using raw prompt instead.' });
+  }
+});
+
 app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
