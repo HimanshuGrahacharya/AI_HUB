@@ -8,6 +8,12 @@
 
 ## 🌟 Premium Features
 
+### 🤖 HSG Agentic Forge (NEW!)
+Simulate fully autonomous multi-agent pipelines with live terminal execution.
+- **Squad Presets**: Choose between Dev, Marketing, or Analyst AI squads.
+- **Live Orchestration**: Watch agents like "Lead Architect" and "QA Auditor" hand off tasks with animated UI feedback and glowing connective paths.
+- **Terminal Simulator**: Monospace execution logs provide a highly technical, SaaS-grade visual experience as agents 'think' and output code blocks.
+
 ### ⚡ AI Model Arena (4-Column Comparison)
 The crown jewel of HSG AI HUB. Test your prompts against four world-class models simultaneously:
 - **ChatGPT:** The industry standard for creative writing.
