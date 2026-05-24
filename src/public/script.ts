@@ -5040,7 +5040,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const active = darkModeToggle.checked;
       document.body.classList.toggle('dark-mode', active);
       localStorage.setItem('dark-mode', active.toString());
-      showToast(active ? "Dark Mode On ðŸŒ™" : "Light Mode On â˜€ï¸", "info");
+      showToast(active ? "Dark Mode On 🤖Œ™" : "Light Mode On â˜€ï¸", "info");
     });
   }
 
@@ -5049,7 +5049,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (billingLink) {
     billingLink.addEventListener('click', (e) => {
       e.preventDefault();
-      showToast('This feature is coming soon! ðŸš€', 'info');
+      showToast('This feature is coming soon! 🤖š€', 'info');
     });
   }
 
@@ -5495,10 +5495,10 @@ function switchView(viewId: string) {
   const titleMap: Record<string, string> = {
     'dashboard':       'HSG AI HUB | The World\'s Most Powerful AI Dashboard',
     'arena-container': 'âš”ï¸ AI Model Arena | HSG AI HUB',
-    'warroom-container': 'ðŸŽ¯ Tactical AI War Room | HSG AI HUB',
-    'creative-studio': 'ðŸŽ¨ AI Creative Studio | HSG AI HUB',
-    'intelligence-feed': 'ðŸ“¡ AI Intelligence Feed | HSG AI HUB',
-    'chat-container':  'ðŸ’¬ AI Chat | HSG AI HUB',
+    'warroom-container': '🤖Ž¯ Tactical AI War Room | HSG AI HUB',
+    'creative-studio': '🤖Ž¨ AI Creative Studio | HSG AI HUB',
+    'intelligence-feed': '🤖“¡ AI Intelligence Feed | HSG AI HUB',
+    'chat-container':  '🤖’¬ AI Chat | HSG AI HUB',
   };
   document.title = titleMap[viewId] || 'HSG AI HUB';
 
@@ -5818,7 +5818,7 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
 
 (window as any).copyToClipboard = function(text: string) {
   navigator.clipboard.writeText(text);
-  showToast('Response copied! ðŸ“‹', 'info');
+  showToast('Response copied! 🤖“‹', 'info');
 };
 
 function startInactivityTimer() {
@@ -6114,7 +6114,7 @@ async function renderPersonasList() {
     if (!data.personas || data.personas.length === 0) {
       list.innerHTML = `
         <div style="text-align:center; padding:30px; color:var(--text-secondary);">
-          <div style="font-size:3rem; margin-bottom:10px;">ðŸ¤–</div>
+          <div style="font-size:3rem; margin-bottom:10px;">🤖¤–</div>
           <p>No personas yet! Create one to get started.</p>
           <button class="btn-primary" style="margin-top:15px;" onclick="document.getElementById('personas-panel').style.display='none'; document.getElementById('persona-modal').style.display='flex';"><i class="ph ph-plus"></i> Create My First Persona</button>
         </div>`;
@@ -6146,7 +6146,7 @@ async function renderPersonasList() {
 
 (window as any).savePersona = async function() {
   const name = (document.getElementById('persona-name') as HTMLInputElement)?.value?.trim();
-  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || 'ðŸ¤–';
+  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || '🤖¤–';
   const systemPrompt = (document.getElementById('persona-prompt') as HTMLTextAreaElement)?.value?.trim();
   if (!name || !systemPrompt) { showToast('Please fill in the name and system prompt.', 'error'); return; }
   const token = localStorage.getItem('token');
@@ -6162,7 +6162,7 @@ async function renderPersonasList() {
     document.getElementById('persona-modal')!.style.display = 'none';
     (document.getElementById('persona-name') as HTMLInputElement).value = '';
     (document.getElementById('persona-prompt') as HTMLTextAreaElement).value = '';
-    (document.getElementById('persona-emoji') as HTMLInputElement).value = 'ðŸ¤–';
+    (document.getElementById('persona-emoji') as HTMLInputElement).value = '🤖¤–';
   } catch(e) { showToast('Connection error', 'error'); }
 };
 
@@ -6826,7 +6826,7 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
 
 (window as any).shareWarRoomResult = function() {
   const mission = (document.getElementById('warroom-input') as HTMLTextAreaElement).value.trim();
-  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! ðŸš€ #AIHUB #StrategicIntelligence`;
+  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! 🤖š€ #AIHUB #StrategicIntelligence`;
   const url = window.location.href;
 
   if (navigator.share) {
@@ -7629,55 +7629,55 @@ const SWARM_PRESETS: Record<string, any> = {
   dev: {
     task: 'Write a secure Node.js JWT authentication handler and perform rigorous automated test validation.',
     agents: [
-      { icon: 'ðŸ’»', name: 'Lead Architect', model: 'Claude-3.5-Sonnet', color: '#60a5fa' },
+      { icon: '🤖’»', name: 'Lead Architect', model: 'Claude-3.5-Sonnet', color: '#60a5fa' },
       { icon: 'âš¡', name: 'Senior Coder', model: 'Llama-3.1-70B', color: '#c084fc' },
-      { icon: 'ðŸ›¡ï¸', name: 'Security QA Auditor', model: 'GPT-4o-Intelligence', color: '#22c55e' },
+      { icon: '🤖›¡ï¸', name: 'Security QA Auditor', model: 'GPT-4o-Intelligence', color: '#22c55e' },
     ],
     steps: [
-      { agent: 0, msg: 'ðŸ“ Analyzing requirements... decomposing task into modular architecture blocks.' },
+      { agent: 0, msg: '🤖“ Analyzing requirements... decomposing task into modular architecture blocks.' },
       { agent: 0, msg: 'âœ… Architecture blueprint finalized. Handoff â†’ Senior Coder.' },
       { agent: 1, msg: 'âš¡ Generating secure JWT handler with bcrypt + refresh token rotation...' },
       { agent: 1, msg: '```typescript\nconst token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn:"7d"});\n```' },
       { agent: 1, msg: 'âœ… Code generation complete. Handoff â†’ Security QA Auditor.' },
-      { agent: 2, msg: 'ðŸ›¡ï¸ Running automated security audit â€” scanning for OWASP Top 10 vulnerabilities...' },
-      { agent: 2, msg: 'ðŸ” JWT expiry: âœ… | Password hashing: âœ… | SQL Injection shield: âœ… | CSRF token: âœ…' },
-      { agent: 2, msg: 'ðŸ† MISSION COMPLETE: Zero vulnerabilities found. Code is production-ready!' },
+      { agent: 2, msg: '🤖›¡ï¸ Running automated security audit â€” scanning for OWASP Top 10 vulnerabilities...' },
+      { agent: 2, msg: '🤖” JWT expiry: âœ… | Password hashing: âœ… | SQL Injection shield: âœ… | CSRF token: âœ…' },
+      { agent: 2, msg: '🤖† MISSION COMPLETE: Zero vulnerabilities found. Code is production-ready!' },
     ]
   },
   marketing: {
     task: 'Create a full brand launch plan with tagline, social strategy, and influencer outreach campaign.',
     agents: [
-      { icon: 'ðŸŽ¯', name: 'Brand Strategist', model: 'Claude-3.5-Sonnet', color: '#f59e0b' },
-      { icon: 'ðŸ“¢', name: 'Content Creator', model: 'Llama-3.1-70B', color: '#ec4899' },
-      { icon: 'ðŸ“Š', name: 'Analytics Optimizer', model: 'GPT-4o-Intelligence', color: '#22c55e' },
+      { icon: '🤖Ž¯', name: 'Brand Strategist', model: 'Claude-3.5-Sonnet', color: '#f59e0b' },
+      { icon: '🤖“¢', name: 'Content Creator', model: 'Llama-3.1-70B', color: '#ec4899' },
+      { icon: '🤖“Š', name: 'Analytics Optimizer', model: 'GPT-4o-Intelligence', color: '#22c55e' },
     ],
     steps: [
-      { agent: 0, msg: 'ðŸŽ¯ Analyzing brand positioning... Identifying unique value proposition and target personas.' },
+      { agent: 0, msg: '🤖Ž¯ Analyzing brand positioning... Identifying unique value proposition and target personas.' },
       { agent: 0, msg: 'âœ… Brand blueprint: "Democratize AI for Everyone." Tone: Bold, accessible, futuristic.' },
-      { agent: 1, msg: 'ðŸ“¢ Generating launch assets: Twitter thread, LinkedIn article, Instagram carousel...' },
-      { agent: 1, msg: 'ðŸ’¡ Hook: "The future of AI doesn\'t belong to corporations. It belongs to YOU. ðŸš€ #HSGAIHub"' },
+      { agent: 1, msg: '🤖“¢ Generating launch assets: Twitter thread, LinkedIn article, Instagram carousel...' },
+      { agent: 1, msg: '🤖’¡ Hook: "The future of AI doesn\'t belong to corporations. It belongs to YOU. 🤖š€ #HSGAIHub"' },
       { agent: 1, msg: 'âœ… 3-week content calendar generated. 42 posts across 4 platforms. Handoff â†’ Analytics.' },
-      { agent: 2, msg: 'ðŸ“Š Running campaign ROI simulation... Projected reach: 2.4M impressions in Week 1.' },
-      { agent: 2, msg: 'ðŸ“ˆ Optimal post times computed. Peak engagement: Tue/Thu 7-9 AM & 8-10 PM (IST).' },
-      { agent: 2, msg: 'ðŸ† MISSION COMPLETE: Full launch playbook delivered. Expected 340% organic growth.' },
+      { agent: 2, msg: '🤖“Š Running campaign ROI simulation... Projected reach: 2.4M impressions in Week 1.' },
+      { agent: 2, msg: '🤖“ˆ Optimal post times computed. Peak engagement: Tue/Thu 7-9 AM & 8-10 PM (IST).' },
+      { agent: 2, msg: '🤖† MISSION COMPLETE: Full launch playbook delivered. Expected 340% organic growth.' },
     ]
   },
   analyst: {
     task: 'Deep analysis of AI agents market landscape, key players, investment trends, and future outlook.',
     agents: [
-      { icon: 'ðŸ”', name: 'Market Researcher', model: 'Claude-3.5-Sonnet', color: '#38bdf8' },
-      { icon: 'ðŸ“ˆ', name: 'Data Analyst', model: 'Llama-3.1-70B', color: '#a78bfa' },
-      { icon: 'ðŸ§ ', name: 'Intelligence Synthesizer', model: 'GPT-4o-Intelligence', color: '#f97316' },
+      { icon: '🤖”', name: 'Market Researcher', model: 'Claude-3.5-Sonnet', color: '#38bdf8' },
+      { icon: '🤖“ˆ', name: 'Data Analyst', model: 'Llama-3.1-70B', color: '#a78bfa' },
+      { icon: '🤖§ ', name: 'Intelligence Synthesizer', model: 'GPT-4o-Intelligence', color: '#f97316' },
     ],
     steps: [
-      { agent: 0, msg: 'ðŸ” Scanning market data... Indexing 500+ AI agent platforms worldwide.' },
-      { agent: 0, msg: 'ðŸ“Œ Key Players Identified: AutoGPT, LangChain, CrewAI, Microsoft Copilot Studio, AgentGPT.' },
-      { agent: 1, msg: 'ðŸ“ˆ Running investment trend analysis across 2022â€“2025 YoY data...' },
-      { agent: 1, msg: 'ðŸ’° AI Agent market: $2.8B (2024) â†’ projected $47B by 2029. CAGR: 76.4%' },
+      { agent: 0, msg: '🤖” Scanning market data... Indexing 500+ AI agent platforms worldwide.' },
+      { agent: 0, msg: '🤖“Œ Key Players Identified: AutoGPT, LangChain, CrewAI, Microsoft Copilot Studio, AgentGPT.' },
+      { agent: 1, msg: '🤖“ˆ Running investment trend analysis across 2022â€“2025 YoY data...' },
+      { agent: 1, msg: '🤖’° AI Agent market: $2.8B (2024) â†’ projected $47B by 2029. CAGR: 76.4%' },
       { agent: 1, msg: 'âœ… Statistical models finalized. Handoff â†’ Intelligence Synthesizer.' },
-      { agent: 2, msg: 'ðŸ§  Synthesizing findings into actionable strategic intelligence report...' },
-      { agent: 2, msg: 'ðŸŽ¯ Key Insight: "Autonomous vertical agents (Coding, Marketing, Legal) will dominate 2025-2027."' },
-      { agent: 2, msg: 'ðŸ† MISSION COMPLETE: Intelligence briefing delivered. Board-ready executive summary generated!' },
+      { agent: 2, msg: '🤖§  Synthesizing findings into actionable strategic intelligence report...' },
+      { agent: 2, msg: '🤖Ž¯ Key Insight: "Autonomous vertical agents (Coding, Marketing, Legal) will dominate 2025-2027."' },
+      { agent: 2, msg: '🤖† MISSION COMPLETE: Intelligence briefing delivered. Board-ready executive summary generated!' },
     ]
   }
 };
@@ -7749,7 +7749,7 @@ function loadSwarmPresetByKey(key: string) {
   const consoleEl = document.getElementById('swarm-console');
   if (!consoleEl) return;
 
-  consoleEl.innerHTML = '<div style="color:#64748b;">// ðŸš€ Mission INITIATED â€” Orchestration pipeline starting...<br>// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€</div>';
+  consoleEl.innerHTML = '<div style="color:#64748b;">// 🤖š€ Mission INITIATED â€” Orchestration pipeline starting...<br>// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€</div>';
 
   const agentColors = preset.agents.map((a: any) => a.color);
   const agentNames = preset.agents.map((a: any) => a.name);
