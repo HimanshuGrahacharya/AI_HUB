@@ -5494,11 +5494,11 @@ function switchView(viewId: string) {
   // Dynamic page title map â€” professional SaaS-grade naming
   const titleMap: Record<string, string> = {
     'dashboard':       'HSG AI HUB | The World\'s Most Powerful AI Dashboard',
-    'arena-container': 'âš”ï¸ AI Model Arena | HSG AI HUB',
-    'warroom-container': '🤖Ž¯ Tactical AI War Room | HSG AI HUB',
-    'creative-studio': '🤖Ž¨ AI Creative Studio | HSG AI HUB',
-    'intelligence-feed': '🤖“¡ AI Intelligence Feed | HSG AI HUB',
-    'chat-container':  '🤖’¬ AI Chat | HSG AI HUB',
+    'arena-container': '⚔️ AI Model Arena | HSG AI HUB',
+    'warroom-container': '🎯 Tactical AI War Room | HSG AI HUB',
+    'creative-studio': '🎨 AI Creative Studio | HSG AI HUB',
+    'intelligence-feed': '📡 AI Intelligence Feed | HSG AI HUB',
+    'chat-container':  '💬 AI Chat | HSG AI HUB',
   };
   document.title = titleMap[viewId] || 'HSG AI HUB';
 
@@ -6146,7 +6146,7 @@ async function renderPersonasList() {
 
 (window as any).savePersona = async function() {
   const name = (document.getElementById('persona-name') as HTMLInputElement)?.value?.trim();
-  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || '🤖¤–';
+  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || '🤖';
   const systemPrompt = (document.getElementById('persona-prompt') as HTMLTextAreaElement)?.value?.trim();
   if (!name || !systemPrompt) { showToast('Please fill in the name and system prompt.', 'error'); return; }
   const token = localStorage.getItem('token');
@@ -6162,7 +6162,7 @@ async function renderPersonasList() {
     document.getElementById('persona-modal')!.style.display = 'none';
     (document.getElementById('persona-name') as HTMLInputElement).value = '';
     (document.getElementById('persona-prompt') as HTMLTextAreaElement).value = '';
-    (document.getElementById('persona-emoji') as HTMLInputElement).value = '🤖¤–';
+    (document.getElementById('persona-emoji') as HTMLInputElement).value = '🤖';
   } catch(e) { showToast('Connection error', 'error'); }
 };
 
