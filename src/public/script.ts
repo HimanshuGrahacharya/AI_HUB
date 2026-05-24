@@ -6816,7 +6816,7 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
   }
 
   btn.disabled = false;
-  btn.textContent = 'Launch Multi-Agent Mission âš¡';
+  btn.textContent = 'Launch Multi-Agent Mission ⚡';
 };
 
 (window as any).copyMasterPlan = function() {
@@ -7488,7 +7488,7 @@ const originalAddWarLog = addWarLog;
     showToast('Forge swarm error occurred.', 'error');
   } finally {
     forgeBtn.disabled = false;
-    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> âš¡ Parallel Forge â€” Swarm Multiple Styles';
+    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge â€” Swarm Multiple Styles';
   }
 };
 
@@ -7630,13 +7630,13 @@ const SWARM_PRESETS: Record<string, any> = {
     task: 'Write a secure Node.js JWT authentication handler and perform rigorous automated test validation.',
     agents: [
       { icon: '🤖’»', name: 'Lead Architect', model: 'Claude-3.5-Sonnet', color: '#60a5fa' },
-      { icon: 'âš¡', name: 'Senior Coder', model: 'Llama-3.1-70B', color: '#c084fc' },
+      { icon: '⚡', name: 'Senior Coder', model: 'Llama-3.1-70B', color: '#c084fc' },
       { icon: '🤖›¡ï¸', name: 'Security QA Auditor', model: 'GPT-4o-Intelligence', color: '#22c55e' },
     ],
     steps: [
       { agent: 0, msg: '🤖“ Analyzing requirements... decomposing task into modular architecture blocks.' },
       { agent: 0, msg: 'âœ… Architecture blueprint finalized. Handoff â†’ Senior Coder.' },
-      { agent: 1, msg: 'âš¡ Generating secure JWT handler with bcrypt + refresh token rotation...' },
+      { agent: 1, msg: '⚡ Generating secure JWT handler with bcrypt + refresh token rotation...' },
       { agent: 1, msg: '```typescript\nconst token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn:"7d"});\n```' },
       { agent: 1, msg: 'âœ… Code generation complete. Handoff â†’ Security QA Auditor.' },
       { agent: 2, msg: '🤖›¡ï¸ Running automated security audit â€” scanning for OWASP Top 10 vulnerabilities...' },
@@ -7749,7 +7749,7 @@ function loadSwarmPresetByKey(key: string) {
   const consoleEl = document.getElementById('swarm-console');
   if (!consoleEl) return;
 
-  consoleEl.innerHTML = '<div style="color:#64748b;">// 🤖š€ Mission INITIATED â€” Orchestration pipeline starting...<br>// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€</div>';
+  consoleEl.innerHTML = '<div style="color:#64748b;">// 🚀 Mission INITIATED — Orchestration pipeline starting...<br>// ─────────────────────────────────────────────────</div>';
 
   const agentColors = preset.agents.map((a: any) => a.color);
   const agentNames = preset.agents.map((a: any) => a.name);
@@ -7785,12 +7785,12 @@ function loadSwarmPresetByKey(key: string) {
 
   function runNextStep() {
     if (stepIndex >= preset.steps.length) {
-      // Done â€” reset bubbles
+      // Done — reset bubbles
       for (let i = 1; i <= 3; i++) {
         const b = document.querySelector(`#bubble-${i} .bubble-icon-container`) as HTMLElement;
         if (b) { b.style.transform = 'scale(1)'; }
       }
-      consoleEl!.innerHTML += `<div style="margin-top:12px; color:#22c55e; font-weight:700;">// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•<br>// âœ… SWARM MISSION COMPLETE â€” All agents signed off.<br>// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•</div>`;
+      consoleEl!.innerHTML += `<div style="margin-top:12px; color:#22c55e; font-weight:700;">// ═════════════════════════════════════════════════<br>// ✅ SWARM MISSION COMPLETE — All agents signed off.<br>// ═════════════════════════════════════════════════</div>`;
       consoleEl!.scrollTop = consoleEl!.scrollHeight;
       return;
     }
