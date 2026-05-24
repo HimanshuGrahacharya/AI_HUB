@@ -1,4 +1,4 @@
-interface AITool {
+﻿interface AITool {
   id: string;
   name: string;
   description: string;
@@ -370,12 +370,30 @@ const aiTools: AITool[] = [
     "link": "https://openwebui.com",
     "logo": "https://www.google.com/s2/favicons?domain=openwebui.com&sz=128"
   },
+
+  // AI Agent Platforms
   {
     "id": "langchain",
     "name": "LangChain",
     "description": "The leading framework for building stateful, production-ready AI agents and LLM applications.",
     "category": "AI Agent Platforms",
     "link": "https://langchain.com",
+    "logo": "https://www.google.com/s2/favicons?domain=langchain.com&sz=128"
+  },
+  {
+    "id": "crewai",
+    "name": "CrewAI",
+    "description": "Cutting-edge framework for orchestrating role-playing, autonomous AI agents to solve complex tasks.",
+    "category": "AI Agent Platforms",
+    "link": "https://crewai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=crewai.com&sz=128"
+  },
+  {
+    "id": "langgraph",
+    "name": "LangGraph",
+    "description": "Build resilient, stateful multi-agent workflows with cyclic graphs and human-in-the-loop features.",
+    "category": "AI Agent Platforms",
+    "link": "https://langchain.com/langgraph",
     "logo": "https://www.google.com/s2/favicons?domain=langchain.com&sz=128"
   },
   {
@@ -386,6 +404,7 @@ const aiTools: AITool[] = [
     "link": "https://llamaindex.ai",
     "logo": "https://www.google.com/s2/favicons?domain=llamaindex.ai&sz=128"
   },
+  // AI Coding Agents
   {
     "id": "bolt-new",
     "name": "Bolt.new",
@@ -395,12 +414,46 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=bolt.new&sz=128"
   },
   {
+    "id": "lovable",
+    "name": "Lovable",
+    "description": "The ultimate GPT-engineer. Build and ship production-ready web apps through natural conversation.",
+    "category": "AI Coding Agents",
+    "link": "https://lovable.dev",
+    "logo": "https://www.google.com/s2/favicons?domain=lovable.dev&sz=128"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "description": "The AI-first code editor designed for pair programming with powerful autonomous coding agents.",
+    "category": "AI Coding Agents",
+    "link": "https://cursor.com",
+    "logo": "https://www.google.com/s2/favicons?domain=cursor.com&sz=128"
+  },
+  // Browser & Automation Agents
+  {
     "id": "openai-operator",
     "name": "OpenAI Operator",
     "description": "Autonomous browser agent that can use your computer to perform complex tasks on the web.",
     "category": "Browser Agents",
     "link": "https://openai.com/index/introducing-operator/",
     "logo": "https://www.google.com/s2/favicons?domain=openai.com&sz=128"
+  },
+  {
+    "id": "n8n",
+    "name": "n8n AI",
+    "description": "The workflow automation platform with native AI capabilities to build complex agentic pipelines.",
+    "category": "AI Automation",
+    "link": "https://n8n.io",
+    "logo": "https://www.google.com/s2/favicons?domain=n8n.io&sz=128"
+  },
+  // Media Agents
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "description": "The world's most advanced AI voice platform. Perfect for voice agents and natural narration.",
+    "category": "AI Voice Agents",
+    "link": "https://elevenlabs.io",
+    "logo": "https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128"
   },
   {
     "id": "heygen",
@@ -410,6 +463,7 @@ const aiTools: AITool[] = [
     "link": "https://heygen.com",
     "logo": "https://www.google.com/s2/favicons?domain=heygen.com&sz=128"
   },
+
   {
     "id": "chatgpt",
     "name": "ChatGPT",
@@ -483,6 +537,14 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=youchat.com"
   },
   {
+    "id": "piai",
+    "name": "Pi AI",
+    "description": "Pi AI is a top-tier ai assistants solution.",
+    "category": "AI Assistants",
+    "link": "https://piai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=piai.com"
+  },
+  {
     "id": "kimiai",
     "name": "Kimi AI",
     "description": "Kimi AI is a top-tier ai assistants solution.",
@@ -497,6 +559,14 @@ const aiTools: AITool[] = [
     "category": "AI Assistants",
     "link": "https://characterai.com",
     "logo": "https://www.google.com/s2/favicons?domain=characterai.com"
+  },
+  {
+    "id": "janai",
+    "name": "Jan AI",
+    "description": "Jan AI is a top-tier ai assistants solution.",
+    "category": "AI Assistants",
+    "link": "https://janai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=janai.com"
   },
   {
     "id": "huggingchat",
@@ -1515,6 +1585,14 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=synthesia.com"
   },
   {
+    "id": "heygen",
+    "name": "HeyGen",
+    "description": "HeyGen is a top-tier video tools solution.",
+    "category": "Video Tools",
+    "link": "https://heygen.com",
+    "logo": "https://www.google.com/s2/favicons?domain=heygen.com"
+  },
+  {
     "id": "did",
     "name": "D-ID",
     "description": "D-ID is a top-tier video tools solution.",
@@ -1875,6 +1953,14 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=speechifyvideo.com"
   },
   {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "description": "ElevenLabs is a top-tier audio / voice solution.",
+    "category": "Audio / Voice",
+    "link": "https://elevenlabs.io",
+    "logo": "https://www.google.com/s2/favicons?domain=elevenlabs.io"
+  },
+  {
     "id": "murfai",
     "name": "Murf AI",
     "description": "Murf AI is a top-tier audio / voice solution.",
@@ -1889,6 +1975,14 @@ const aiTools: AITool[] = [
     "category": "Audio / Voice",
     "link": "https://playht.com",
     "logo": "https://www.google.com/s2/favicons?domain=playht.com"
+  },
+  {
+    "id": "descript",
+    "name": "Descript",
+    "description": "Descript is a top-tier audio / voice solution.",
+    "category": "Audio / Voice",
+    "link": "https://descript.com",
+    "logo": "https://www.google.com/s2/favicons?domain=descript.com"
   },
   {
     "id": "resembleai",
@@ -2179,6 +2273,22 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=github.com"
   },
   {
+    "id": "codeium",
+    "name": "Codeium",
+    "description": "Codeium is a top-tier coding tools solution.",
+    "category": "Coding Tools",
+    "link": "https://codeium.com",
+    "logo": "https://www.google.com/s2/favicons?domain=codeium.com"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "description": "Cursor is a top-tier coding tools solution.",
+    "category": "Coding Tools",
+    "link": "https://cursor.com",
+    "logo": "https://www.google.com/s2/favicons?domain=cursor.com"
+  },
+  {
     "id": "replitghostwriter",
     "name": "Replit Ghostwriter",
     "description": "Replit Ghostwriter is a top-tier coding tools solution.",
@@ -2305,6 +2415,14 @@ const aiTools: AITool[] = [
     "category": "Coding Tools",
     "link": "https://marscode.com",
     "logo": "https://www.google.com/s2/favicons?domain=marscode.com"
+  },
+  {
+    "id": "continuedev",
+    "name": "Continue.dev",
+    "description": "Continue.dev is a top-tier coding tools solution.",
+    "category": "Coding Tools",
+    "link": "https://continuedev.com",
+    "logo": "https://www.google.com/s2/favicons?domain=continuedev.com"
   },
   {
     "id": "refactai",
@@ -2443,6 +2561,30 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=windsurfai.com"
   },
   {
+    "id": "langchain",
+    "name": "LangChain",
+    "description": "LangChain is a top-tier coding tools solution.",
+    "category": "Coding Tools",
+    "link": "https://langchain.com",
+    "logo": "https://www.google.com/s2/favicons?domain=langchain.com"
+  },
+  {
+    "id": "autogpt",
+    "name": "AutoGPT",
+    "description": "AutoGPT is a top-tier coding tools solution.",
+    "category": "Coding Tools",
+    "link": "https://autogpt.com",
+    "logo": "https://www.google.com/s2/favicons?domain=autogpt.com"
+  },
+  {
+    "id": "crewai",
+    "name": "CrewAI",
+    "description": "CrewAI is a top-tier coding tools solution.",
+    "category": "Coding Tools",
+    "link": "https://crewai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=crewai.com"
+  },
+  {
     "id": "notionai",
     "name": "Notion AI",
     "description": "Notion AI is a top-tier productivity solution.",
@@ -2579,6 +2721,14 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=bardeenai.com"
   },
   {
+    "id": "zapierai",
+    "name": "Zapier AI",
+    "description": "Zapier AI is a top-tier productivity solution.",
+    "category": "Productivity",
+    "link": "https://zapier.com",
+    "logo": "https://www.google.com/s2/favicons?domain=zapier.com"
+  },
+  {
     "id": "makecom",
     "name": "Make.com",
     "description": "Make.com is a top-tier productivity solution.",
@@ -2641,6 +2791,14 @@ const aiTools: AITool[] = [
     "category": "Productivity",
     "link": "https://flowrite.com",
     "logo": "https://www.google.com/s2/favicons?domain=flowrite.com"
+  },
+  {
+    "id": "composeai",
+    "name": "Compose AI",
+    "description": "Compose AI is a top-tier productivity solution.",
+    "category": "Productivity",
+    "link": "https://composeai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=composeai.com"
   },
   {
     "id": "shortwaveai",
@@ -2747,6 +2905,14 @@ const aiTools: AITool[] = [
     "logo": "https://www.google.com/s2/favicons?domain=surferseo.com"
   },
   {
+    "id": "frase",
+    "name": "Frase",
+    "description": "Frase is a top-tier marketing solution.",
+    "category": "Marketing",
+    "link": "https://frase.com",
+    "logo": "https://www.google.com/s2/favicons?domain=frase.com"
+  },
+  {
     "id": "marketmuse",
     "name": "MarketMuse",
     "description": "MarketMuse is a top-tier marketing solution.",
@@ -2769,6 +2935,30 @@ const aiTools: AITool[] = [
     "category": "Marketing",
     "link": "https://neuronwriter.com",
     "logo": "https://www.google.com/s2/favicons?domain=neuronwriter.com"
+  },
+  {
+    "id": "scalenut",
+    "name": "Scalenut",
+    "description": "Scalenut is a top-tier marketing solution.",
+    "category": "Marketing",
+    "link": "https://scalenut.com",
+    "logo": "https://www.google.com/s2/favicons?domain=scalenut.com"
+  },
+  {
+    "id": "growthbar",
+    "name": "GrowthBar",
+    "description": "GrowthBar is a top-tier marketing solution.",
+    "category": "Marketing",
+    "link": "https://growthbar.com",
+    "logo": "https://www.google.com/s2/favicons?domain=growthbar.com"
+  },
+  {
+    "id": "outranking",
+    "name": "Outranking",
+    "description": "Outranking is a top-tier marketing solution.",
+    "category": "Marketing",
+    "link": "https://outranking.com",
+    "logo": "https://www.google.com/s2/favicons?domain=outranking.com"
   },
   {
     "id": "inkseo",
@@ -4369,7 +4559,8 @@ const aiTools: AITool[] = [
     "category": "Productivity",
     "link": "https://productivityextra11.com",
     "logo": "https://www.google.com/s2/favicons?domain=productivityextra11.com"
-  }
+  },
+
 ];
 
 let selectedAI: string | null = null;
@@ -5303,16 +5494,11 @@ function switchView(viewId: string) {
   // Dynamic page title map â€” professional SaaS-grade naming
   const titleMap: Record<string, string> = {
     'dashboard':       'HSG AI HUB | The World\'s Most Powerful AI Dashboard',
-    'arena-container': '⚔️ AI Model Arena | HSG AI HUB',
-
-    'warroom-container': '🎯 Tactical AI War Room | HSG AI HUB',
-
-    'creative-studio': '🎨 AI Creative Studio | HSG AI HUB',
-
-    'intelligence-feed': '📡 AI Intelligence Feed | HSG AI HUB',
-
-    'chat-container':  '💬 AI Chat | HSG AI HUB',
-
+    'arena-container': '⚔️ AI Model Arena | HSG AI HUB',
+    'warroom-container': '🎯 Tactical AI War Room | HSG AI HUB',
+    'creative-studio': '🎨 AI Creative Studio | HSG AI HUB',
+    'intelligence-feed': '📡 AI Intelligence Feed | HSG AI HUB',
+    'chat-container':  '💬 AI Chat | HSG AI HUB',
   };
   document.title = titleMap[viewId] || 'HSG AI HUB';
 
@@ -5355,63 +5541,29 @@ function switchView(viewId: string) {
   }
 }
 
-async function selectAI(toolId: string) {
+function selectAI(toolId: string) {
   selectedAI = toolId;
   addToRecentlyViewed(toolId);
+  const tool = aiTools.find(t => t.id === toolId);
   
   const nameEl = document.getElementById('selected-ai-name');
-  const logoEl = document.getElementById('selected-ai-logo') as HTMLImageElement;
+  if (nameEl) nameEl.textContent = tool ? tool.name : 'AI Assistant';
   
-  if (toolId.startsWith('personas/')) {
-    const id = toolId.split('/')[1];
-    const token = localStorage.getItem('token');
-    try {
-      // Set temporary state while loading
-      if (nameEl) nameEl.textContent = 'Loading Persona...';
-      
-      const res = await fetch('/api/personas', { headers: { 'Authorization': `Bearer ${token}` } });
-      const data = await res.json();
-      const persona = data.personas?.find((p: any) => p._id === id);
-      
-      if (persona) {
-        if (nameEl) nameEl.textContent = `${persona.emoji} ${persona.name}`;
-        if (logoEl) {
-          logoEl.src = ''; // Clear logo for personas
-          logoEl.style.display = 'none'; // Or set a placeholder
-        }
-      } else {
-        if (nameEl) nameEl.textContent = 'Unknown Persona';
-      }
-    } catch (e) {
-      if (nameEl) nameEl.textContent = 'AI Persona';
-    }
-  } else {
-    const tool = aiTools.find(t => t.id === toolId);
-    if (nameEl) nameEl.textContent = tool ? tool.name : 'AI Assistant';
-    if (logoEl) {
-      logoEl.style.display = 'block';
-      logoEl.src = tool ? tool.logo : '';
-      logoEl.onerror = () => {
-        logoEl.src = 'https://www.gstatic.com/lamda/images/favicon_v2_71731f242707730e84.png';
-      };
-    }
+  const logoEl = document.getElementById('selected-ai-logo') as HTMLImageElement;
+  if (logoEl) {
+    logoEl.src = tool ? tool.logo : '';
+    logoEl.onerror = () => {
+      logoEl.src = 'https://www.gstatic.com/lamda/images/favicon_v2_71731f242707730e84.png';
+    };
   }
 
   switchView('chat-container');
-  // Update URL hash for chat persistence
-  if (window.location.hash !== `#chat/${toolId}`) {
-    history.pushState(null, '', `#chat/${toolId}`);
-  }
+  // Update URL hash for chat persistence (enables refresh-restore)
+  history.pushState(null, '', `#chat/${toolId}`);
   
   const messagesDiv = document.getElementById('chat-messages');
   if (messagesDiv) messagesDiv.innerHTML = '';
 }
-
-(window as any).selectPersona = function(id: string, name: string, emoji: string) {
-  selectAI(`personas/${id}/chat`);
-  document.getElementById('personas-panel')!.style.display = 'none';
-  addMessage('ai', `Hello! I am ${emoji} ${name}. How can I help you today?`);
-};
 
 function showTools() {
   switchView('dashboard');

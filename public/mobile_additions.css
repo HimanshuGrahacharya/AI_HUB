@@ -19,23 +19,16 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     height: auto !important;
     position: relative; 
     -webkit-overflow-scrolling: touch;
-    background: #08081a !important; /* Premium Dark Navy */
+    background: #0a0a1f !important; /* Premium Midnight Nebula */
   }
-  
   .dashboard-main { 
     padding: 0 !important; 
     margin-top: 70px !important; 
     display: block !important; 
     height: auto !important; 
-    min-height: calc(100vh - 70px);
     overflow: visible !important; 
+    min-height: calc(100vh - 70px);
   }
-
-  .content-area {
-    height: auto !important;
-    overflow: visible !important;
-  }
-  
   .glass { padding: 15px !important; }
   .navbar { padding: 0 15px; height: 70px; }
   .nav-center { display: none !important; }
@@ -167,20 +160,25 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
 
   .sidebar.active {
     transform: translateX(0);
-    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.7) !important;
+    box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5) !important;
   }
 
-  /* Lock body scroll when sidebar is open WITHOUT fixed positioning if possible */
+  /* Lock body scroll when sidebar is open — iOS Safari REQUIRES position:fixed */
   body.sidebar-open {
     overflow: hidden !important;
-    touch-action: none; /* Prevents scroll on the body underneath */
+    position: fixed !important;
+    width: 100% !important;
+    /* do NOT set height here — it causes layout jump on Android */
   }
 
   /* Ensure sidebar scrolls independently - CRITICAL FIX */
   .sidebar.active {
-    overflow-y: auto !important;
+    overflow-y: scroll !important;
     -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    /* Sidebar must receive ALL touch events */
     pointer-events: all !important;
+    touch-action: pan-y !important;
   }
 
   .sidebar-overlay {
@@ -213,30 +211,6 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     padding: 12px 12px 100px !important;
   }
   .arena-grid { grid-template-columns: 1fr !important; }
-
-  /* Premium Dark Mode Overrides for Mobile */
-  .dark-mode {
-    --bg-body: #08081a !important;
-    --bg-card: rgba(15, 23, 42, 0.9) !important;
-    --nav-bg: rgba(10, 10, 31, 0.9) !important;
-    --text-main: #f1f5f9 !important;
-    --primary: #8b5cf6 !important;
-  }
-
-  .dark-mode .sidebar {
-    background: #0a0a1a !important;
-    border-right: 1px solid rgba(139, 92, 246, 0.3) !important;
-  }
-
-  .dark-mode .ai-card {
-    background: rgba(15, 23, 42, 0.8) !important;
-    border: 1px solid rgba(139, 92, 246, 0.2) !important;
-  }
-
-  .dark-mode .navbar {
-    background: rgba(10, 10, 31, 0.9) !important;
-    border-bottom: 1px solid rgba(139, 92, 246, 0.2) !important;
-  }
 }
 
 @media (max-width: 400px) {
@@ -586,16 +560,48 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   .sidebar.active,
   .dark-mode .sidebar,
   .dark-mode .sidebar.active {
-    backdrop-filter: blur(30px) !important;
-    -webkit-backdrop-filter: blur(30px) !important;
-    /* Dark mode: Deep Nebula Navy */
-    background: rgba(10, 10, 26, 0.95) !important;
-    border-right: 1px solid rgba(139, 92, 246, 0.25) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    /* Dark mode: solid dark navy */
+    background: #0d1526 !important;
   }
 
-  /* Global Dark BG Improvement - Less "Absolute Black" */
-  .dark-mode {
-    --bg-body: #08081a !important;
-    --bg-card: rgba(15, 23, 42, 0.9) !important;
+  /* Light mode override */
+  body:not(.dark-mode) .sidebar,
+  body:not(.dark-mode) .sidebar.active {
+    background: #ffffff !important;
+  }
+
+  /* Overlay: dim but never blur — blur leaks into the sidebar layer */
+  .sidebar-overlay,
+  .sidebar-overlay.show {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Section headings match laptop: bold white on dark, dark on light */
+  .sidebar .sidebar-section h3 {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    text-transform: none !important;
+    letter-spacing: -0.01em !important;
+    opacity: 1 !important;
+  }
+
+  body:not(.dark-mode) .sidebar .sidebar-section h3 {
+    color: #0f172a !important;
   }
 }
+
+/* Global Dark BG Improvement - Less "Absolute Black" for Mobile */
+@media (max-width: 768px) {
+  .dark-mode {
+    --bg-body: #0a0a24 !important;
+    --bg-card: rgba(15, 23, 42, 0.9) !important;
+    --nav-bg: rgba(10, 10, 31, 0.9) !important;
+    --text-main: #f1f5f9 !important;
+  }
+}
+
+/* Compact professional sidebar - fixed width for consistency */
