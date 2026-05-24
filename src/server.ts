@@ -388,6 +388,31 @@ app.post('/api/signup', async (req: Request, res: Response) => {
   }
 });
 
+
+app.post('/api/auth/guest', async (req: Request, res: Response) => {
+  try {
+    const guestEmail = 'guest@aihub.com';
+    let user = await User.findOne({ email: guestEmail });
+    
+    if (!user) {
+      const hashedPassword = await bcrypt.hash('guestpass123', 10);
+      user = new User({
+        fullName: 'Guest Explorer',
+        email: guestEmail,
+        password: hashedPassword,
+        mobileNumber: undefined
+      });
+      await user.save();
+    }
+    
+    const token = jwt.sign({ id: user._id, email: user.email, tokenVersion: user.tokenVersion || 0 }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token });
+  } catch (error) {
+    console.error('Guest login error:', error);
+    res.status(500).json({ error: 'Failed to authenticate guest' });
+  }
+});
+
 app.post('/api/login', async (req: Request, res: Response) => {
   try {
     const { identifier, password } = req.body; // identifier can be email or mobile

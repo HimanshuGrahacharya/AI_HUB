@@ -158,6 +158,35 @@
     }
     .btn-submit:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(99,102,241,0.4); }
 
+    .btn-guest-bypass {
+      width:100%; padding:14px;
+      background: rgba(99, 102, 241, 0.06);
+      border: 1.5px dashed rgba(99, 102, 241, 0.4);
+      color: #818cf8; border-radius:12px;
+      font-family:'Outfit',sans-serif; font-weight:700; font-size:0.95rem;
+      cursor:pointer; transition:all .3s; letter-spacing:.02em;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 14px;
+    }
+    .btn-guest-bypass:hover {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: #818cf8;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+    }
+    body.dark-mode .btn-guest-bypass {
+      background: rgba(167, 139, 250, 0.06);
+      border-color: rgba(167, 139, 250, 0.3);
+      color: #c084fc;
+    }
+    body.dark-mode .btn-guest-bypass:hover {
+      background: rgba(167, 139, 250, 0.15);
+      border-color: #c084fc;
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(167, 139, 250, 0.2);
+    }
+
     .divider { display:flex; align-items:center; gap:14px; margin:24px 0; }
     .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--border); }
     .divider span { color:var(--text-subtle); font-size:.82rem; white-space:nowrap; }
@@ -240,6 +269,11 @@
         </div>
 
         <button type="submit" class="btn-submit">Sign In</button>
+        
+        <!-- Premium Fast Guest Bypass -->
+        <button type="button" class="btn-guest-bypass" onclick="loginAsGuest()">
+          <i class="ph ph-lightning"></i> Try as Guest (Instant Access)
+        </button>
       </form>
 
       <div class="divider"><span>or continue with</span></div>

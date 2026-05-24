@@ -77,6 +77,34 @@ async function login(identifier: string, password: string): Promise<void> {
   }
 }
 
+// Guest Login bypass function
+async function loginAsGuest(): Promise<void> {
+  try {
+    showToast('Entering sandbox... Please wait.', 'info');
+    const response = await fetch('/api/auth/guest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem('token', data.token);
+      showToast('🚀 Sandbox access granted! Redirecting...', 'success');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1000);
+    } else {
+      showToast(data.error || 'Failed to enter guest sandbox', 'error');
+    }
+  } catch (error) {
+    console.error('Guest login error:', error);
+    showToast('Connection error during guest login', 'error');
+  }
+}
+
+// Expose guest login to window object
+(window as any).loginAsGuest = loginAsGuest;
+
+
 // Signup function
 async function signup(fullName: string, email: string, mobileNumber: string, password: string): Promise<void> {
   try {
