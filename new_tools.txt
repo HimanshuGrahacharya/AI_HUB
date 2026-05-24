@@ -1,0 +1,360 @@
+  {
+    "id": "kiro",
+    "name": "Kiro",
+    "description": "AI-native IDE and autonomous development environment.",
+    "category": "Coding & Development",
+    "link": "https://kiro.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=kiro.ai&sz=128"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "description": "AI coding IDE based on VS Code.",
+    "category": "Coding & Development",
+    "link": "https://cursor.sh",
+    "logo": "https://www.google.com/s2/favicons?domain=cursor.sh&sz=128"
+  },
+  {
+    "id": "windsurf",
+    "name": "Windsurf",
+    "description": "AI software engineering workspace.",
+    "category": "Coding & Development",
+    "link": "https://codeium.com/windsurf",
+    "logo": "https://www.google.com/s2/favicons?domain=codeium.com&sz=128"
+  },
+  {
+    "id": "replitai",
+    "name": "Replit AI",
+    "description": "Cloud coding + AI agents.",
+    "category": "Coding & Development",
+    "link": "https://replit.com",
+    "logo": "https://www.google.com/s2/favicons?domain=replit.com&sz=128"
+  },
+  {
+    "id": "codeium",
+    "name": "Codeium",
+    "description": "AI coding assistant and editor.",
+    "category": "Coding & Development",
+    "link": "https://codeium.com",
+    "logo": "https://www.google.com/s2/favicons?domain=codeium.com&sz=128"
+  },
+  {
+    "id": "continuedev",
+    "name": "Continue Dev",
+    "description": "Open-source AI coding assistant.",
+    "category": "Coding & Development",
+    "link": "https://continue.dev",
+    "logo": "https://www.google.com/s2/favicons?domain=continue.dev&sz=128"
+  },
+  {
+    "id": "cline",
+    "name": "Cline",
+    "description": "Autonomous coding agent for VS Code.",
+    "category": "Coding & Development",
+    "link": "https://github.com/cline/cline",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "aider",
+    "name": "Aider",
+    "description": "Terminal AI pair programmer.",
+    "category": "Coding & Development",
+    "link": "https://aider.chat",
+    "logo": "https://www.google.com/s2/favicons?domain=aider.chat&sz=128"
+  },
+  {
+    "id": "boltnew",
+    "name": "Bolt.new",
+    "description": "AI full-stack app generator.",
+    "category": "Coding & Development",
+    "link": "https://bolt.new",
+    "logo": "https://www.google.com/s2/favicons?domain=bolt.new&sz=128"
+  },
+  {
+    "id": "lovable",
+    "name": "Lovable",
+    "description": "Prompt-to-app builder.",
+    "category": "Coding & Development",
+    "link": "https://lovable.dev",
+    "logo": "https://www.google.com/s2/favicons?domain=lovable.dev&sz=128"
+  },
+  {
+    "id": "autogpt",
+    "name": "Auto-GPT",
+    "description": "Autonomous GPT-based agent framework.",
+    "category": "AI Agent Platforms",
+    "link": "https://agpt.co",
+    "logo": "https://www.google.com/s2/favicons?domain=agpt.co&sz=128"
+  },
+  {
+    "id": "babyagi",
+    "name": "BabyAGI",
+    "description": "Task planning autonomous AI.",
+    "category": "AI Agent Platforms",
+    "link": "https://github.com/yoheinakajima/babyagi",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "crewai",
+    "name": "CrewAI",
+    "description": "Multi-agent collaboration framework.",
+    "category": "AI Agent Platforms",
+    "link": "https://crewai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=crewai.com&sz=128"
+  },
+  {
+    "id": "langgraph",
+    "name": "LangGraph",
+    "description": "Stateful AI agent workflows.",
+    "category": "AI Agent Platforms",
+    "link": "https://langchain.com/langgraph",
+    "logo": "https://www.google.com/s2/favicons?domain=langchain.com&sz=128"
+  },
+  {
+    "id": "opendevin",
+    "name": "OpenDevin",
+    "description": "Open-source autonomous developer AI.",
+    "category": "AI Agent Platforms",
+    "link": "https://github.com/OpenDevin/OpenDevin",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "metagpt",
+    "name": "MetaGPT",
+    "description": "AI software company simulation agents.",
+    "category": "AI Agent Platforms",
+    "link": "https://github.com/geekan/MetaGPT",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "superagi",
+    "name": "SuperAGI",
+    "description": "Autonomous AI infrastructure.",
+    "category": "AI Agent Platforms",
+    "link": "https://superagi.com",
+    "logo": "https://www.google.com/s2/favicons?domain=superagi.com&sz=128"
+  },
+  {
+    "id": "agentgpt",
+    "name": "AgentGPT",
+    "description": "Browser-based autonomous agents.",
+    "category": "AI Agent Platforms",
+    "link": "https://agentgpt.reworkd.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=agentgpt.reworkd.ai&sz=128"
+  },
+  {
+    "id": "microsoftautogen",
+    "name": "Microsoft AutoGen",
+    "description": "Multi-agent conversation framework.",
+    "category": "AI Agent Platforms",
+    "link": "https://microsoft.github.io/autogen",
+    "logo": "https://www.google.com/s2/favicons?domain=microsoft.github.io&sz=128"
+  },
+  {
+    "id": "semantickernel",
+    "name": "Semantic Kernel",
+    "description": "AI orchestration framework by Microsoft.",
+    "category": "AI Agent Platforms",
+    "link": "https://github.com/microsoft/semantic-kernel",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "openinterpreter",
+    "name": "Open Interpreter",
+    "description": "AI that controls your computer locally.",
+    "category": "AI Automation",
+    "link": "https://openinterpreter.com",
+    "logo": "https://www.google.com/s2/favicons?domain=openinterpreter.com&sz=128"
+  },
+  {
+    "id": "browseruse",
+    "name": "Browser Use",
+    "description": "Browser automation agents.",
+    "category": "AI Automation",
+    "link": "https://browser-use.com",
+    "logo": "https://www.google.com/s2/favicons?domain=browser-use.com&sz=128"
+  },
+  {
+    "id": "skyvern",
+    "name": "Skyvern",
+    "description": "AI browser workflow automation.",
+    "category": "AI Automation",
+    "link": "https://skyvern.com",
+    "logo": "https://www.google.com/s2/favicons?domain=skyvern.com&sz=128"
+  },
+  {
+    "id": "stagehand",
+    "name": "Stagehand",
+    "description": "AI web automation framework.",
+    "category": "AI Automation",
+    "link": "https://stagehand.dev",
+    "logo": "https://www.google.com/s2/favicons?domain=stagehand.dev&sz=128"
+  },
+  {
+    "id": "hyperwriteassistant",
+    "name": "HyperWrite Assistant",
+    "description": "Personal AI assistant for browser tasks.",
+    "category": "AI Automation",
+    "link": "https://hyperwriteai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=hyperwriteai.com&sz=128"
+  },
+  {
+    "id": "adeptai",
+    "name": "Adept AI",
+    "description": "Action-based computer agents.",
+    "category": "AI Automation",
+    "link": "https://adept.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=adept.ai&sz=128"
+  },
+  {
+    "id": "rabbitai",
+    "name": "Rabbit AI",
+    "description": "AI action model ecosystem.",
+    "category": "AI Automation",
+    "link": "https://rabbit.tech",
+    "logo": "https://www.google.com/s2/favicons?domain=rabbit.tech&sz=128"
+  },
+  {
+    "id": "multion",
+    "name": "MultiOn",
+    "description": "AI web browsing agent.",
+    "category": "AI Automation",
+    "link": "https://multion.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=multion.ai&sz=128"
+  },
+  {
+    "id": "n8n",
+    "name": "n8n",
+    "description": "AI workflow automation platform.",
+    "category": "AI Automation",
+    "link": "https://n8n.io",
+    "logo": "https://www.google.com/s2/favicons?domain=n8n.io&sz=128"
+  },
+  {
+    "id": "zapierai",
+    "name": "Zapier AI",
+    "description": "AI-powered workflow automation.",
+    "category": "AI Automation",
+    "link": "https://zapier.com",
+    "logo": "https://www.google.com/s2/favicons?domain=zapier.com&sz=128"
+  },
+  {
+    "id": "make",
+    "name": "Make",
+    "description": "No-code automation workflows.",
+    "category": "AI Automation",
+    "link": "https://make.com",
+    "logo": "https://www.google.com/s2/favicons?domain=make.com&sz=128"
+  },
+  {
+    "id": "flowise",
+    "name": "Flowise",
+    "description": "Drag-and-drop LLM orchestration.",
+    "category": "AI Automation",
+    "link": "https://flowiseai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=flowiseai.com&sz=128"
+  },
+  {
+    "id": "dify",
+    "name": "Dify",
+    "description": "LLM app development platform.",
+    "category": "AI Automation",
+    "link": "https://dify.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=dify.ai&sz=128"
+  },
+  {
+    "id": "langflow",
+    "name": "LangFlow",
+    "description": "Visual LangChain builder.",
+    "category": "AI Automation",
+    "link": "https://langflow.org",
+    "logo": "https://www.google.com/s2/favicons?domain=langflow.org&sz=128"
+  },
+  {
+    "id": "pipedream",
+    "name": "Pipedream",
+    "description": "AI + API automation platform.",
+    "category": "AI Automation",
+    "link": "https://pipedream.com",
+    "logo": "https://www.google.com/s2/favicons?domain=pipedream.com&sz=128"
+  },
+  {
+    "id": "vapi",
+    "name": "Vapi",
+    "description": "AI voice agent infrastructure.",
+    "category": "AI Voice Agents",
+    "link": "https://vapi.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=vapi.ai&sz=128"
+  },
+  {
+    "id": "retellai",
+    "name": "Retell AI",
+    "description": "Voice AI calling agents.",
+    "category": "AI Voice Agents",
+    "link": "https://retellai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=retellai.com&sz=128"
+  },
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "description": "AI voice generation and agents.",
+    "category": "AI Voice Agents",
+    "link": "https://elevenlabs.io",
+    "logo": "https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128"
+  },
+  {
+    "id": "livekitagents",
+    "name": "LiveKit Agents",
+    "description": "Realtime voice/video AI agents.",
+    "category": "AI Voice Agents",
+    "link": "https://livekit.io",
+    "logo": "https://www.google.com/s2/favicons?domain=livekit.io&sz=128"
+  },
+  {
+    "id": "piai",
+    "name": "Pi AI",
+    "description": "Conversational personal AI assistant.",
+    "category": "AI Voice Agents",
+    "link": "https://pi.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=pi.ai&sz=128"
+  },
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "description": "Run LLMs locally.",
+    "category": "AI Assistants",
+    "link": "https://ollama.com",
+    "logo": "https://www.google.com/s2/favicons?domain=ollama.com&sz=128"
+  },
+  {
+    "id": "lmstudio",
+    "name": "LM Studio",
+    "description": "Local AI model GUI platform.",
+    "category": "AI Assistants",
+    "link": "https://lmstudio.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=lmstudio.ai&sz=128"
+  },
+  {
+    "id": "anythingllm",
+    "name": "AnythingLLM",
+    "description": "Private AI workspace.",
+    "category": "AI Assistants",
+    "link": "https://anythingllm.com",
+    "logo": "https://www.google.com/s2/favicons?domain=anythingllm.com&sz=128"
+  },
+  {
+    "id": "janai",
+    "name": "Jan AI",
+    "description": "Open-source ChatGPT alternative.",
+    "category": "AI Assistants",
+    "link": "https://jan.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=jan.ai&sz=128"
+  },
+  {
+    "id": "openwebui",
+    "name": "Open WebUI",
+    "description": "Self-hosted AI interface.",
+    "category": "AI Assistants",
+    "link": "https://openwebui.com",
+    "logo": "https://www.google.com/s2/favicons?domain=openwebui.com&sz=128"
+  },

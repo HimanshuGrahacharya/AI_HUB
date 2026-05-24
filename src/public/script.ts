@@ -1,4 +1,4 @@
-interface AITool {
+﻿interface AITool {
   id: string;
   name: string;
   description: string;
@@ -10,6 +10,367 @@ interface AITool {
 declare function showToast(message: string, type?: 'error' | 'info' | 'success'): void;
 
 const aiTools: AITool[] = [
+  {
+    "id": "kiro",
+    "name": "Kiro",
+    "description": "AI-native IDE and autonomous development environment.",
+    "category": "Coding & Development",
+    "link": "https://kiro.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=kiro.ai&sz=128"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "description": "AI coding IDE based on VS Code.",
+    "category": "Coding & Development",
+    "link": "https://cursor.sh",
+    "logo": "https://www.google.com/s2/favicons?domain=cursor.sh&sz=128"
+  },
+  {
+    "id": "windsurf",
+    "name": "Windsurf",
+    "description": "AI software engineering workspace.",
+    "category": "Coding & Development",
+    "link": "https://codeium.com/windsurf",
+    "logo": "https://www.google.com/s2/favicons?domain=codeium.com&sz=128"
+  },
+  {
+    "id": "replitai",
+    "name": "Replit AI",
+    "description": "Cloud coding + AI agents.",
+    "category": "Coding & Development",
+    "link": "https://replit.com",
+    "logo": "https://www.google.com/s2/favicons?domain=replit.com&sz=128"
+  },
+  {
+    "id": "codeium",
+    "name": "Codeium",
+    "description": "AI coding assistant and editor.",
+    "category": "Coding & Development",
+    "link": "https://codeium.com",
+    "logo": "https://www.google.com/s2/favicons?domain=codeium.com&sz=128"
+  },
+  {
+    "id": "continuedev",
+    "name": "Continue Dev",
+    "description": "Open-source AI coding assistant.",
+    "category": "Coding & Development",
+    "link": "https://continue.dev",
+    "logo": "https://www.google.com/s2/favicons?domain=continue.dev&sz=128"
+  },
+  {
+    "id": "cline",
+    "name": "Cline",
+    "description": "Autonomous coding agent for VS Code.",
+    "category": "Coding & Development",
+    "link": "https://github.com/cline/cline",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "aider",
+    "name": "Aider",
+    "description": "Terminal AI pair programmer.",
+    "category": "Coding & Development",
+    "link": "https://aider.chat",
+    "logo": "https://www.google.com/s2/favicons?domain=aider.chat&sz=128"
+  },
+  {
+    "id": "boltnew",
+    "name": "Bolt.new",
+    "description": "AI full-stack app generator.",
+    "category": "Coding & Development",
+    "link": "https://bolt.new",
+    "logo": "https://www.google.com/s2/favicons?domain=bolt.new&sz=128"
+  },
+  {
+    "id": "lovable",
+    "name": "Lovable",
+    "description": "Prompt-to-app builder.",
+    "category": "Coding & Development",
+    "link": "https://lovable.dev",
+    "logo": "https://www.google.com/s2/favicons?domain=lovable.dev&sz=128"
+  },
+  {
+    "id": "autogpt",
+    "name": "Auto-GPT",
+    "description": "Autonomous GPT-based agent framework.",
+    "category": "AI Agent Platforms",
+    "link": "https://agpt.co",
+    "logo": "https://www.google.com/s2/favicons?domain=agpt.co&sz=128"
+  },
+  {
+    "id": "babyagi",
+    "name": "BabyAGI",
+    "description": "Task planning autonomous AI.",
+    "category": "AI Agent Platforms",
+    "link": "https://github.com/yoheinakajima/babyagi",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "crewai",
+    "name": "CrewAI",
+    "description": "Multi-agent collaboration framework.",
+    "category": "AI Agent Platforms",
+    "link": "https://crewai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=crewai.com&sz=128"
+  },
+  {
+    "id": "langgraph",
+    "name": "LangGraph",
+    "description": "Stateful AI agent workflows.",
+    "category": "AI Agent Platforms",
+    "link": "https://langchain.com/langgraph",
+    "logo": "https://www.google.com/s2/favicons?domain=langchain.com&sz=128"
+  },
+  {
+    "id": "opendevin",
+    "name": "OpenDevin",
+    "description": "Open-source autonomous developer AI.",
+    "category": "AI Agent Platforms",
+    "link": "https://github.com/OpenDevin/OpenDevin",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "metagpt",
+    "name": "MetaGPT",
+    "description": "AI software company simulation agents.",
+    "category": "AI Agent Platforms",
+    "link": "https://github.com/geekan/MetaGPT",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "superagi",
+    "name": "SuperAGI",
+    "description": "Autonomous AI infrastructure.",
+    "category": "AI Agent Platforms",
+    "link": "https://superagi.com",
+    "logo": "https://www.google.com/s2/favicons?domain=superagi.com&sz=128"
+  },
+  {
+    "id": "agentgpt",
+    "name": "AgentGPT",
+    "description": "Browser-based autonomous agents.",
+    "category": "AI Agent Platforms",
+    "link": "https://agentgpt.reworkd.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=agentgpt.reworkd.ai&sz=128"
+  },
+  {
+    "id": "microsoftautogen",
+    "name": "Microsoft AutoGen",
+    "description": "Multi-agent conversation framework.",
+    "category": "AI Agent Platforms",
+    "link": "https://microsoft.github.io/autogen",
+    "logo": "https://www.google.com/s2/favicons?domain=microsoft.github.io&sz=128"
+  },
+  {
+    "id": "semantickernel",
+    "name": "Semantic Kernel",
+    "description": "AI orchestration framework by Microsoft.",
+    "category": "AI Agent Platforms",
+    "link": "https://github.com/microsoft/semantic-kernel",
+    "logo": "https://www.google.com/s2/favicons?domain=github.com&sz=128"
+  },
+  {
+    "id": "openinterpreter",
+    "name": "Open Interpreter",
+    "description": "AI that controls your computer locally.",
+    "category": "AI Automation",
+    "link": "https://openinterpreter.com",
+    "logo": "https://www.google.com/s2/favicons?domain=openinterpreter.com&sz=128"
+  },
+  {
+    "id": "browseruse",
+    "name": "Browser Use",
+    "description": "Browser automation agents.",
+    "category": "AI Automation",
+    "link": "https://browser-use.com",
+    "logo": "https://www.google.com/s2/favicons?domain=browser-use.com&sz=128"
+  },
+  {
+    "id": "skyvern",
+    "name": "Skyvern",
+    "description": "AI browser workflow automation.",
+    "category": "AI Automation",
+    "link": "https://skyvern.com",
+    "logo": "https://www.google.com/s2/favicons?domain=skyvern.com&sz=128"
+  },
+  {
+    "id": "stagehand",
+    "name": "Stagehand",
+    "description": "AI web automation framework.",
+    "category": "AI Automation",
+    "link": "https://stagehand.dev",
+    "logo": "https://www.google.com/s2/favicons?domain=stagehand.dev&sz=128"
+  },
+  {
+    "id": "hyperwriteassistant",
+    "name": "HyperWrite Assistant",
+    "description": "Personal AI assistant for browser tasks.",
+    "category": "AI Automation",
+    "link": "https://hyperwriteai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=hyperwriteai.com&sz=128"
+  },
+  {
+    "id": "adeptai",
+    "name": "Adept AI",
+    "description": "Action-based computer agents.",
+    "category": "AI Automation",
+    "link": "https://adept.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=adept.ai&sz=128"
+  },
+  {
+    "id": "rabbitai",
+    "name": "Rabbit AI",
+    "description": "AI action model ecosystem.",
+    "category": "AI Automation",
+    "link": "https://rabbit.tech",
+    "logo": "https://www.google.com/s2/favicons?domain=rabbit.tech&sz=128"
+  },
+  {
+    "id": "multion",
+    "name": "MultiOn",
+    "description": "AI web browsing agent.",
+    "category": "AI Automation",
+    "link": "https://multion.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=multion.ai&sz=128"
+  },
+  {
+    "id": "n8n",
+    "name": "n8n",
+    "description": "AI workflow automation platform.",
+    "category": "AI Automation",
+    "link": "https://n8n.io",
+    "logo": "https://www.google.com/s2/favicons?domain=n8n.io&sz=128"
+  },
+  {
+    "id": "zapierai",
+    "name": "Zapier AI",
+    "description": "AI-powered workflow automation.",
+    "category": "AI Automation",
+    "link": "https://zapier.com",
+    "logo": "https://www.google.com/s2/favicons?domain=zapier.com&sz=128"
+  },
+  {
+    "id": "make",
+    "name": "Make",
+    "description": "No-code automation workflows.",
+    "category": "AI Automation",
+    "link": "https://make.com",
+    "logo": "https://www.google.com/s2/favicons?domain=make.com&sz=128"
+  },
+  {
+    "id": "flowise",
+    "name": "Flowise",
+    "description": "Drag-and-drop LLM orchestration.",
+    "category": "AI Automation",
+    "link": "https://flowiseai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=flowiseai.com&sz=128"
+  },
+  {
+    "id": "dify",
+    "name": "Dify",
+    "description": "LLM app development platform.",
+    "category": "AI Automation",
+    "link": "https://dify.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=dify.ai&sz=128"
+  },
+  {
+    "id": "langflow",
+    "name": "LangFlow",
+    "description": "Visual LangChain builder.",
+    "category": "AI Automation",
+    "link": "https://langflow.org",
+    "logo": "https://www.google.com/s2/favicons?domain=langflow.org&sz=128"
+  },
+  {
+    "id": "pipedream",
+    "name": "Pipedream",
+    "description": "AI + API automation platform.",
+    "category": "AI Automation",
+    "link": "https://pipedream.com",
+    "logo": "https://www.google.com/s2/favicons?domain=pipedream.com&sz=128"
+  },
+  {
+    "id": "vapi",
+    "name": "Vapi",
+    "description": "AI voice agent infrastructure.",
+    "category": "AI Voice Agents",
+    "link": "https://vapi.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=vapi.ai&sz=128"
+  },
+  {
+    "id": "retellai",
+    "name": "Retell AI",
+    "description": "Voice AI calling agents.",
+    "category": "AI Voice Agents",
+    "link": "https://retellai.com",
+    "logo": "https://www.google.com/s2/favicons?domain=retellai.com&sz=128"
+  },
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "description": "AI voice generation and agents.",
+    "category": "AI Voice Agents",
+    "link": "https://elevenlabs.io",
+    "logo": "https://www.google.com/s2/favicons?domain=elevenlabs.io&sz=128"
+  },
+  {
+    "id": "livekitagents",
+    "name": "LiveKit Agents",
+    "description": "Realtime voice/video AI agents.",
+    "category": "AI Voice Agents",
+    "link": "https://livekit.io",
+    "logo": "https://www.google.com/s2/favicons?domain=livekit.io&sz=128"
+  },
+  {
+    "id": "piai",
+    "name": "Pi AI",
+    "description": "Conversational personal AI assistant.",
+    "category": "AI Voice Agents",
+    "link": "https://pi.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=pi.ai&sz=128"
+  },
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "description": "Run LLMs locally.",
+    "category": "AI Assistants",
+    "link": "https://ollama.com",
+    "logo": "https://www.google.com/s2/favicons?domain=ollama.com&sz=128"
+  },
+  {
+    "id": "lmstudio",
+    "name": "LM Studio",
+    "description": "Local AI model GUI platform.",
+    "category": "AI Assistants",
+    "link": "https://lmstudio.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=lmstudio.ai&sz=128"
+  },
+  {
+    "id": "anythingllm",
+    "name": "AnythingLLM",
+    "description": "Private AI workspace.",
+    "category": "AI Assistants",
+    "link": "https://anythingllm.com",
+    "logo": "https://www.google.com/s2/favicons?domain=anythingllm.com&sz=128"
+  },
+  {
+    "id": "janai",
+    "name": "Jan AI",
+    "description": "Open-source ChatGPT alternative.",
+    "category": "AI Assistants",
+    "link": "https://jan.ai",
+    "logo": "https://www.google.com/s2/favicons?domain=jan.ai&sz=128"
+  },
+  {
+    "id": "openwebui",
+    "name": "Open WebUI",
+    "description": "Self-hosted AI interface.",
+    "category": "AI Assistants",
+    "link": "https://openwebui.com",
+    "logo": "https://www.google.com/s2/favicons?domain=openwebui.com&sz=128"
+  },
+
   // AI Agent Platforms
   {
     "id": "langchain",
@@ -4679,7 +5040,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const active = darkModeToggle.checked;
       document.body.classList.toggle('dark-mode', active);
       localStorage.setItem('dark-mode', active.toString());
-      showToast(active ? "Dark Mode On 🌙" : "Light Mode On ☀️", "info");
+      showToast(active ? "Dark Mode On ðŸŒ™" : "Light Mode On â˜€ï¸", "info");
     });
   }
 
@@ -4688,7 +5049,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (billingLink) {
     billingLink.addEventListener('click', (e) => {
       e.preventDefault();
-      showToast('This feature is coming soon! 🚀', 'info');
+      showToast('This feature is coming soon! ðŸš€', 'info');
     });
   }
 
@@ -4809,7 +5170,7 @@ function addToRecentlyViewed(toolId: string) {
   
   if (isAdding) {
     favorites.push(toolId);
-    showToast("Added to Favorites ⭐", "info");
+    showToast("Added to Favorites â­", "info");
   } else {
     favorites = favorites.filter(id => id !== toolId);
     showToast('Removed from Favorites', 'info');
@@ -5130,14 +5491,14 @@ function switchView(viewId: string) {
   const sidebar = document.querySelector('.sidebar') as HTMLElement;
   const navCenter = document.querySelector('.nav-center') as HTMLElement;
 
-  // Dynamic page title map — professional SaaS-grade naming
+  // Dynamic page title map â€” professional SaaS-grade naming
   const titleMap: Record<string, string> = {
     'dashboard':       'HSG AI HUB | The World\'s Most Powerful AI Dashboard',
-    'arena-container': '⚔️ AI Model Arena | HSG AI HUB',
-    'warroom-container': '🎯 Tactical AI War Room | HSG AI HUB',
-    'creative-studio': '🎨 AI Creative Studio | HSG AI HUB',
-    'intelligence-feed': '📡 AI Intelligence Feed | HSG AI HUB',
-    'chat-container':  '💬 AI Chat | HSG AI HUB',
+    'arena-container': 'âš”ï¸ AI Model Arena | HSG AI HUB',
+    'warroom-container': 'ðŸŽ¯ Tactical AI War Room | HSG AI HUB',
+    'creative-studio': 'ðŸŽ¨ AI Creative Studio | HSG AI HUB',
+    'intelligence-feed': 'ðŸ“¡ AI Intelligence Feed | HSG AI HUB',
+    'chat-container':  'ðŸ’¬ AI Chat | HSG AI HUB',
   };
   document.title = titleMap[viewId] || 'HSG AI HUB';
 
@@ -5457,7 +5818,7 @@ function addMessage(sender: 'user' | 'ai', text: string, animate: boolean = true
 
 (window as any).copyToClipboard = function(text: string) {
   navigator.clipboard.writeText(text);
-  showToast('Response copied! 📋', 'info');
+  showToast('Response copied! ðŸ“‹', 'info');
 };
 
 function startInactivityTimer() {
@@ -5511,7 +5872,7 @@ function resetInactivityTimer() {
     });
 
     if (res.ok) {
-      showToast('Settings saved successfully! ✅', 'info');
+      showToast('Settings saved successfully! âœ…', 'info');
       document.getElementById('settings-modal')!.style.display = 'none';
     } else {
       showToast('Failed to save settings to server.', 'error');
@@ -5753,7 +6114,7 @@ async function renderPersonasList() {
     if (!data.personas || data.personas.length === 0) {
       list.innerHTML = `
         <div style="text-align:center; padding:30px; color:var(--text-secondary);">
-          <div style="font-size:3rem; margin-bottom:10px;">🤖</div>
+          <div style="font-size:3rem; margin-bottom:10px;">ðŸ¤–</div>
           <p>No personas yet! Create one to get started.</p>
           <button class="btn-primary" style="margin-top:15px;" onclick="document.getElementById('personas-panel').style.display='none'; document.getElementById('persona-modal').style.display='flex';"><i class="ph ph-plus"></i> Create My First Persona</button>
         </div>`;
@@ -5785,7 +6146,7 @@ async function renderPersonasList() {
 
 (window as any).savePersona = async function() {
   const name = (document.getElementById('persona-name') as HTMLInputElement)?.value?.trim();
-  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || '🤖';
+  const emoji = (document.getElementById('persona-emoji') as HTMLInputElement)?.value?.trim() || 'ðŸ¤–';
   const systemPrompt = (document.getElementById('persona-prompt') as HTMLTextAreaElement)?.value?.trim();
   if (!name || !systemPrompt) { showToast('Please fill in the name and system prompt.', 'error'); return; }
   const token = localStorage.getItem('token');
@@ -5801,7 +6162,7 @@ async function renderPersonasList() {
     document.getElementById('persona-modal')!.style.display = 'none';
     (document.getElementById('persona-name') as HTMLInputElement).value = '';
     (document.getElementById('persona-prompt') as HTMLTextAreaElement).value = '';
-    (document.getElementById('persona-emoji') as HTMLInputElement).value = '🤖';
+    (document.getElementById('persona-emoji') as HTMLInputElement).value = 'ðŸ¤–';
   } catch(e) { showToast('Connection error', 'error'); }
 };
 
@@ -6455,7 +6816,7 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
   }
 
   btn.disabled = false;
-  btn.textContent = 'Launch Multi-Agent Mission ⚡';
+  btn.textContent = 'Launch Multi-Agent Mission âš¡';
 };
 
 (window as any).copyMasterPlan = function() {
@@ -6465,7 +6826,7 @@ async function addWarLog(text: string, type: 'system' | 'agent' | 'success' = 'a
 
 (window as any).shareWarRoomResult = function() {
   const mission = (document.getElementById('warroom-input') as HTMLTextAreaElement).value.trim();
-  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! 🚀 #AIHUB #StrategicIntelligence`;
+  const text = `Just generated a Master Strategy for my mission: "${mission}" using the HSG AI War Room! ðŸš€ #AIHUB #StrategicIntelligence`;
   const url = window.location.href;
 
   if (navigator.share) {
@@ -7127,7 +7488,7 @@ const originalAddWarLog = addWarLog;
     showToast('Forge swarm error occurred.', 'error');
   } finally {
     forgeBtn.disabled = false;
-    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> ⚡ Parallel Forge — Swarm Multiple Styles';
+    forgeBtn.innerHTML = '<i class="ph ph-lightning"></i> âš¡ Parallel Forge â€” Swarm Multiple Styles';
   }
 };
 
@@ -7261,62 +7622,62 @@ window.addEventListener('hashchange', handleRouting);
 
 
 // ==========================================
-// HSG AGENTIC FORGE — MULTI-AGENT SWARM
+// HSG AGENTIC FORGE â€” MULTI-AGENT SWARM
 // ==========================================
 
 const SWARM_PRESETS: Record<string, any> = {
   dev: {
     task: 'Write a secure Node.js JWT authentication handler and perform rigorous automated test validation.',
     agents: [
-      { icon: '💻', name: 'Lead Architect', model: 'Claude-3.5-Sonnet', color: '#60a5fa' },
-      { icon: '⚡', name: 'Senior Coder', model: 'Llama-3.1-70B', color: '#c084fc' },
-      { icon: '🛡️', name: 'Security QA Auditor', model: 'GPT-4o-Intelligence', color: '#22c55e' },
+      { icon: 'ðŸ’»', name: 'Lead Architect', model: 'Claude-3.5-Sonnet', color: '#60a5fa' },
+      { icon: 'âš¡', name: 'Senior Coder', model: 'Llama-3.1-70B', color: '#c084fc' },
+      { icon: 'ðŸ›¡ï¸', name: 'Security QA Auditor', model: 'GPT-4o-Intelligence', color: '#22c55e' },
     ],
     steps: [
-      { agent: 0, msg: '📐 Analyzing requirements... decomposing task into modular architecture blocks.' },
-      { agent: 0, msg: '✅ Architecture blueprint finalized. Handoff → Senior Coder.' },
-      { agent: 1, msg: '⚡ Generating secure JWT handler with bcrypt + refresh token rotation...' },
+      { agent: 0, msg: 'ðŸ“ Analyzing requirements... decomposing task into modular architecture blocks.' },
+      { agent: 0, msg: 'âœ… Architecture blueprint finalized. Handoff â†’ Senior Coder.' },
+      { agent: 1, msg: 'âš¡ Generating secure JWT handler with bcrypt + refresh token rotation...' },
       { agent: 1, msg: '```typescript\nconst token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn:"7d"});\n```' },
-      { agent: 1, msg: '✅ Code generation complete. Handoff → Security QA Auditor.' },
-      { agent: 2, msg: '🛡️ Running automated security audit — scanning for OWASP Top 10 vulnerabilities...' },
-      { agent: 2, msg: '🔍 JWT expiry: ✅ | Password hashing: ✅ | SQL Injection shield: ✅ | CSRF token: ✅' },
-      { agent: 2, msg: '🏆 MISSION COMPLETE: Zero vulnerabilities found. Code is production-ready!' },
+      { agent: 1, msg: 'âœ… Code generation complete. Handoff â†’ Security QA Auditor.' },
+      { agent: 2, msg: 'ðŸ›¡ï¸ Running automated security audit â€” scanning for OWASP Top 10 vulnerabilities...' },
+      { agent: 2, msg: 'ðŸ” JWT expiry: âœ… | Password hashing: âœ… | SQL Injection shield: âœ… | CSRF token: âœ…' },
+      { agent: 2, msg: 'ðŸ† MISSION COMPLETE: Zero vulnerabilities found. Code is production-ready!' },
     ]
   },
   marketing: {
     task: 'Create a full brand launch plan with tagline, social strategy, and influencer outreach campaign.',
     agents: [
-      { icon: '🎯', name: 'Brand Strategist', model: 'Claude-3.5-Sonnet', color: '#f59e0b' },
-      { icon: '📢', name: 'Content Creator', model: 'Llama-3.1-70B', color: '#ec4899' },
-      { icon: '📊', name: 'Analytics Optimizer', model: 'GPT-4o-Intelligence', color: '#22c55e' },
+      { icon: 'ðŸŽ¯', name: 'Brand Strategist', model: 'Claude-3.5-Sonnet', color: '#f59e0b' },
+      { icon: 'ðŸ“¢', name: 'Content Creator', model: 'Llama-3.1-70B', color: '#ec4899' },
+      { icon: 'ðŸ“Š', name: 'Analytics Optimizer', model: 'GPT-4o-Intelligence', color: '#22c55e' },
     ],
     steps: [
-      { agent: 0, msg: '🎯 Analyzing brand positioning... Identifying unique value proposition and target personas.' },
-      { agent: 0, msg: '✅ Brand blueprint: "Democratize AI for Everyone." Tone: Bold, accessible, futuristic.' },
-      { agent: 1, msg: '📢 Generating launch assets: Twitter thread, LinkedIn article, Instagram carousel...' },
-      { agent: 1, msg: '💡 Hook: "The future of AI doesn\'t belong to corporations. It belongs to YOU. 🚀 #HSGAIHub"' },
-      { agent: 1, msg: '✅ 3-week content calendar generated. 42 posts across 4 platforms. Handoff → Analytics.' },
-      { agent: 2, msg: '📊 Running campaign ROI simulation... Projected reach: 2.4M impressions in Week 1.' },
-      { agent: 2, msg: '📈 Optimal post times computed. Peak engagement: Tue/Thu 7-9 AM & 8-10 PM (IST).' },
-      { agent: 2, msg: '🏆 MISSION COMPLETE: Full launch playbook delivered. Expected 340% organic growth.' },
+      { agent: 0, msg: 'ðŸŽ¯ Analyzing brand positioning... Identifying unique value proposition and target personas.' },
+      { agent: 0, msg: 'âœ… Brand blueprint: "Democratize AI for Everyone." Tone: Bold, accessible, futuristic.' },
+      { agent: 1, msg: 'ðŸ“¢ Generating launch assets: Twitter thread, LinkedIn article, Instagram carousel...' },
+      { agent: 1, msg: 'ðŸ’¡ Hook: "The future of AI doesn\'t belong to corporations. It belongs to YOU. ðŸš€ #HSGAIHub"' },
+      { agent: 1, msg: 'âœ… 3-week content calendar generated. 42 posts across 4 platforms. Handoff â†’ Analytics.' },
+      { agent: 2, msg: 'ðŸ“Š Running campaign ROI simulation... Projected reach: 2.4M impressions in Week 1.' },
+      { agent: 2, msg: 'ðŸ“ˆ Optimal post times computed. Peak engagement: Tue/Thu 7-9 AM & 8-10 PM (IST).' },
+      { agent: 2, msg: 'ðŸ† MISSION COMPLETE: Full launch playbook delivered. Expected 340% organic growth.' },
     ]
   },
   analyst: {
     task: 'Deep analysis of AI agents market landscape, key players, investment trends, and future outlook.',
     agents: [
-      { icon: '🔍', name: 'Market Researcher', model: 'Claude-3.5-Sonnet', color: '#38bdf8' },
-      { icon: '📈', name: 'Data Analyst', model: 'Llama-3.1-70B', color: '#a78bfa' },
-      { icon: '🧠', name: 'Intelligence Synthesizer', model: 'GPT-4o-Intelligence', color: '#f97316' },
+      { icon: 'ðŸ”', name: 'Market Researcher', model: 'Claude-3.5-Sonnet', color: '#38bdf8' },
+      { icon: 'ðŸ“ˆ', name: 'Data Analyst', model: 'Llama-3.1-70B', color: '#a78bfa' },
+      { icon: 'ðŸ§ ', name: 'Intelligence Synthesizer', model: 'GPT-4o-Intelligence', color: '#f97316' },
     ],
     steps: [
-      { agent: 0, msg: '🔍 Scanning market data... Indexing 500+ AI agent platforms worldwide.' },
-      { agent: 0, msg: '📌 Key Players Identified: AutoGPT, LangChain, CrewAI, Microsoft Copilot Studio, AgentGPT.' },
-      { agent: 1, msg: '📈 Running investment trend analysis across 2022–2025 YoY data...' },
-      { agent: 1, msg: '💰 AI Agent market: $2.8B (2024) → projected $47B by 2029. CAGR: 76.4%' },
-      { agent: 1, msg: '✅ Statistical models finalized. Handoff → Intelligence Synthesizer.' },
-      { agent: 2, msg: '🧠 Synthesizing findings into actionable strategic intelligence report...' },
-      { agent: 2, msg: '🎯 Key Insight: "Autonomous vertical agents (Coding, Marketing, Legal) will dominate 2025-2027."' },
-      { agent: 2, msg: '🏆 MISSION COMPLETE: Intelligence briefing delivered. Board-ready executive summary generated!' },
+      { agent: 0, msg: 'ðŸ” Scanning market data... Indexing 500+ AI agent platforms worldwide.' },
+      { agent: 0, msg: 'ðŸ“Œ Key Players Identified: AutoGPT, LangChain, CrewAI, Microsoft Copilot Studio, AgentGPT.' },
+      { agent: 1, msg: 'ðŸ“ˆ Running investment trend analysis across 2022â€“2025 YoY data...' },
+      { agent: 1, msg: 'ðŸ’° AI Agent market: $2.8B (2024) â†’ projected $47B by 2029. CAGR: 76.4%' },
+      { agent: 1, msg: 'âœ… Statistical models finalized. Handoff â†’ Intelligence Synthesizer.' },
+      { agent: 2, msg: 'ðŸ§  Synthesizing findings into actionable strategic intelligence report...' },
+      { agent: 2, msg: 'ðŸŽ¯ Key Insight: "Autonomous vertical agents (Coding, Marketing, Legal) will dominate 2025-2027."' },
+      { agent: 2, msg: 'ðŸ† MISSION COMPLETE: Intelligence briefing delivered. Board-ready executive summary generated!' },
     ]
   }
 };
@@ -7388,7 +7749,7 @@ function loadSwarmPresetByKey(key: string) {
   const consoleEl = document.getElementById('swarm-console');
   if (!consoleEl) return;
 
-  consoleEl.innerHTML = '<div style="color:#64748b;">// 🚀 Mission INITIATED — Orchestration pipeline starting...<br>// ─────────────────────────────────────────────────</div>';
+  consoleEl.innerHTML = '<div style="color:#64748b;">// ðŸš€ Mission INITIATED â€” Orchestration pipeline starting...<br>// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€</div>';
 
   const agentColors = preset.agents.map((a: any) => a.color);
   const agentNames = preset.agents.map((a: any) => a.name);
@@ -7424,12 +7785,12 @@ function loadSwarmPresetByKey(key: string) {
 
   function runNextStep() {
     if (stepIndex >= preset.steps.length) {
-      // Done — reset bubbles
+      // Done â€” reset bubbles
       for (let i = 1; i <= 3; i++) {
         const b = document.querySelector(`#bubble-${i} .bubble-icon-container`) as HTMLElement;
         if (b) { b.style.transform = 'scale(1)'; }
       }
-      consoleEl!.innerHTML += `<div style="margin-top:12px; color:#22c55e; font-weight:700;">// ═══════════════════════════════<br>// ✅ SWARM MISSION COMPLETE — All agents signed off.<br>// ═══════════════════════════════</div>`;
+      consoleEl!.innerHTML += `<div style="margin-top:12px; color:#22c55e; font-weight:700;">// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•<br>// âœ… SWARM MISSION COMPLETE â€” All agents signed off.<br>// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•</div>`;
       consoleEl!.scrollTop = consoleEl!.scrollHeight;
       return;
     }
@@ -7446,3 +7807,4 @@ function loadSwarmPresetByKey(key: string) {
 
   runNextStep();
 };
+
