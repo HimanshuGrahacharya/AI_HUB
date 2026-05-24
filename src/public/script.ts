@@ -6587,6 +6587,28 @@ function executePaletteAction(res: any) {
 // AI CREATIVE STUDIO LOGIC
 // ==========================================
 
+// Rich prompt descriptors for each Visual DNA style
+const stylePromptMap: Record<string, string> = {
+  'cinematic':      'cinematic photography, movie still, anamorphic lens, dramatic studio lighting, shallow depth of field, film grain, color grading, 8k ultra-HD, masterpiece',
+  'cyberpunk':      'cyberpunk art, neon glow, rain-slicked streets, dark futuristic megacity, holographic signs, reflective puddles, sharp neon edges, synthwave aesthetic, 8k, masterpiece',
+  'oil-painting':   'classical oil painting, thick impasto brushstrokes, rich warm color palette, chiaroscuro lighting, canvas texture, museum masterpiece quality, renaissance style, highly detailed',
+  'anime':          'modern anime style, studio ghibli aesthetic, vibrant saturated colors, clean bold linework, soft cel shading, detailed background, manga-inspired, 4k anime wallpaper',
+  'minimalist':     'ultra minimalist design, clean white background, simple geometric shapes, negative space, flat design, modern Scandinavian aesthetic, pastel tones, crisp lines, professional',
+  '3d-render':      '3D CGI render, octane render, blender 3D, subsurface scattering, physically based materials, soft cinematic lighting, HDRI environment, 8k resolution, photorealistic',
+  'surrealism':     'surrealist painting, Salvador Dali inspired, melting reality, dreamlike impossible landscape, juxtaposed elements, hyper-detailed fantastical world, soft ethereal lighting',
+  'pixel-art':      '16-bit pixel art, retro video game aesthetic, clean sprite art, vibrant colors, isometric pixel art, sharp pixel edges, NES SNES era style, highly detailed pixel work',
+  'steampunk':      'steampunk art, Victorian brass gears and cogs, steam-powered machinery, sepia tones, leather and copper textures, intricate mechanical details, fog and gas lamps, highly detailed',
+  'hyperrealistic': 'hyperrealistic photography, 8k ultra-HD, sharp focus, photorealistic textures, natural subsurface skin scattering, professional DSLR bokeh, studio lighting, indistinguishable from real photo',
+  'synthwave':      'synthwave retrowave aesthetic, 1980s neon grid, purple and pink gradient sky, retro sun, chrome typography, dark atmospheric, Miami Vice vibes, highly detailed digital art',
+  'voxel-art':      'voxel art 3D, colorful cubic blocks, isometric voxel rendering, game asset style, MagicaVoxel aesthetic, bright saturated colors, charming low-poly 3D',
+  'neon-punk':      'neon punk art, glowing neon outlines, dark background, high contrast vivid neons, punk rock aesthetic, graffiti influence, gritty urban futurism, vivid electric colors',
+  'watercolor':     'professional watercolor painting, wet-on-wet technique, delicate transparent washes, bleeding ink edges, soft pastel tones, artistic paper texture, hand-painted illustration',
+  'origami':      'origami art, intricate paper folding, geometric paper sculpture, clean crisp folds, minimalist paper art, professional studio photography, white paper on white background',
+  'pop-art':        'pop art style, Roy Lichtenstein inspired, bold Ben-Day dots, thick black outlines, flat primary colors, comic book aesthetic, graphic and high-contrast, retro American art',
+  'gothic':         'gothic dark fantasy art, dramatic atmospheric shadows, dark stone architecture, candlelight, ornate gothic arches, dark romantic aesthetic, highly detailed, moody color grading',
+  'vector':         'clean vector illustration, flat design, bold solid colors, geometric shapes, professional graphic design, SVG art style, modern infographic aesthetic, crisp sharp edges'
+};
+
 let activeArtStyle = 'cinematic';
 let attachedStudioFile: { name: string, type: string, data: string } | null = null;
 
@@ -6703,7 +6725,9 @@ Example: "Olive-skinned Indian male, approximately 45 years old, sharp jawline, 
       finalPromptText = rawPrompt;
     }
 
-    finalPromptText += `, ${activeArtStyle} style, ultra detailed, 8k, masterpiece`;
+    // Apply rich style-specific prompt from the DNA map
+    const styleKeywords = stylePromptMap[activeArtStyle] || `${activeArtStyle} style, ultra detailed, 8k, masterpiece`;
+    finalPromptText += `, ${styleKeywords}`;
     const safePrompt = finalPromptText.substring(0, 800); // URL safety truncation
     const finalPrompt = encodeURIComponent(safePrompt);
 
