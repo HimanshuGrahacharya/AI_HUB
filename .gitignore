@@ -5,3 +5,8 @@ node_modules/
 
 dist/
 PROJECT_MASTER_GUIDE.md
+
+# Utility/scratch scripts — not part of the project
+*.py
+new_tools.txt
+swarm_section.txt
