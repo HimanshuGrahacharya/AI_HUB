@@ -42,12 +42,10 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
   .sidebar {
     position: fixed !important;
     top: 0 !important;
+    bottom: 0 !important;
     left: 0 !important;
     width: 260px !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    max-height: 100vh !important;
-    max-height: 100dvh !important;
+    height: auto !important;
     transform: translateX(-100%);
     z-index: 6000 !important;
     display: block !important;
