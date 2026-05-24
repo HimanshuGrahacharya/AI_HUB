@@ -4257,7 +4257,15 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/api/user/data', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
-    .then(res => res.json())
+    .then(res => {
+      if (!res.ok) {
+        // Token is invalid/expired or user was deleted/database reset
+        localStorage.removeItem('token');
+        window.location.href = 'landing.html';
+        throw new Error('Session invalid or user not found');
+      }
+      return res.json();
+    })
     .then(data => {
       // Populate User Profile
       if (data.fullName) {

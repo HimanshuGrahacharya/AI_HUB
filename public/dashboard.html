@@ -117,6 +117,11 @@
         const grid = document.getElementById('history-grid');
         
         if (!response.ok) {
+          if (response.status === 401 || response.status === 403 || response.status === 404) {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+            return;
+          }
           grid.innerHTML = `<div style="grid-column: 1/-1; color: #ef4444;">Failed to load history.</div>`;
           return;
         }
