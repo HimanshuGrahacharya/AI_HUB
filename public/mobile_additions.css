@@ -145,16 +145,22 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     box-shadow: 20px 0 60px rgba(0, 0, 0, 0.5) !important;
   }
 
-  /* Lock body scroll when sidebar is open */
+  /* Lock body scroll when sidebar is open — iOS Safari REQUIRES position:fixed */
   body.sidebar-open {
     overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    /* do NOT set height here — it causes layout jump on Android */
   }
 
   /* Ensure sidebar scrolls independently - CRITICAL FIX */
   .sidebar.active {
-    overflow-y: auto !important;
+    overflow-y: scroll !important;
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior: contain !important;
+    /* Sidebar must receive ALL touch events */
+    pointer-events: all !important;
+    touch-action: pan-y !important;
   }
 
   .sidebar-overlay {
@@ -168,16 +174,15 @@ p { font-size: clamp(0.9rem, 2vw, 1.1rem); }
     display: none;
     opacity: 0;
     transition: opacity 0.3s ease;
+    /* Overlay MUST NOT steal touches from the sidebar panel */
+    pointer-events: none;
   }
 
-  /* Light mode: even lighter overlay for better visibility */
-  body:not(.dark-mode) .sidebar-overlay {
-    background: rgba(0, 0, 0, 0.2);
-  }
-
+  /* Only enable overlay pointer events when shown (to catch taps outside sidebar) */
   .sidebar-overlay.show {
     display: block !important;
     opacity: 1 !important;
+    pointer-events: all !important;
   }
 
   .main-content { width: 100% !important; max-width: 100% !important; padding: 0 !important; }
