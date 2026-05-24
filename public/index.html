@@ -225,11 +225,88 @@
             <button id="voice-search-btn" class="voice-search-btn" title="Voice Search"><i class="ph ph-microphone"></i></button>
             <span class="search-kbd-hint">Ctrl K</span>
           </div>
+          <!-- Prompt Library Quick Access -->
+          <div class="prompt-library-bar">
+            <span class="prompt-lib-label"><i class="ph ph-fire"></i> Trending Prompts:</span>
+            <button class="prompt-chip-quick" onclick="openPromptLibrary()">🧠 Explain Quantum Computing</button>
+            <button class="prompt-chip-quick" onclick="openPromptLibrary()">💻 Debug my Python code</button>
+            <button class="prompt-chip-quick" onclick="openPromptLibrary()">✉️ Write a cold email</button>
+            <button class="prompt-chip-quick" onclick="openPromptLibrary()">🎨 Generate art ideas</button>
+            <button class="prompt-chip-quick prompt-chip-more" onclick="openPromptLibrary()"><i class="ph ph-dots-three"></i> View All</button>
+          </div>
         </div>
         <div class="hero-visual">
           <div class="glow-circle"></div>
         </div>
       </section>
+
+      <!-- ═══════════════════════════════════════════════════ -->
+      <!-- PROMPT LIBRARY MODAL                                -->
+      <!-- ═══════════════════════════════════════════════════ -->
+      <div id="prompt-library-modal" style="display:none; position:fixed; inset:0; z-index:9000; background:rgba(2,6,23,0.85); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); align-items:center; justify-content:center; padding:20px;">
+        <div class="prompt-lib-container glass" style="width:100%; max-width:780px; max-height:90vh; overflow-y:auto; border-radius:24px; padding:32px; position:relative;">
+          <button onclick="closePromptLibrary()" style="position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:#94a3b8; width:36px; height:36px; border-radius:50%; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;"><i class="ph ph-x"></i></button>
+          <div style="margin-bottom:24px;">
+            <h2 style="font-size:1.6rem; font-weight:800; background:linear-gradient(135deg,#6366f1,#a78bfa); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px;"><i class="ph ph-fire" style="-webkit-text-fill-color:#f59e0b;"></i> Prompt Library</h2>
+            <p style="color:#94a3b8; font-size:0.9rem;">Click any prompt to auto-fill it into the search. 20+ curated, expert-level prompts.</p>
+          </div>
+          
+          <!-- Writing & Content -->
+          <div class="prompt-lib-section">
+            <h4 class="prompt-lib-cat"><i class="ph ph-pen"></i> Writing & Content</h4>
+            <div class="prompt-lib-grid">
+              <button class="prompt-lib-item" onclick="usePrompt('Write a compelling cold email to a potential client for a SaaS product')">✉️ Cold Email for SaaS</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Write a professional LinkedIn post about AI trends in 2025')">💼 LinkedIn AI Post</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Create a blog post outline about the future of artificial intelligence')">📝 AI Blog Outline</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Write an executive summary for a mobile app startup pitch deck')">🚀 Startup Pitch Summary</button>
+            </div>
+          </div>
+
+          <!-- Coding & Tech -->
+          <div class="prompt-lib-section">
+            <h4 class="prompt-lib-cat"><i class="ph ph-code"></i> Coding & Tech</h4>
+            <div class="prompt-lib-grid">
+              <button class="prompt-lib-item" onclick="usePrompt('Debug this Python code and explain what is wrong: ')">🐛 Debug Python Code</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Write a REST API in Node.js with Express for a user authentication system')">⚙️ Node.js REST API</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Explain the difference between SQL and NoSQL databases with real examples')">🗄️ SQL vs NoSQL</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Review my code for security vulnerabilities and suggest improvements: ')">🔒 Security Review</button>
+            </div>
+          </div>
+
+          <!-- Business & Strategy -->
+          <div class="prompt-lib-section">
+            <h4 class="prompt-lib-cat"><i class="ph ph-briefcase"></i> Business & Strategy</h4>
+            <div class="prompt-lib-grid">
+              <button class="prompt-lib-item" onclick="usePrompt('Create a SWOT analysis for a new AI SaaS startup entering the market')">📊 SWOT Analysis</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Generate 10 innovative startup ideas in the AI and machine learning space')">💡 AI Startup Ideas</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Write a go-to-market strategy for a B2B productivity tool')">📈 GTM Strategy</button>
+              <button class="prompt-lib-item" onclick="usePrompt('How do I price a SaaS product? Give me a detailed pricing strategy framework')">💰 SaaS Pricing Guide</button>
+            </div>
+          </div>
+
+          <!-- Creative & AI Art -->
+          <div class="prompt-lib-section">
+            <h4 class="prompt-lib-cat"><i class="ph ph-paint-brush-broad"></i> Creative & Art</h4>
+            <div class="prompt-lib-grid">
+              <button class="prompt-lib-item" onclick="usePrompt('Give me 5 unique cinematic art prompt ideas for generating a futuristic cityscape')">🌆 Futuristic City Art</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Write a short science fiction story about an AI that gains consciousness')">🤖 AI Sci-Fi Story</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Create a product name and tagline for a new AI-powered writing assistant')">✨ Product Naming</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Give me 10 creative social media content ideas for an AI tools platform')">📱 Social Media Ideas</button>
+            </div>
+          </div>
+
+          <!-- Research & Learning -->
+          <div class="prompt-lib-section">
+            <h4 class="prompt-lib-cat"><i class="ph ph-book-open"></i> Research & Learning</h4>
+            <div class="prompt-lib-grid">
+              <button class="prompt-lib-item" onclick="usePrompt('Explain quantum computing to a complete beginner using simple analogies')">⚛️ Quantum Computing</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Summarize the key differences between GPT-4, Claude 3, and Gemini 1.5')">🧠 GPT vs Claude vs Gemini</button>
+              <button class="prompt-lib-item" onclick="usePrompt('What are the top 5 AI papers I should read in 2025 and why?')">📄 Top AI Papers 2025</button>
+              <button class="prompt-lib-item" onclick="usePrompt('Create a 30-day learning roadmap to become proficient in machine learning')">🗺️ ML Learning Roadmap</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- NEW: AI Creative Studio -->
       <div id="creative-studio" class="creative-studio-container" style="display: none; position: relative;">

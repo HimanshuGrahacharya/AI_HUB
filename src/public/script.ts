@@ -6644,6 +6644,58 @@ let attachedStudioFile: { name: string, type: string, data: string } | null = nu
   }
 };
 
+// ==========================================
+// PROMPT LIBRARY
+// ==========================================
+(window as any).openPromptLibrary = function() {
+  const modal = document.getElementById('prompt-library-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+};
+
+(window as any).closePromptLibrary = function() {
+  const modal = document.getElementById('prompt-library-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+};
+
+(window as any).usePrompt = function(promptText: string) {
+  // Close the library modal
+  (window as any).closePromptLibrary();
+
+  // Try to find the active chat message input first
+  const chatInput = document.getElementById('message-input') as HTMLTextAreaElement;
+  if (chatInput && chatInput.offsetParent !== null) {
+    chatInput.value = promptText;
+    chatInput.focus();
+    showToast('Prompt loaded! Press Send to use it.', 'success');
+    return;
+  }
+
+  // Otherwise open Command Palette and pre-fill the search
+  const palette = document.getElementById('command-palette');
+  const paletteInput = document.getElementById('palette-input') as HTMLInputElement;
+  if (palette && paletteInput) {
+    palette.style.display = 'flex';
+    paletteInput.value = promptText;
+    paletteInput.focus();
+    // Trigger search
+    const event = new Event('input', { bubbles: true });
+    paletteInput.dispatchEvent(event);
+  }
+
+  showToast('Prompt loaded into search!', 'success');
+};
+
+// Close prompt library on overlay click
+document.getElementById('prompt-library-modal')?.addEventListener('click', function(e) {
+  if (e.target === this) (window as any).closePromptLibrary();
+});
+
 (window as any).openCreativeStudio = function() {
   switchView('creative-studio');
   loadArtGallery();
