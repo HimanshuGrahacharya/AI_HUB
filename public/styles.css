@@ -8732,3 +8732,120 @@ div.code-toolbar > .toolbar .toolbar-item button:hover {
   .prompt-lib-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
   .prompt-lib-item { font-size: 0.8rem; padding: 9px 11px; }
 }
+/* ==============================================
+   HERO NEURAL NETWORK VISUALIZATION (MIND-BLOWING) 
+   ============================================== */
+.hero-visual {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+  margin-left: 20px;
+}
+.galaxy-core {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.45) 0%, rgba(99, 102, 241, 0) 70%);
+  border-radius: 50%;
+  filter: blur(15px);
+  animation: pulse-core 4s infinite ease-in-out;
+}
+.glow-ring-1 {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border: 1.5px dashed rgba(99, 102, 241, 0.2);
+  border-radius: 50%;
+  animation: spin-clockwise 25s linear infinite;
+}
+.glow-ring-2 {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border: 1px dashed rgba(167, 139, 250, 0.15);
+  border-radius: 50%;
+  animation: spin-counter 35s linear infinite;
+}
+.floating-node {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+.floating-node:hover {
+  transform: scale(1.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.5) !important;
+  cursor: pointer;
+}
+.node-brain {
+  top: 15%;
+  left: 10%;
+  border-color: rgba(16, 163, 127, 0.3);
+  color: #10a37f;
+  animation: float-brain 6s infinite ease-in-out;
+}
+.node-cpu {
+  top: 18%;
+  right: 8%;
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+  animation: float-cpu 6.5s infinite ease-in-out;
+}
+.node-sparkle {
+  bottom: 12%;
+  left: 20%;
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #8b5cf6;
+  animation: float-sparkle 7s infinite ease-in-out;
+}
+.node-aperture {
+  bottom: 22%;
+  right: 15%;
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #06b6d4;
+  animation: float-aperture 5.5s infinite ease-in-out;
+}
+@keyframes pulse-core {
+  0%, 100% { transform: scale(0.9); opacity: 0.6; }
+  50% { transform: scale(1.25); opacity: 0.95; }
+}
+@keyframes spin-clockwise {
+  to { transform: rotate(360deg); }
+}
+@keyframes spin-counter {
+  to { transform: rotate(-360deg); }
+}
+@keyframes float-brain {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-10px, 12px) rotate(-5deg); }
+}
+@keyframes float-cpu {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(12px, -8px) rotate(5deg); }
+}
+@keyframes float-sparkle {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-8px, -12px) rotate(-6deg); }
+}
+@keyframes float-aperture {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(10px, 10px) rotate(6deg); }
+}
+@media (max-width: 992px) {
+  .hero-visual { display: none !important; }
+}
