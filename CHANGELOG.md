@@ -4,6 +4,26 @@ This document tracks all major features, technical implementations, and producti
 
 ---
 
+## 🚀 Version 3.1.0 — Massive Tool Expansion & UX Polish
+**Release Date: 2026-05-24 | Focus: World's Most Comprehensive AI Directory**
+
+### ✨ New Features
+- **📚 40+ New AI Tools Added** across 5 new and updated categories:
+  - **Agentic IDEs**: Kiro, Cursor, Windsurf, Replit AI, Codeium, Continue Dev, Cline, Aider, Bolt.new, Lovable
+  - **Autonomous AI Agents**: Auto-GPT, BabyAGI, CrewAI, LangGraph, OpenDevin, MetaGPT, SuperAGI, AgentGPT, Microsoft AutoGen, Semantic Kernel
+  - **Browser & Desktop AI Automation**: Open Interpreter, Browser Use, Skyvern, Stagehand, HyperWrite Assistant, Adept AI, Rabbit AI, MultiOn
+  - **AI Workflow Automation**: n8n, Zapier AI, Make, Flowise, Dify, LangFlow, Pipedream
+  - **Voice AI & Personal Assistants**: Vapi, Retell AI, ElevenLabs, LiveKit Agents, Pi AI
+  - **Local Open-Source AI**: Ollama, LM Studio, AnythingLLM, Jan AI, Open WebUI
+
+### 🛠 Technical Improvements
+- **Sidebar Updated**: Added "Agentic IDEs" and "Automation & Workflows" filter categories to match the new tool data.
+- **Global UX Polish**: Auto-resizing textareas, ESC/click-outside-to-close on all modals (Agentic Forge, Prompt Library, Persona), CSS-only smooth tooltips on icon buttons, and glowing focus rings on all inputs.
+- **README Rewritten**: Full professional documentation with tool directory table, tech stack matrix, `.env` setup guide, and roadmap.
+- **CHANGELOG Updated**: This file.
+
+---
+
 ## 🚀 Version 3.0.0 — World-Class Agentic Platform Update
 **Release Date: 2026-05-24 | Focus: Agentic AI Ecosystem, Public Access & Premium UX**
 

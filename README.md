@@ -1,76 +1,101 @@
-# 🚀 HSG AI HUB - The World's Most Powerful AI Dashboard
+# 🚀 HSG AI HUB — The World's Most Powerful AI Platform
 
 ![HSG AI HUB Banner](https://himanshu-ai-hub.onrender.com/logos/ai-hubs-logo.svg)
 
-**HSG AI HUB** is a professional-grade, world-class SaaS platform designed to centralize the power of Artificial Intelligence. Access multiple LLMs, compare models side-by-side, and explore a directory of 500+ AI tools in a stunning glassmorphism interface.
+> **HSG AI HUB** is a professional-grade, world-class SaaS platform centralizing the power of Artificial Intelligence. Explore **550+ curated AI tools**, compare top LLMs side-by-side, generate art, orchestrate autonomous agent swarms, and run automated AI workflows — all in one stunning glassmorphism interface.
+
+🌐 **Live Demo:** [himanshu-ai-hub.onrender.com](https://himanshu-ai-hub.onrender.com)
 
 ---
 
-## 🌟 Premium Features
+## 🌟 Flagship Features
 
-### 🤖 HSG Agentic Forge (NEW!)
-Simulate fully autonomous multi-agent pipelines with live terminal execution.
+### 🤖 HSG Agentic Forge *(Exclusive)*
+Simulate fully autonomous multi-agent pipelines with real-time terminal execution.
 - **Squad Presets**: Choose between Dev, Marketing, or Analyst AI squads.
-- **Live Orchestration**: Watch agents like "Lead Architect" and "QA Auditor" hand off tasks with animated UI feedback and glowing connective paths.
-- **Terminal Simulator**: Monospace execution logs provide a highly technical, SaaS-grade visual experience as agents 'think' and output code blocks.
+- **Live Orchestration**: Watch agents like "Lead Architect" → "Senior Coder" → "QA Auditor" hand off tasks with animated pipeline bubbles and glowing neon connective paths.
+- **Terminal Simulator**: Monospace execution logs stream in real-time as agents think, write code, and report results.
 
-### ⚡ AI Model Arena (4-Column Comparison)
-The crown jewel of HSG AI HUB. Test your prompts against four world-class models simultaneously:
-- **ChatGPT:** The industry standard for creative writing.
-- **Google Gemini:** High-speed, multimodal reasoning (v1.5 Flash).
-- **Groq AI:** Lightning-fast Llama 3.1 8B performance.
-- **Free Assistant:** Powered by Groq's massive **70B model** for guaranteed high-quality free access.
+### ⚡ AI Model Arena *(4-Column Comparison)*
+Test your prompts against four world-class AI models simultaneously:
+- **ChatGPT** — Industry standard for creative writing.
+- **Google Gemini** — High-speed multimodal reasoning (v1.5 Flash).
+- **Groq AI** — Lightning-fast Llama 3.1 8B inference.
+- **Free Assistant** — Groq's massive 70B model, no API key needed.
 
 ### ⚔️ AI War Room & Multi-Agent Missions
-Launch complex missions using multiple AI models working in tandem. 
-- **Swarm Intelligence**: Orchestrate GPT, Gemini, and Groq to solve high-level strategic problems.
-- **Master Strategy**: Automated synthesis of multiple AI viewpoints into a single actionable plan.
+Orchestrate multiple AI models together to solve complex strategic problems.
+- **Swarm Intelligence**: GPT + Gemini + Groq working in tandem.
+- **Master Strategy**: Automated synthesis of all AI viewpoints into one actionable plan.
 
 ### 🎨 Creative Studio & Vision Forge
-The ultimate playground for AI artists and creators.
-- **Parallel Vision Forge**: Generate 4 unique variations of an image simultaneously.
-- **Vision AI Engine**: Integrated multimodal support—upload images and let AI reverse-engineer the prompts or analyze the content.
-- **Masterpiece Gallery**: Manage, remix, and publish your AI-generated art.
+The ultimate AI art playground.
+- **Parallel Vision Forge**: Generate 4 unique image variations simultaneously.
+- **Vision AI Engine**: Upload images for AI prompt reverse-engineering or content analysis.
+- **Masterpiece Gallery**: Manage, remix, and publish AI-generated art.
+
+### 🔥 Trending Prompt Library
+A curated library of 20+ expert-crafted prompts across 5 categories.
+- One-click injection into the active workspace.
+- Categories: Coding, Business, Creative, Writing, Research.
 
 ### 🎭 Custom AI Persona Engine
-Define your own AI experts with unique personalities.
-- **Persona Customization**: Set specific emojis, names, and system instructions.
-- **Expert Mode**: Switch between your custom agents (e.g., "Senior Python Dev", "Marketing Guru") instantly.
+Define your own AI experts with unique personalities and system instructions.
+- Switch between "Senior Python Dev", "Marketing Guru", or your own custom agents instantly.
 
 ### 📱 Full PWA & Native Installability
-HSG AI HUB isn't just a website; it's an application.
-- **Install on Any Device**: Add to home screen on iOS, Android, and Windows for a native app experience.
-- **Offline Reliable**: Advanced Service Worker with **Stale-While-Revalidate** caching ensures the app is fast and works offline.
-- **Maskable Icons**: Perfectly tailored for modern mobile operating systems.
+- **Install on Any Device**: Add to home screen on iOS, Android, and Windows.
+- **Offline Reliable**: Service Worker with Stale-While-Revalidate caching strategy.
+- **Maskable Icons**: Perfectly tailored for all modern operating systems.
 
-### 🔗 Professional SPA Hash Routing
-- **Deep-Linking**: Navigate directly to any tool via hashes (e.g., `/#chat/chatgpt`).
-- **Persistence**: Refreshing the page restores your current chat session and UI state perfectly.
-- **Legacy Support**: Automatic conversion of old query parameters to modern hashes.
+### 🔗 SPA Hash Routing
+- **Deep-Linking**: Navigate directly to any module via URL hash (e.g., `/#chat/chatgpt`).
+- **Session Persistence**: Page refreshes restore your chat session and UI state perfectly.
 
-### 🎙️ World-Class Interactions
-- **AI Voice Narration**: Every AI response features a "Speak" button using natural-sounding TTS.
-- **Advanced Code Highlighting**: Prism.js integration with a premium **Copy Button** and support for TypeScript, Python, SQL, Bash, and more.
-- **Suggested Prompt Chips**: A horizontally scrollable track of professional prompts to spark creativity.
-- **🔥 Trending Prompt Library**: A premium popup center holding 20+ expert-curated prompts across 5 key categories (Coding, Business, Creative, Writing, Research). Users can click any prompt to automatically inject it into the active workspace.
-- **🌌 3D Interactive Constellation**: A gorgeous, fluid orbital galaxy system displaying active AI nodes (OpenAI, Claude, Gemini, Flux) orbiting the core with inertia physics and hover glowing micro-interactions.
+---
+
+## 📚 AI Tool Directory — 550+ Tools Across 12 Categories
+
+The most comprehensive AI tool directory in any open-source project:
+
+| Category | Examples |
+|---|---|
+| 🤖 **AI Assistants** | ChatGPT, Claude, Gemini, Groq, Ollama, Jan AI, Open WebUI |
+| 🖥️ **Agentic IDEs** | Cursor, Kiro, Windsurf, Replit AI, Bolt.new, Lovable, Cline, Aider |
+| 🦾 **Autonomous Agents** | Auto-GPT, BabyAGI, MetaGPT, OpenDevin, SuperAGI, AgentGPT |
+| 🔗 **Agent Platforms** | LangChain, CrewAI, LangGraph, Microsoft AutoGen, Semantic Kernel |
+| ⚙️ **Workflow Automation** | n8n, Zapier AI, Make, Flowise, Dify, LangFlow, Pipedream |
+| 🌐 **Browser Automation** | Browser Use, Skyvern, Stagehand, Open Interpreter, MultiOn |
+| 🎙️ **Voice AI** | Vapi, Retell AI, ElevenLabs, LiveKit Agents, Pi AI |
+| 🎨 **Image Generation** | Midjourney, DALL-E 3, Stable Diffusion, Flux, Ideogram |
+| 💻 **Coding & Development** | GitHub Copilot, Codeium, Continue Dev, Tabnine |
+| 📝 **Writing & Productivity** | Notion AI, Jasper, Copy.ai, Writesonic |
+| 🔍 **Research & Study** | Perplexity AI, Elicit, Consensus, SciSpace |
+| 🎬 **Video & Media** | Runway, Sora, Pika Labs, HeyGen |
 
 ---
 
 ## 🛡️ Enterprise-Grade Security
 - **3-Step OTP Auth**: Secure email verification for every user.
-- **Google & Facebook OAuth**: Seamless one-click authentication.
-- **JWT Protection**: Professional session management and data isolation.
+- **Google & Facebook OAuth**: Seamless one-click social authentication.
+- **JWT Protection**: Professional session management with data isolation.
+- **Guest Sandbox**: Zero-friction instant access with a real JWT guest token.
 - **DB Resilience**: Automated fallback to `MongoMemoryServer` for high availability.
 
 ---
 
 ## 🛠️ Technology Stack
-- **Frontend:** HTML5, Vanilla CSS (Glassmorphism), TypeScript.
-- **Backend:** Node.js, Express, TypeScript.
-- **Database:** MongoDB Cloud (Atlas) + Local Fallback.
-- **AI Integration:** OpenAI, Google Gemini, Groq, Blackbox AI.
-- **Build System:** TSC + Shx Production Pipeline.
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | HTML5, Vanilla CSS (Glassmorphism), TypeScript |
+| **Backend** | Node.js, Express.js, TypeScript |
+| **Database** | MongoDB Atlas + In-Memory Fallback |
+| **AI Integrations** | OpenAI, Google Gemini, Groq, Blackbox AI |
+| **Auth** | JWT, Google OAuth, Facebook OAuth, OTP Email |
+| **Build** | TSC + Shx Production Pipeline |
+| **Deployment** | Render (auto-deploy on push) |
+| **PWA** | Service Worker, Web App Manifest, Maskable Icons |
 
 ---
 
@@ -78,35 +103,55 @@ HSG AI HUB isn't just a website; it's an application.
 
 ### Prerequisites
 - Node.js (v18+)
-- MongoDB Atlas Account
-- API Keys for OpenAI, Gemini, and Groq.
+- MongoDB Atlas Account (or local MongoDB)
+- API Keys: OpenAI, Google Gemini, Groq
 
 ### Installation
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/HimanshuGrahacharya/AI_HUB.git
+   cd AI_HUB
    ```
 2. **Install dependencies:**
    ```bash
    npm install
    ```
-3. **Build the production bundle:**
+3. **Set up environment variables** (create a `.env` file):
+   ```env
+   OPENAI_API_KEY=your_key
+   GEMINI_API_KEY=your_key
+   GROQ_API_KEY=your_key
+   MONGO_URI=your_mongodb_uri
+   JWT_SECRET=your_secret
+   ```
+4. **Build the production bundle:**
    ```bash
    npm run build
    ```
-4. **Run the server:**
+5. **Run the server:**
    ```bash
    npm start
    ```
+6. **Open** `http://localhost:3000` in your browser.
 
 ---
 
 ## 📈 SEO & Performance
-- **100% SEO Optimized:** Meta tags and OpenGraph integration for perfect social sharing.
-- **Semantic HTML**: Built with accessibility and search engine crawlability in mind.
-- **Performance Optimized**: Minified assets and efficient DOM management for a "zero-lag" experience.
+- **100% SEO Optimized**: Meta tags, OpenGraph, and Twitter Card integration.
+- **Semantic HTML5**: Built with accessibility and search engine crawlability in mind.
+- **Performance First**: Efficient DOM management, lazy loading, and minimal layout thrash.
+- **PWA Score**: Lighthouse PWA score optimized for full installability.
 
 ---
 
-**Built with ❤️ by Himanshu Grahacharya**  
+## 🗺️ Roadmap
+
+- [ ] **Real Backend Binding** for Agentic Forge (LangGraph / CrewAI integration)
+- [ ] **Custom Agent Builder**: Let users define their own agent squads and save them in MongoDB
+- [ ] **AI Tool Reviews**: Community ratings and comments on each tool
+- [ ] **API Playground**: Test any listed AI tool's API directly from the dashboard
+
+---
+
+**Built with ❤️ by [Himanshu Grahacharya](https://github.com/HimanshuGrahacharya)**
 *Turning the future of AI into a reality, one prompt at a time.*
