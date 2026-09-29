@@ -535,52 +535,130 @@
         <!-- AI tool cards will be dynamically generated here -->
       </div>
 
-      <!-- NEW: Global AI Intelligence Feed -->
+      <!-- PROFESSIONAL IT INDUSTRY NEWS HUB -->
       <div id="intelligence-feed" class="intelligence-feed" style="display: none;">
-        <div class="feed-header">
-          <div class="morning-brief">
+        
+        <!-- Hero Header -->
+        <div class="news-hub-hero">
+          <div class="news-hub-hero-left">
             <button class="back-tools-btn" onclick="switchView('dashboard')">
               <i class="ph ph-arrow-left"></i> Back to Tools
             </button>
-            <div class="brief-icon"><i class="ph ph-sparkle"></i></div>
-            <div class="brief-text">
-              <h2>AI Intelligence Feed</h2>
-              <p id="brief-date"></p>
+            <div class="news-hub-badge">
+              <span class="pulse"></span> LIVE NEWS HUB
+            </div>
+            <h1 class="news-hub-title">
+              <i class="ph ph-newspaper"></i> IT Industry News
+            </h1>
+            <p class="news-hub-subtitle">Global coverage · USA · India · MNC Layoffs · Real-time from 10+ sources</p>
+            <div class="news-stats-bar" id="news-stats-bar">
+              <div class="news-stat-item" id="stat-total">
+                <span class="stat-num">—</span>
+                <span class="stat-label">Total Stories</span>
+              </div>
+              <div class="news-stat-item" id="stat-layoffs">
+                <span class="stat-num layoff-color">—</span>
+                <span class="stat-label">Layoff Reports</span>
+              </div>
+              <div class="news-stat-item" id="stat-india">
+                <span class="stat-num india-color">—</span>
+                <span class="stat-label">India Stories</span>
+              </div>
+              <div class="news-stat-item" id="stat-usa">
+                <span class="stat-num usa-color">—</span>
+                <span class="stat-label">USA Stories</span>
+              </div>
+              <div class="news-stat-item" id="stat-updated">
+                <span class="stat-num small-text" id="last-updated-text">Loading...</span>
+                <span class="stat-label">Last Updated</span>
+              </div>
             </div>
           </div>
-          <div class="trending-ticker">
-            <span class="live-indicator"><span class="pulse"></span> LIVE TRENDS</span>
-            <div class="ticker-content">
-              <span class="ticker-item">🔥 OpenAI Operator Autonomous Agent Released</span>
-              <span class="ticker-item">🚀 NVIDIA Blackwell Chips Volume Production</span>
-              <span class="ticker-item">💡 DeepSeek-V3 Open Source Revolution</span>
-              <span class="ticker-item">🤖 Google Gemini 2.0 Ultra Preview Leaked</span>
+          <div class="news-hub-hero-right">
+            <!-- Live Ticker -->
+            <div class="news-live-ticker-box">
+              <div class="ticker-header">
+                <span class="live-indicator"><span class="pulse"></span> TRENDING NOW</span>
+              </div>
+              <div class="ticker-track">
+                <div class="ticker-content" id="news-ticker-content">
+                  <span class="ticker-item">⚡ Loading latest tech news...</span>
+                </div>
+              </div>
+            </div>
+            <!-- Source Logos -->
+            <div class="news-sources-row">
+              <span class="source-chip">TechCrunch</span>
+              <span class="source-chip">The Verge</span>
+              <span class="source-chip">Wired</span>
+              <span class="source-chip">NDTV Tech</span>
+              <span class="source-chip">ET Tech</span>
+              <span class="source-chip">Ars Technica</span>
+              <span class="source-chip">NY Times</span>
+              <span class="source-chip">Hacker News</span>
             </div>
           </div>
         </div>
 
-        <div class="feed-grid">
-          <section class="feed-section">
-            <div class="section-header">
-              <h3><i class="ph ph-newspaper"></i> Latest AI & IT News</h3>
-              <a href="#" class="view-all">View All</a>
-            </div>
-            <div class="news-grid" id="news-grid">
-              <!-- News cards will be generated here -->
-            </div>
-          </section>
-
-          <section class="feed-section">
-            <div class="section-header">
-              <h3><i class="ph ph-youtube-logo"></i> Trending AI Tutorials</h3>
-              <a href="#" class="view-all">View All</a>
-            </div>
-            <div class="video-grid" id="video-grid">
-              <!-- Video cards will be generated here -->
-            </div>
-          </section>
+        <!-- Category Filter Tabs -->
+        <div class="news-filter-tabs">
+          <button class="news-tab active" data-category="all" onclick="filterNews('all', this)">
+            <i class="ph ph-globe"></i> All News
+          </button>
+          <button class="news-tab" data-category="global" onclick="filterNews('global', this)">
+            <i class="ph ph-planet"></i> 🌍 Global IT
+          </button>
+          <button class="news-tab" data-category="usa" onclick="filterNews('usa', this)">
+            <i class="ph ph-flag"></i> 🇺🇸 USA
+          </button>
+          <button class="news-tab" data-category="india" onclick="filterNews('india', this)">
+            <i class="ph ph-flag"></i> 🇮🇳 India
+          </button>
+          <button class="news-tab tab-danger" data-category="layoffs" onclick="filterNews('layoffs', this)">
+            <i class="ph ph-warning"></i> 🚨 Layoffs
+          </button>
+          <button class="news-tab tab-purple" data-category="ai" onclick="filterNews('ai', this)">
+            <i class="ph ph-robot"></i> 🤖 AI
+          </button>
+          <button class="news-tab tab-gold" data-category="mnc" onclick="filterNews('mnc', this)">
+            <i class="ph ph-buildings"></i> 🏢 MNC
+          </button>
         </div>
+
+        <!-- Search Bar -->
+        <div class="news-search-row">
+          <div class="news-search-box">
+            <i class="ph ph-magnifying-glass"></i>
+            <input type="text" id="news-search-input" placeholder="Search news, companies, topics..." oninput="searchNews(this.value)">
+          </div>
+          <button class="news-refresh-btn" onclick="refreshNews()" title="Refresh News">
+            <i class="ph ph-arrows-clockwise" id="refresh-icon"></i> Refresh
+          </button>
+        </div>
+
+        <!-- News Grid -->
+        <div class="news-grid-pro" id="news-grid">
+          <!-- Loading State -->
+          <div class="news-loading" id="news-loading">
+            <div class="news-skeleton" style="grid-column: span 1;"></div>
+            <div class="news-skeleton" style="grid-column: span 1;"></div>
+            <div class="news-skeleton" style="grid-column: span 1;"></div>
+            <div class="news-skeleton" style="grid-column: span 1;"></div>
+            <div class="news-skeleton" style="grid-column: span 1;"></div>
+            <div class="news-skeleton" style="grid-column: span 1;"></div>
+          </div>
+        </div>
+
+        <!-- Load More -->
+        <div class="news-pagination-row" id="news-pagination-row" style="display:none;">
+          <button class="btn-load-more" id="news-load-more-btn" onclick="loadMoreNews()">
+            <i class="ph ph-arrow-down"></i> Load More Stories
+          </button>
+          <span class="news-count-label" id="news-count-label"></span>
+        </div>
+
       </div>
+
       <div class="pagination" id="pagination">
         <!-- Pagination buttons will be dynamically generated here -->
       </div>

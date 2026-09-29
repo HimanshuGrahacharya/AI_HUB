@@ -62,4 +62,22 @@ describe('AI Hub Server', () => {
       expect((error.response.data as any).error).toBe('Email already exists');
     }
   });
+
+  it('should fetch news stats from GET /api/news/stats', async () => {
+    const response = await axios.get<any>(baseUrl + '/api/news/stats', { timeout: 25000 });
+    expect(response.status).toBe(200);
+    const data = response.data as any;
+    expect(data).toHaveProperty('total');
+    expect(data).toHaveProperty('byCategory');
+    expect(data).toHaveProperty('sources');
+  }, 30000);
+
+  it('should fetch news articles from GET /api/news', async () => {
+    const response = await axios.get<any>(baseUrl + '/api/news?category=all&limit=5', { timeout: 25000 });
+    expect(response.status).toBe(200);
+    const data = response.data as any;
+    expect(data).toHaveProperty('articles');
+    expect(Array.isArray(data.articles)).toBe(true);
+    expect(data).toHaveProperty('total');
+  }, 30000);
 });

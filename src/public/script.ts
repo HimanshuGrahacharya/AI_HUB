@@ -6738,72 +6738,7 @@ async function fetchFallbackRSS() {
   return sorted.slice(0, 24);
 }
 
-async function initializeFeed() {
-  const dateEl = document.getElementById('brief-date');
-  if (dateEl) {
-    const now = new Date();
-    dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-  }
-  
-  const newsGrid = document.getElementById('news-grid');
-  if (newsGrid) {
-    newsGrid.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
-        <div class="hsg-spinner" style="margin: 0 auto 15px;"></div>
-        <p>Connecting to global AI intelligence feeds...</p>
-      </div>
-    `;
 
-    try {
-      const news = await fetchLiveAINews();
-      if (news.length > 0) {
-        let newsHtml = '';
-        let showedEarlierDivider = false;
-        
-        news.forEach((item, index) => {
-          const isToday = new Date(item.pubDate).toDateString() === new Date().toDateString();
-          
-          if (!isToday && !showedEarlierDivider && index > 0) {
-            newsHtml += `<div style="grid-column: 1/-1; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 15px;">
-              <h4 style="color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin:0;">Earlier this week</h4>
-            </div>`;
-            showedEarlierDivider = true;
-          }
-
-          newsHtml += `
-            <div class="news-card" onclick="window.open('${item.link}', '_blank')">
-              <img src="${item.image}" class="news-img" alt="${item.title}">
-              <div class="news-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                  <span class="news-tag">${item.source}</span>
-                  <span style="font-size: 0.75rem; color: var(--text-secondary); opacity: 0.8;">${timeAgo(item.pubDate)}</span>
-                </div>
-                <h4>${item.title}</h4>
-                <p>${item.excerpt}</p>
-              </div>
-            </div>
-          `;
-        });
-        newsGrid.innerHTML = newsHtml;
-      }
-    } catch (err) {
-      console.error('Feed Error:', err);
-      newsGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">Unable to connect to live news. Please try again later.</div>';
-    }
-  }
-  
-  const videoGrid = document.getElementById('video-grid');
-  if (videoGrid) {
-    videoGrid.innerHTML = (aiVideosData as any[]).map(item => `
-      <div class="video-card">
-        <div class="video-thumb" style="background-image: url('${item.thumb}'); background-size: cover;">
-          <div class="play-overlay"><i class="ph ph-play-fill"></i></div>
-        </div>
-        <h5>${item.title}</h5>
-      </div>
-    `).join('');
-  }
-}
 
 function extractImageFromContent(content: string) {
   if (!content) return null;
@@ -7970,3 +7905,414 @@ function loadSwarmPresetByKey(key: string) {
   runNextStep();
 };
 
+// ============================================================
+// PROFESSIONAL IT INDUSTRY NEWS HUB IMPLEMENTATION
+// Covers Global IT, USA, India, MNC Layoffs, AI & Cloud
+// ============================================================
+
+interface NewsArticleItem {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  image: string;
+  source: string;
+  publishedAt: string;
+  category: 'global' | 'usa' | 'india' | 'layoffs' | 'ai' | 'mnc';
+  country: string;
+  tags: string[];
+}
+
+interface NewsStatsData {
+  total: number;
+  byCategory: {
+    global: number;
+    usa: number;
+    india: number;
+    layoffs: number;
+    ai: number;
+    mnc: number;
+  };
+  withLayoffTag: number;
+  withMNCTag: number;
+  sources: number;
+  lastUpdated: string | null;
+}
+
+let activeNewsCategory: string = 'all';
+let currentNewsFeedPage: number = 1;
+let totalNewsFeedPages: number = 1;
+let loadedNewsArticles: NewsArticleItem[] = [];
+let allFetchedNewsPool: NewsArticleItem[] = [];
+let isNewsFeedFetching: boolean = false;
+let newsDebounceTimer: any = null;
+
+function formatNewsRelativeTime(dateString: string): string {
+  try {
+    const pub = new Date(dateString).getTime();
+    if (isNaN(pub)) return 'Recently';
+    const now = Date.now();
+    const diffSec = Math.floor((now - pub) / 1000);
+    if (diffSec < 60) return 'Just now';
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHrs = Math.floor(diffMin / 60);
+    if (diffHrs < 24) return `${diffHrs}h ago`;
+    const diffDays = Math.floor(diffHrs / 24);
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 30) return `${diffDays}d ago`;
+    return new Date(dateString).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  } catch {
+    return 'Recently';
+  }
+}
+
+function escapeNewsHtml(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function getCategoryTagClass(tag: string): string {
+  const lower = tag.toLowerCase();
+  if (lower.includes('layoff')) return 'tag-layoffs';
+  if (lower.includes('india')) return 'tag-india';
+  if (lower.includes('usa')) return 'tag-usa';
+  if (lower.includes('ai')) return 'tag-ai';
+  if (lower.includes('mnc')) return 'tag-mnc';
+  if (lower.includes('startup')) return 'tag-startup';
+  return 'tag-global';
+}
+
+function renderNewsTicker(articles: NewsArticleItem[]): void {
+  const tickerContainer = document.getElementById('news-ticker-content');
+  if (!tickerContainer) return;
+
+  if (!articles || articles.length === 0) {
+    tickerContainer.innerHTML = '<span class="ticker-item">⚡ Live feeds active — watching global tech, MNCs & Indian IT...</span>';
+    return;
+  }
+
+  // Pick top 12 articles for breaking ticker
+  const topArticles = articles.slice(0, 12);
+  const tickerHtml = topArticles.map(article => {
+    const isLayoff = article.tags.some(t => t.toLowerCase().includes('layoff')) || article.category === 'layoffs';
+    const tagEmoji = isLayoff ? '🚨 [LAYOFF]' : '⚡';
+    return `<a href="${article.url}" target="_blank" rel="noopener noreferrer" class="ticker-item" style="text-decoration:none; color:inherit; display:inline-flex; align-items:center; gap:6px; margin-right:30px;">
+      <span style="color:${isLayoff ? '#f87171' : '#38bdf8'}; font-weight:800;">${tagEmoji} [${escapeNewsHtml(article.source)}]</span>
+      <span style="color:#e2e8f0; font-weight:600;">${escapeNewsHtml(article.title)}</span>
+      <span style="color:#64748b; font-size:0.75rem;">(${formatNewsRelativeTime(article.publishedAt)})</span>
+    </a>`;
+  }).join('');
+
+  tickerContainer.innerHTML = tickerHtml + tickerHtml;
+}
+
+function renderNewsCardsGrid(articles: NewsArticleItem[], append: boolean = false): void {
+  const grid = document.getElementById('news-grid');
+  const loading = document.getElementById('news-loading');
+  if (loading) loading.style.display = 'none';
+  if (!grid) return;
+
+  if (!append) {
+    grid.innerHTML = '';
+  }
+
+  if (!articles || articles.length === 0) {
+    if (!append) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); border-radius: 20px;">
+          <div style="font-size: 3rem; margin-bottom: 12px;">📰</div>
+          <h3 style="font-size: 1.3rem; color: white; margin-bottom: 8px;">No stories found in this section</h3>
+          <p style="color: #94a3b8; font-size: 0.95rem; max-width: 480px; margin: 0 auto 20px;">
+            Try clearing search filters or switching to "All News" to view latest global, US, India & MNC tech updates.
+          </p>
+          <button class="news-tab active" onclick="filterNews('all')" style="margin: 0 auto;">
+            <i class="ph ph-globe"></i> View All News
+          </button>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  const cardsHtml = articles.map(article => {
+    const isLayoff = article.category === 'layoffs' || article.tags.some(t => t.toLowerCase().includes('layoff'));
+    const isMNC = article.tags.some(t => t.toLowerCase().includes('mnc')) || article.category === 'mnc';
+    
+    const tagBadges = (article.tags || []).slice(0, 3).map(tag => {
+      const cls = getCategoryTagClass(tag);
+      return `<span class="news-tag-chip ${cls}">${escapeNewsHtml(tag)}</span>`;
+    }).join('');
+
+    const cardClasses = `news-card-pro ${isLayoff ? 'layoff-card' : ''}`;
+    const safeTitle = escapeNewsHtml(article.title);
+    const safeDesc = escapeNewsHtml(article.description || 'Click to read full in-depth story from original publisher.');
+    const safeSource = escapeNewsHtml(article.source);
+    const safeCountry = article.country || '🌍 Global';
+    const relativeTime = formatNewsRelativeTime(article.publishedAt);
+    const safeImg = article.image || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop';
+
+    return `
+      <div class="${cardClasses}" onclick="window.open('${article.url}', '_blank', 'noopener,noreferrer')">
+        <div class="news-card-img-wrap">
+          <img class="news-card-img" src="${safeImg}" alt="${safeTitle}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop';" />
+          <div class="news-card-img-overlay"></div>
+          <div class="news-source-badge">
+            <i class="ph ph-broadcast"></i> ${safeSource}
+          </div>
+          <div class="news-country-badge" title="${safeCountry}">
+            ${safeCountry}
+          </div>
+        </div>
+        <div class="news-card-content">
+          <div class="news-card-tags">
+            ${isLayoff ? '<span class="news-tag-chip tag-layoffs">🚨 LAYOFFS</span>' : ''}
+            ${isMNC && !isLayoff ? '<span class="news-tag-chip tag-mnc">🏢 MNC</span>' : ''}
+            ${tagBadges}
+          </div>
+          <h2 class="news-card-title" title="${safeTitle}">
+            ${safeTitle}
+          </h2>
+          <p class="news-card-desc">
+            ${safeDesc}
+          </p>
+          <div class="news-card-footer">
+            <span class="news-card-date">
+              <i class="ph ph-clock"></i> ${relativeTime}
+            </span>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <button class="back-tools-btn" style="padding:4px 8px; font-size:0.75rem; border-radius:8px;" onclick="event.stopPropagation(); shareNewsArticle('${article.url}', '${safeTitle.replace(/'/g, "\\'")}')" title="Share / Copy Link">
+                <i class="ph ph-share-network"></i>
+              </button>
+              <a href="${article.url}" target="_blank" rel="noopener noreferrer" class="news-card-read-btn" onclick="event.stopPropagation();">
+                Read Story <i class="ph ph-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (append) {
+    grid.insertAdjacentHTML('beforeend', cardsHtml);
+  } else {
+    grid.innerHTML = cardsHtml;
+  }
+}
+
+async function fetchNewsStats(): Promise<void> {
+  try {
+    const res = await fetch('/api/news/stats');
+    if (!res.ok) return;
+    const stats: NewsStatsData = await res.json();
+    
+    const totalEl = document.querySelector('#stat-total .stat-num');
+    const layoffsEl = document.querySelector('#stat-layoffs .stat-num');
+    const indiaEl = document.querySelector('#stat-india .stat-num');
+    const usaEl = document.querySelector('#stat-usa .stat-num');
+    const updatedEl = document.getElementById('last-updated-text');
+
+    if (totalEl) totalEl.textContent = `${stats.total}+`;
+    if (layoffsEl) layoffsEl.textContent = `${stats.withLayoffTag || stats.byCategory.layoffs || 0}`;
+    if (indiaEl) indiaEl.textContent = `${stats.byCategory.india || 0}`;
+    if (usaEl) usaEl.textContent = `${stats.byCategory.usa || 0}`;
+    if (updatedEl) {
+      updatedEl.textContent = stats.lastUpdated ? formatNewsRelativeTime(stats.lastUpdated) : 'Just now';
+    }
+  } catch (e) {
+    console.warn('Failed to load news stats:', e);
+  }
+}
+
+async function fetchNewsFeedData(category: string = 'all', page: number = 1, append: boolean = false): Promise<void> {
+  if (isNewsFeedFetching) return;
+  isNewsFeedFetching = true;
+
+  const loading = document.getElementById('news-loading');
+  const paginationRow = document.getElementById('news-pagination-row');
+  const countLabel = document.getElementById('news-count-label');
+
+  if (!append && loading) {
+    loading.style.display = 'contents';
+  }
+
+  try {
+    const res = await fetch(`/api/news?category=${encodeURIComponent(category)}&page=${page}&limit=18`);
+    if (!res.ok) throw new Error('News API response not ok');
+    const data = await res.json();
+    
+    totalNewsFeedPages = data.totalPages || 1;
+    currentNewsFeedPage = data.page || 1;
+
+    if (append) {
+      loadedNewsArticles = [...loadedNewsArticles, ...(data.articles || [])];
+    } else {
+      loadedNewsArticles = data.articles || [];
+      if (category === 'all') {
+        allFetchedNewsPool = [...loadedNewsArticles];
+      }
+    }
+
+    renderNewsCardsGrid(data.articles || [], append);
+
+    // If initial all news load, also update ticker
+    if (category === 'all' && page === 1) {
+      renderNewsTicker(data.articles || []);
+    }
+
+    // Update pagination controls
+    if (paginationRow) {
+      if (currentNewsFeedPage < totalNewsFeedPages) {
+        paginationRow.style.display = 'flex';
+        if (countLabel) {
+          countLabel.textContent = `Showing ${loadedNewsArticles.length} of ${data.total} stories`;
+        }
+      } else {
+        paginationRow.style.display = loadedNewsArticles.length > 10 ? 'flex' : 'none';
+        if (countLabel) {
+          countLabel.textContent = `All ${data.total} stories loaded`;
+        }
+        const loadMoreBtn = document.getElementById('news-load-more-btn');
+        if (loadMoreBtn && currentNewsFeedPage >= totalNewsFeedPages) {
+          loadMoreBtn.style.display = 'none';
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Failed to fetch news:', err);
+    if (!append) {
+      renderNewsCardsGrid([], false);
+    }
+    showToast('Failed to load latest news feeds. Please try refreshing.', 'error');
+  } finally {
+    isNewsFeedFetching = false;
+    if (loading) loading.style.display = 'none';
+  }
+}
+
+function initializeFeed(): void {
+  activeNewsCategory = 'all';
+  currentNewsFeedPage = 1;
+  
+  // Highlight "All News" tab
+  document.querySelectorAll('.news-tab').forEach(tab => tab.classList.remove('active'));
+  const allTab = document.querySelector('.news-tab[data-category="all"]');
+  if (allTab) allTab.classList.add('active');
+
+  // Clear search input
+  const searchInput = document.getElementById('news-search-input') as HTMLInputElement;
+  if (searchInput) searchInput.value = '';
+
+  // Reset pagination button
+  const loadMoreBtn = document.getElementById('news-load-more-btn');
+  if (loadMoreBtn) loadMoreBtn.style.display = 'inline-flex';
+
+  fetchNewsStats();
+  fetchNewsFeedData('all', 1, false);
+}
+
+function filterNews(category: string, tabEl?: HTMLElement): void {
+  activeNewsCategory = category;
+  currentNewsFeedPage = 1;
+
+  // Update tabs active state
+  document.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'));
+  if (tabEl) {
+    tabEl.classList.add('active');
+  } else {
+    const match = document.querySelector(`.news-tab[data-category="${category}"]`);
+    if (match) match.classList.add('active');
+  }
+
+  // Clear search input on tab change
+  const searchInput = document.getElementById('news-search-input') as HTMLInputElement;
+  if (searchInput) searchInput.value = '';
+
+  const loadMoreBtn = document.getElementById('news-load-more-btn');
+  if (loadMoreBtn) loadMoreBtn.style.display = 'inline-flex';
+
+  fetchNewsFeedData(category, 1, false);
+}
+
+function searchNews(query: string): void {
+  if (newsDebounceTimer) clearTimeout(newsDebounceTimer);
+  newsDebounceTimer = setTimeout(() => {
+    const q = (query || '').trim().toLowerCase();
+    if (!q) {
+      // Re-render currently loaded category
+      renderNewsCardsGrid(loadedNewsArticles, false);
+      const paginationRow = document.getElementById('news-pagination-row');
+      if (paginationRow) paginationRow.style.display = 'flex';
+      return;
+    }
+
+    // Filter in-memory articles
+    const pool = loadedNewsArticles.length > 0 ? loadedNewsArticles : allFetchedNewsPool;
+    const matches = pool.filter(a => {
+      const inTitle = a.title.toLowerCase().includes(q);
+      const inDesc = (a.description || '').toLowerCase().includes(q);
+      const inSource = a.source.toLowerCase().includes(q);
+      const inCountry = (a.country || '').toLowerCase().includes(q);
+      const inTags = (a.tags || []).some(t => t.toLowerCase().includes(q));
+      return inTitle || inDesc || inSource || inCountry || inTags;
+    });
+
+    renderNewsCardsGrid(matches, false);
+
+    // Hide load more when searching locally
+    const paginationRow = document.getElementById('news-pagination-row');
+    if (paginationRow) paginationRow.style.display = 'none';
+  }, 250);
+}
+
+async function refreshNews(): Promise<void> {
+  const icon = document.getElementById('refresh-icon');
+  if (icon) icon.classList.add('spinning');
+
+  showToast('Fetching latest IT, USA, India & Layoff news...', 'info');
+
+  try {
+    await fetchNewsStats();
+    await fetchNewsFeedData(activeNewsCategory, 1, false);
+    showToast('Real-time news feeds updated!', 'success');
+  } catch {
+    showToast('Failed to refresh news', 'error');
+  } finally {
+    if (icon) icon.classList.remove('spinning');
+  }
+}
+
+function loadMoreNews(): void {
+  if (currentNewsFeedPage >= totalNewsFeedPages) {
+    showToast('All available stories loaded for this category', 'info');
+    return;
+  }
+  const nextPage = currentNewsFeedPage + 1;
+  fetchNewsFeedData(activeNewsCategory, nextPage, true);
+}
+
+function shareNewsArticle(url: string, title: string): void {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast(`Copied article link to clipboard!`, 'success');
+    }).catch(() => {
+      showToast('Could not copy link to clipboard', 'error');
+    });
+  } else {
+    showToast('Sharing not supported on this browser', 'info');
+  }
+}
+
+// Bind to window for HTML onclick and global access
+(window as any).initializeFeed = initializeFeed;
+(window as any).filterNews = filterNews;
+(window as any).searchNews = searchNews;
+(window as any).refreshNews = refreshNews;
+(window as any).loadMoreNews = loadMoreNews;
+(window as any).shareNewsArticle = shareNewsArticle;
