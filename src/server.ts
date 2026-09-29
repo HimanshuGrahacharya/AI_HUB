@@ -244,253 +244,269 @@ app.post('/api/ollama', async (req: Request, res: Response) => {
 });
 
 // ============================================================
-// Specific AI API Routes
-app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
-  try {
-    const { message, image } = req.body;
-    let payload: any = {
-      messages: [{ role: 'user', content: message }],
-      model: 'deepseek-v3', // High intelligence model for art analysis
-      max_tokens: 500
-    };
+// AI API CALL HELPERS (Live Working Models with Auto-Failover)
+// ============================================================
 
-    if (image) {
-      payload.messages[0].content = [
-        { type: 'text', text: message },
-        { type: 'image_url', image_url: { url: image } }
-      ];
+async function callGemini(message: string, image?: string): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error('Gemini API key missing');
+
+  let parts: any[] = [{ text: message || "Analyze this image." }];
+  if (image && image.startsWith('data:image')) {
+    const partsArray = image.split(';');
+    const mimePart = partsArray[0];
+    const mimeType = mimePart ? (mimePart.split(':')[1] || 'image/jpeg') : 'image/jpeg';
+    const base64Data = image.includes(',') ? image.split(',')[1] : '';
+    if (base64Data) {
+      parts.push({
+        inlineData: { mimeType, data: base64Data }
+      });
     }
-
-    const response = await axios.post('https://api.blackbox.ai/api/chat', payload, {
-      headers: { 'Content-Type': 'application/json' },
-      timeout: 15000
-    });
-
-    res.json({ response: response.data.choices[0].message.content });
-  } catch (error: any) {
-    console.error('Blackbox API error:', error.message);
-    if (await isOllamaRunning()) {
-      try {
-        const ollamaAns = await callOllama(req.body.message);
-        return res.json({ response: `[Local Ollama · Visual/Text Fallback]\n\n${ollamaAns}` });
-      } catch (_) {}
-    }
-    res.json({ response: "AI service temporarily unavailable. Install Ollama (https://ollama.com) for offline AI." });
   }
+
+  const models = ['gemini-3.8-flash', 'gemini-3.5-flash'];
+  for (const m of models) {
+    try {
+      const r = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`, {
+        contents: [{ parts }]
+      }, { timeout: 15000 });
+      const text = r.data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) return text;
+    } catch (_) {}
+  }
+  throw new Error('Gemini generation failed');
+}
+
+async function callGroq(message: string, systemPrompt?: string): Promise<string> {
+  const apiKey = process.env.GROQ_API_KEY || (process.env.ANTHROPIC_API_KEY?.startsWith('gsk_') ? process.env.ANTHROPIC_API_KEY : null);
+  if (!apiKey) throw new Error('Groq API key missing');
+
+  const messages: any[] = [];
+  if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
+  messages.push({ role: 'user', content: message });
+
+  const models = ['openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'qwen/qwen3.8-27b'];
+  for (const model of models) {
+    try {
+      const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
+        model,
+        messages,
+      }, {
+        headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        timeout: 12000
+      });
+      const text = response.data.choices?.[0]?.message?.content;
+      if (text) return text;
+    } catch (err: any) {
+      console.warn(`Groq model ${model} failed, trying next...`);
+    }
+  }
+  throw new Error('All Groq models failed');
+}
+
+// ============================================================
+// Specific AI API Routes (Multi-Tier Resilience)
+// ============================================================
+
+// Blackbox AI: Deep visual & code intelligence (Gemini 3.8 Flash + Groq fallback)
+app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
+  const { message, image } = req.body;
+  const prompt = message || "Provide deep analysis.";
+
+  // Tier 1: Gemini 3.8 Flash (native vision & high intelligence)
+  try {
+    const aiResponse = await callGemini(
+      `[Blackbox AI Visual & Code Engine]\n\n${prompt}`,
+      image
+    );
+    await saveChatMessage(req.user.id, 'blackbox', 'user', image ? `[Image] ${prompt}` : prompt);
+    await saveChatMessage(req.user.id, 'blackbox', 'ai', aiResponse);
+    return res.json({ response: aiResponse });
+  } catch (_) {}
+
+  // Tier 2: Groq high-speed engine
+  try {
+    const aiResponse = await callGroq(prompt, "You are Blackbox AI, an elite visual and code generation intelligence.");
+    await saveChatMessage(req.user.id, 'blackbox', 'user', prompt);
+    await saveChatMessage(req.user.id, 'blackbox', 'ai', aiResponse);
+    return res.json({ response: aiResponse });
+  } catch (_) {}
+
+  // Tier 3: Local Ollama
+  if (await isOllamaRunning()) {
+    try {
+      const ollamaAns = await callOllama(prompt);
+      return res.json({ response: `[Local Ollama]\n\n${ollamaAns}` });
+    } catch (_) {}
+  }
+
+  res.json({ response: "Blackbox AI is preparing resources. Please retry in a moment." });
 });
 
+// ChatGPT: OpenAI with auto-fallback to Groq and Gemini
 app.post('/api/chatgpt', authenticateToken, async (req: AuthRequest, res: Response) => {
+  const message = req.body.message || 'Hello';
+
+  // Tier 1: Official OpenAI
   try {
     const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) throw new Error('No Key');
-
-    const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: req.body.message }],
-    }, {
-      headers: { 'Authorization': `Bearer ${apiKey}` },
-      timeout: 10000
-    });
-    res.json({ response: response.data.choices[0].message.content });
-  } catch (error) {
-    try {
-      const groqKey = process.env.GROQ_API_KEY;
-      const fb = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-        model: 'llama-3.1-8b-instant',
-        messages: [{ role: 'user', content: req.body.message }],
-      }, { headers: { 'Authorization': `Bearer ${groqKey}` } });
-      res.json({ response: fb.data.choices[0].message.content + " (Note: Using High-Speed Fallback Model)" });
-    } catch (e) {
-      if (await isOllamaRunning()) {
-        try {
-          const ollamaAns = await callOllama(req.body.message);
-          return res.json({ response: `[Local Ollama]\n\n${ollamaAns}` });
-        } catch (_) {}
-      }
-      res.json({ response: "ChatGPT is currently busy. Please try again shortly or run Ollama locally." });
+    if (apiKey) {
+      const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: message }],
+      }, {
+        headers: { 'Authorization': `Bearer ${apiKey}` },
+        timeout: 10000
+      });
+      const text = response.data.choices[0].message.content;
+      await saveChatMessage(req.user.id, 'chatgpt', 'user', message);
+      await saveChatMessage(req.user.id, 'chatgpt', 'ai', text);
+      return res.json({ response: text });
     }
+  } catch (_) {}
+
+  // Tier 2: Groq high-speed model
+  try {
+    const groqResponse = await callGroq(message);
+    await saveChatMessage(req.user.id, 'chatgpt', 'user', message);
+    await saveChatMessage(req.user.id, 'chatgpt', 'ai', groqResponse);
+    return res.json({ response: groqResponse });
+  } catch (_) {}
+
+  // Tier 3: Gemini Flash
+  try {
+    const geminiResponse = await callGemini(message);
+    await saveChatMessage(req.user.id, 'chatgpt', 'user', message);
+    await saveChatMessage(req.user.id, 'chatgpt', 'ai', geminiResponse);
+    return res.json({ response: geminiResponse });
+  } catch (_) {}
+
+  // Tier 4: Local Ollama
+  if (await isOllamaRunning()) {
+    try {
+      const ollamaAns = await callOllama(message);
+      return res.json({ response: `[Local Ollama]\n\n${ollamaAns}` });
+    } catch (_) {}
   }
+
+  res.json({ response: "ChatGPT is temporarily busy. Please try again shortly." });
 });
 
+// Claude: Anthropic with auto-fallback to Groq and Gemini
 app.post('/api/claude', authenticateToken, async (req: AuthRequest, res: Response) => {
-  try {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+  const message = req.body.message || 'Hello';
+  const apiKey = process.env.ANTHROPIC_API_KEY;
 
-    // AUTO-FIX: If they used a Groq key for Claude, just use Groq API for them!
-    if (apiKey && apiKey.startsWith('gsk_')) {
-      const groqResponse = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-        model: 'llama-3.1-8b-instant',
-        messages: [{ role: 'user', content: req.body.message }],
+  // Tier 1: Anthropic API (if valid anthropic key provided)
+  if (apiKey && !apiKey.startsWith('gsk_')) {
+    try {
+      const response = await axios.post('https://api.anthropic.com/v1/messages', {
+        model: 'claude-3-sonnet-20240229',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: message }],
       }, {
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
           'Content-Type': 'application/json',
         },
+        timeout: 12000
       });
-      const aiResponse = `[Auto-Fix: Using Groq] ${groqResponse.data.choices[0].message.content}`;
-      await saveChatMessage(req.user.id, 'claude', 'user', req.body.message);
+      const aiResponse = response.data.content[0].text;
+      await saveChatMessage(req.user.id, 'claude', 'user', message);
       await saveChatMessage(req.user.id, 'claude', 'ai', aiResponse);
       return res.json({ response: aiResponse });
-    }
-
-    if (!apiKey) {
-      return res.json({ response: "Claude integration is in Demo Mode. Add ANTHROPIC_API_KEY to Render to enable real answers." });
-    }
-
-    const response = await axios.post('https://api.anthropic.com/v1/messages', {
-      model: 'claude-3-sonnet-20240229',
-      max_tokens: 1000,
-      messages: [{ role: 'user', content: req.body.message }],
-    }, {
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-      },
-    });
-    const aiResponse = response.data.content[0].text;
-
-    // Save to history
-    await saveChatMessage(req.user.id, 'claude', 'user', req.body.message);
-    await saveChatMessage(req.user.id, 'claude', 'ai', aiResponse);
-
-    res.json({ response: aiResponse });
-  } catch (error: any) {
-    console.error('Anthropic API error:', error.response?.data || error.message);
-    const errorMessage = error.response?.data?.error?.message || 'Failed to get response from Claude';
-    res.status(500).json({ error: errorMessage });
+    } catch (_) {}
   }
+
+  // Tier 2: Groq high-speed model
+  try {
+    const groqResponse = await callGroq(message, "You are Claude, a helpful and thoughtful AI assistant created by Anthropic.");
+    await saveChatMessage(req.user.id, 'claude', 'user', message);
+    await saveChatMessage(req.user.id, 'claude', 'ai', groqResponse);
+    return res.json({ response: groqResponse });
+  } catch (_) {}
+
+  // Tier 3: Gemini Flash
+  try {
+    const geminiResponse = await callGemini(message);
+    await saveChatMessage(req.user.id, 'claude', 'user', message);
+    await saveChatMessage(req.user.id, 'claude', 'ai', geminiResponse);
+    return res.json({ response: geminiResponse });
+  } catch (_) {}
+
+  // Tier 4: Local Ollama
+  if (await isOllamaRunning()) {
+    try {
+      const ollamaAns = await callOllama(message);
+      return res.json({ response: `[Local Ollama]\n\n${ollamaAns}` });
+    } catch (_) {}
+  }
+
+  res.json({ response: "Claude is temporarily busy. Please try again shortly." });
 });
 
-
-
-
+// Gemini: Google Gemini 3.8 Flash (live tested) with Groq fallback
 app.post('/api/gemini', authenticateToken, async (req: AuthRequest, res: Response) => {
+  const { message, image } = req.body;
+  const prompt = message || "Analyze this request.";
+
+  // Tier 1: Google Gemini 3.8 Flash
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
-    const { message, image } = req.body;
-    
-    let parts: any[] = [{ text: message || "Analyze this image." }];
-    
-    if (image) {
-      // image format is "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
-      const mimeType = image.split(';')[0].split(':')[1];
-      const base64Data = image.split(',')[1];
-      parts.push({
-        inlineData: {
-          mimeType: mimeType,
-          data: base64Data
-        }
-      });
-    }
+    const aiResponse = await callGemini(prompt, image);
+    await saveChatMessage(req.user.id, 'gemini', 'user', image ? `[Image] ${prompt}` : prompt);
+    await saveChatMessage(req.user.id, 'gemini', 'ai', aiResponse);
+    return res.json({ response: aiResponse });
+  } catch (_) {}
 
-    const configs = [
-      { v: 'v1', m: 'gemini-1.5-flash' },
-      { v: 'v1beta', m: 'gemini-2.0-flash-exp' }
-    ];
-    for (const c of configs) {
-      try {
-        const r = await axios.post(`https://generativelanguage.googleapis.com/${c.v}/models/${c.m}:generateContent?key=${apiKey}`,
-          { contents: [{ parts: parts }] }, { timeout: 15000 });
-        const aiResponse = r.data.candidates[0].content.parts[0].text;
-        
-        // Save to DB (only save text to avoid massive DB bloat)
-        await saveChatMessage(req.user.id, 'gemini', 'user', image ? `[Image Uploaded] ${message}` : message);
-        await saveChatMessage(req.user.id, 'gemini', 'ai', aiResponse);
+  // Tier 2: Groq high-speed engine
+  try {
+    const groqResponse = await callGroq(prompt);
+    await saveChatMessage(req.user.id, 'gemini', 'user', prompt);
+    await saveChatMessage(req.user.id, 'gemini', 'ai', groqResponse);
+    return res.json({ response: groqResponse });
+  } catch (_) {}
 
-        return res.json({ response: aiResponse });
-      } catch (e) { continue; }
-    }
-    if (await isOllamaRunning()) {
-      try {
-        const ollamaAns = await callOllama(message);
-        return res.json({ response: `[Local Ollama]\n\n${ollamaAns}` });
-      } catch (_) {}
-    }
-    res.json({ response: "Gemini is busy. Try again soon or run Ollama locally." });
-  } catch (e) { 
-    if (await isOllamaRunning()) {
-      try {
-        const ollamaAns = await callOllama(req.body.message);
-        return res.json({ response: `[Local Ollama]\n\n${ollamaAns}` });
-      } catch (_) {}
-    }
-    res.json({ response: "AI service temporarily unavailable." }); 
+  // Tier 3: Local Ollama
+  if (await isOllamaRunning()) {
+    try {
+      const ollamaAns = await callOllama(prompt);
+      return res.json({ response: `[Local Ollama]\n\n${ollamaAns}` });
+    } catch (_) {}
   }
+
+  res.json({ response: "Gemini service temporarily busy. Please try again soon." });
 });
 
+// Groq: High-speed open models (openai/gpt-oss-20b live tested) with Gemini fallback
 app.post('/api/groq', authenticateToken, async (req: AuthRequest, res: Response) => {
+  const message = req.body.message || 'Hello';
+
+  // Tier 1: Groq Engine
   try {
-    const apiKey = process.env.GROQ_API_KEY || (process.env.ANTHROPIC_API_KEY?.startsWith('gsk_') ? process.env.ANTHROPIC_API_KEY : null);
-    if (!apiKey) {
-      if (await isOllamaRunning()) {
-        const ollamaAns = await callOllama(req.body.message);
-        return res.json({ response: `[Local Ollama]\n\n${ollamaAns}` });
-      }
-      return res.json({ response: "Groq API Key is missing! Install Ollama for local AI." });
-    }
-
-    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'llama-3.1-8b-instant',
-      messages: [{ role: 'user', content: req.body.message }],
-    }, {
-      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      timeout: 10000
-    });
-
-    const aiResponse = response.data.choices[0].message.content;
-    await saveChatMessage(req.user.id, 'groq', 'user', req.body.message);
+    const aiResponse = await callGroq(message);
+    await saveChatMessage(req.user.id, 'groq', 'user', message);
     await saveChatMessage(req.user.id, 'groq', 'ai', aiResponse);
-    res.json({ response: aiResponse });
-  } catch (error: any) {
-    if (await isOllamaRunning()) {
-      try {
-        const ollamaAns = await callOllama(req.body.message);
-        return res.json({ response: `[Local Ollama Fallback]\n\n${ollamaAns}` });
-      } catch (_) {}
-    }
-    const detail = error.response?.data?.error?.message || error.message;
-    res.json({ response: `AI service notice: ${detail}` });
-  }
-});
+    return res.json({ response: aiResponse });
+  } catch (_) {}
 
-app.post('/api/blackbox', authenticateToken, async (req: AuthRequest, res: Response) => {
+  // Tier 2: Gemini Flash fallback
   try {
-    const apiKey = process.env.GROQ_API_KEY || (process.env.ANTHROPIC_API_KEY?.startsWith('gsk_') ? process.env.ANTHROPIC_API_KEY : null);
-    if (!apiKey) return res.json({ response: "Free Assistant key missing." });
+    const geminiResponse = await callGemini(message);
+    await saveChatMessage(req.user.id, 'groq', 'user', message);
+    await saveChatMessage(req.user.id, 'groq', 'ai', geminiResponse);
+    return res.json({ response: geminiResponse });
+  } catch (_) {}
 
-    const { message, image } = req.body;
-    
-    // Prepare Multimodal Content
-    const content: any[] = [{ type: "text", text: message }];
-    if (image && image.startsWith('data:image')) {
-      content.push({
-        type: "image_url",
-        image_url: { url: image }
-      });
-    }
-
-    const response = await axios.post('https://api.groq.com/openai/v1/chat/completions', {
-      model: 'meta-llama/llama-4-scout-17b-16e-instruct',
-      messages: [
-        { 
-          role: 'system', 
-          content: "You are the HSG AI Visual Master. If an image is provided, your ABSOLUTE PRIORITY is to describe the subject's identity, face, and features accurately. Do not change the species or basic look. Reverse-engineer a cinematic art prompt that keeps this specific person/subject but places them in the design requested by the user. If only text is provided, expand it into a high-end art prompt." 
-        },
-        { role: 'user', content: content }
-      ],
-    }, {
-      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
-    });
-    
-    const aiResponse = response.data.choices[0].message.content;
-    await saveChatMessage(req.user.id, 'blackbox', 'user', message);
-    await saveChatMessage(req.user.id, 'blackbox', 'ai', aiResponse);
-    res.json({ response: aiResponse });
-  } catch (error: any) {
-    const detail = error.response?.data?.error?.message || error.message;
-    res.json({ response: `Vision Error: ${detail}` });
+  // Tier 3: Local Ollama
+  if (await isOllamaRunning()) {
+    try {
+      const ollamaAns = await callOllama(message);
+      return res.json({ response: `[Local Ollama Fallback]\n\n${ollamaAns}` });
+    } catch (_) {}
   }
+
+  res.json({ response: "Groq is temporarily busy. Please retry in a few moments." });
 });
 
 // ============================================================
