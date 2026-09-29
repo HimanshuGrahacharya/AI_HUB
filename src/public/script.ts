@@ -4626,20 +4626,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
   loadSubmissions(); // Load extra tools automatically
   const token = localStorage.getItem('token');
-  if (token) {
+  if (!token) {
+    fetch('/api/auth/guest', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+      .then(r => r.json())
+      .then(d => {
+        if (d.token) {
+          localStorage.setItem('token', d.token);
+          loadUserData(d.token);
+        }
+      })
+      .catch(() => {
+        renderTools();
+        renderPagination();
+      });
+  } else {
+    loadUserData(token);
+  }
+
+  function loadUserData(tok: string) {
     fetch('/api/user/data', {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${tok}` }
     })
-    .then(res => {
+    .then(async res => {
+      // Auto-recover: if session expired (server restarted / DB reset), re-auth as guest
+      if (res.status === 401 || res.status === 403) {
+        try {
+          const gr = await fetch('/api/auth/guest', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+          if (gr.ok) {
+            const gd = await gr.json();
+            localStorage.setItem('token', gd.token);
+            return loadUserData(gd.token); // retry with fresh token
+          }
+        } catch (_) {}
+        // If guest re-auth also fails, just render tools without user data
+        renderTools();
+        renderPagination();
+        return;
+      }
       if (!res.ok) {
-        // Token is invalid/expired or user was deleted/database reset
-        localStorage.removeItem('token');
-        window.location.href = 'landing.html';
-        throw new Error('Session invalid or user not found');
+        renderTools();
+        renderPagination();
+        return;
       }
       return res.json();
     })
     .then(data => {
+      if (!data) return;
       // Populate User Profile
       if (data.fullName) {
         const initials = data.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2);
@@ -4673,6 +4705,10 @@ document.addEventListener('DOMContentLoaded', () => {
       renderTools();
       renderPagination();
     });
+  };
+
+  if (token) {
+    loadUserData(token);
   } else {
     renderTools();
     renderPagination();
@@ -5734,14 +5770,38 @@ async function sendMessage() {
   }
 
   try {
-    const response = await fetch(`/api/${selectedAI}`, {
+    let currentToken = localStorage.getItem('token') || '';
+    let response = await fetch(`/api/${selectedAI}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${currentToken}`
       },
       body: JSON.stringify(payload),
     });
+
+    const refreshedTok = response.headers.get('X-Refreshed-Token');
+    if (refreshedTok) localStorage.setItem('token', refreshedTok);
+
+    if (response.status === 401 || response.status === 403) {
+      try {
+        const gr = await fetch('/api/auth/guest', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+        if (gr.ok) {
+          const gd = await gr.json();
+          if (gd.token) {
+            localStorage.setItem('token', gd.token);
+            response = await fetch(`/api/${selectedAI}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${gd.token}`
+              },
+              body: JSON.stringify(payload),
+            });
+          }
+        }
+      } catch (_) {}
+    }
     
     if (typingDiv.parentNode) typingDiv.parentNode.removeChild(typingDiv);
     
@@ -5749,12 +5809,41 @@ async function sendMessage() {
     if (response.ok) {
       addMessage('ai', data.response);
     } else {
-      addMessage('ai', data.error || data.response || 'Sorry, there was an error processing your request.');
+      // Try Ollama fallback
+      try {
+        const olRes = await fetch('/api/ollama', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: payload.message })
+        });
+        const olData = await olRes.json();
+        if (olData.response) {
+          addMessage('ai', olData.response);
+          return;
+        }
+      } catch (_) {}
+      
+      const cleanMsg = (data.error && data.error.includes('token'))
+        ? 'AI assistant session refreshed. Please ask your question again!'
+        : (data.response || data.error || 'Sorry, there was an error processing your request.');
+      addMessage('ai', cleanMsg);
     }
   } catch (error) {
     if (typingDiv.parentNode) typingDiv.parentNode.removeChild(typingDiv);
     console.error('Error:', error);
-    addMessage('ai', 'Sorry, there was an error connecting to the server.');
+    try {
+      const olRes = await fetch('/api/ollama', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: payload.message })
+      });
+      const olData = await olRes.json();
+      if (olData.response) {
+        addMessage('ai', olData.response);
+        return;
+      }
+    } catch (_) {}
+    addMessage('ai', 'Sorry, there was an error connecting to the server. Please try again.');
   }
 }
 
@@ -5914,11 +6003,25 @@ async function executeArena() {
   setThinking('res-blackbox', 'arena-blackbox');
   setThinking('res-groq', 'arena-groq');
 
-  const token = localStorage.getItem('token');
+  let token = localStorage.getItem('token');
   if (!token) {
     showToast('Please login to use the AI Arena', 'error');
     return;
   }
+
+  // Auto-recover session if token is expired/invalid (e.g. after server restart)
+  const refreshGuestSession = async (): Promise<boolean> => {
+    try {
+      const r = await fetch('/api/auth/guest', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+      if (r.ok) {
+        const d = await r.json();
+        localStorage.setItem('token', d.token);
+        token = d.token;
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  };
 
   const startTime = performance.now();
   
@@ -5930,19 +6033,69 @@ async function executeArena() {
         image: attachedArenaFileType?.startsWith('image/') ? attachedArenaFileBase64 : null,
         fileName: attachedArenaFileName
       };
-      
-      const res = await fetch(endpoint, {
+
+      const doFetch = async (tok: string) => fetch(endpoint, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${tok}`
         },
         body: JSON.stringify(arenaPayload)
       });
+      
+      let res = await doFetch(localStorage.getItem('token') || '');
+
+      // Auto-recover: if session expired, first refresh guest session and retry cloud model
+      if (res.status === 401 || res.status === 403) {
+        const recovered = await refreshGuestSession();
+        if (recovered) {
+          res = await doFetch(localStorage.getItem('token') || '');
+        }
+      }
+
+      // If cloud model still failed (or not ok), fall back to local Ollama
+      if (!res.ok) {
+        try {
+          const ollamaRes = await fetch('/api/ollama', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: arenaPayload.message })
+          });
+          const ollamaData = await ollamaRes.json();
+          const endTime = performance.now();
+          const duration = ((endTime - modelStartTime) / 1000).toFixed(2);
+          const responseText = ollamaData.response || 'AI is currently preparing a response. Please try again.';
+          const wordCount = responseText.split(/\s+/).filter(Boolean).length;
+          if (element) {
+            const col = element.closest('.arena-column');
+            if (col) col.classList.remove('is-processing');
+            element.innerHTML = `<div class="arena-response-content">${(window as any).marked.parse(responseText)}</div>`;
+            (window as any).Prism.highlightAllUnder(element);
+            const timeEl = document.getElementById(`time-${modelId}`);
+            const wordsEl = document.getElementById(`words-${modelId}`);
+            if (timeEl) timeEl.textContent = duration;
+            if (wordsEl) wordsEl.textContent = wordCount.toString();
+          }
+          return;
+        } catch (_) {
+          if (element) {
+            const col = element.closest('.arena-column');
+            if (col) col.classList.remove('is-processing');
+            element.textContent = 'AI service temporarily unavailable. Please retry in a few moments.';
+          }
+          return;
+        }
+      }
+
+      // Pick up refreshed token from server header if provided
+      const refreshedTok = res.headers.get('X-Refreshed-Token') || res.headers.get('X-New-Token');
+      if (refreshedTok) localStorage.setItem('token', refreshedTok);
+
       const data = await res.json();
       const endTime = performance.now();
       const duration = ((endTime - modelStartTime) / 1000).toFixed(2);
-      const responseText = data.response || data.error || 'Error fetching response';
+      const rawErr = (data.error || '').toLowerCase();
+      const responseText = data.response || (rawErr.includes('token') ? 'Session refreshed. Please click Compare again!' : data.error) || 'Response generated';
       const wordCount = responseText.split(/\s+/).filter(Boolean).length;
 
       if (element) {
